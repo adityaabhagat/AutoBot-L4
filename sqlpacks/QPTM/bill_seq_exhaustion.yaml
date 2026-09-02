@@ -1,0 +1,22 @@
+# Verifies the BLINVGEN sequence-exhaustion cluster (rules QPTM-BILL-024 / QPTM-BILL-025).
+# Source SQL: SKILL_ADO_QPTM_Billing_Invoice_Rates.md §5 / §14-A.
+name: bill_seq_exhaustion
+product: QPTM
+queries:
+  - id: q1
+    sql: "SELECT SEQ_NM, TSP_NO, LAST_NO FROM QTRAN_SEQ WHERE LAST_NO >= 2000000000"
+    proves: "which QTRAN_SEQ counter is near/at the Int32 ceiling (2,147,483,647)"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "a billing/allocation sequence is near the Int32 max — reseed + purge required"
+      - when: "rowcount == 0"
+        verdict: INFERRED
+        meaning: "no QTRAN_SEQ counter near the ceiling — check MSSQL identity columns manually (DBCC CHECKIDENT); report-staging identities (e.g. BLRPTS_10_INVOICE_DOC_IMB_DTL) are not tracked in QTRAN_SEQ"
+  - id: q2
+    sql: "SELECT SEQ_NM, TSP_NO, LAST_NO FROM QARCH_TRAN_SEQ WHERE LAST_NO >= 2000000000"
+    proves: "whether an archive-side sequence counter is also near the Int32 ceiling"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "archive-side sequence near the Int32 max — include it in the reseed"

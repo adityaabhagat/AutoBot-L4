@@ -1,0 +1,18 @@
+name: mea_imbal_bal_dup
+product: TIPS
+# Duplicate QTRAN_IMBAL_ACCT_BAL rows (recurring HEC/Hilcorp defect; fixed 2025.04 stream).
+# Key columns beyond the table name are inferred from the duplicate-key pattern — verify
+# against the client schema before scripting (skill caveat; HEC dedupe scripts live in
+# ADO #1772687/#1778789 attachments).
+# Source: SKILL_TIPS_Master_Data_Contracts.md §16-B; SKILL_ADO_TIPS_MasterData_Contracts_CCT_Meter.md §4-A
+queries:
+  - id: q1
+    sql: "SELECT BA_NO, CTR_NO, ACCT_DT, PROD_DT, COUNT(*) AS DUP_CT FROM QTRAN_IMBAL_ACCT_BAL WHERE PROD_DT = '{prod_mth}' GROUP BY BA_NO, CTR_NO, ACCT_DT, PROD_DT HAVING COUNT(*) > 1"
+    proves: "whether duplicate imbalance account-balance rows exist for production month {prod_mth}"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "duplicate QTRAN_IMBAL_ACCT_BAL rows — the #1772117 doubling defect; dedupe scoped to the month + confirm the 2025.04 patch fix"
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "no duplicates for this production month — the doubling may scope to the accounting month or another table; keep evaluating"

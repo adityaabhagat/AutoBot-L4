@@ -1,0 +1,16 @@
+name: bat_imbal_seq_precision
+product: TIPS
+queries:
+  - id: q1
+    sql: "SELECT DATA_PRECISION AS data_precision FROM ALL_TAB_COLUMNS WHERE TABLE_NAME = 'QTRAN_IMBAL_ACCT_ACTIVITY_DTL' AND COLUMN_NAME = 'ACCT_ACTIVITY_DTL_ID'"
+    proves: "whether ACCT_ACTIVITY_DTL_ID still has the old NUMBER(10) precision that the imbalance activity sequence outgrew (ADO #1723573 widened it to 19)"
+    interpret:
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "column not found in this schema/vendor dictionary — verify manually"
+      - when: "rows[0].data_precision <= 10"
+        verdict: CONFIRMED
+        meaning: "precision still 10 — the widen-to-19 fix (2020.03/2024.04/2024.10 lines) is NOT in this environment; the overflow defect applies"
+      - when: "rows[0].data_precision >= 19"
+        verdict: FALLTHROUGH
+        meaning: "precision already widened — the fix is applied, this rule does not explain the failure"

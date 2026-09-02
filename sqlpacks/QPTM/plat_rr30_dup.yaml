@@ -1,0 +1,13 @@
+name: plat_rr30_dup
+product: QPTM
+queries:
+  - id: q1
+    sql: "SELECT SR_CTR_NO, COUNT(*) AS dup_cnt FROM RRRPTS_30_FERC_FORM_549D GROUP BY SR_CTR_NO HAVING COUNT(*) > 1"
+    proves: "whether duplicate contract rows exist in the 549D backing table (the PK-collision driver from stale duplicate TOS data)"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "duplicate 549D rows per contract — stale duplicate TOS rows feed the report (ADO #1320990); clean the TOS data / apply the DTE LEFT-to-INNER join report-SQL fix"
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "no duplicate rows in the backing table (may already be cleaned or the run rolled back) — verify the raw TOS data before concluding; keep evaluating"

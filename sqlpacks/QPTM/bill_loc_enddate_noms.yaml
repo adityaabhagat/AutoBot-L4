@@ -1,0 +1,15 @@
+# Verifies the CUSTACCTACCUM-stall cluster (rule QPTM-BILL-033).
+# Source SQL: SKILL_Allocations.md §9 diagnostic (case 24-00964259).
+name: bill_loc_enddate_noms
+product: QPTM
+queries:
+  - id: q1
+    sql: "SELECT l.ID_LOC, l.EFF_DT_TO, MAX(n.END_GAS_DAY) AS LAST_NOM_DAY FROM NNCTRL_LOC l JOIN NNCTRL_NOM_DTL n ON n.TSP_NO = l.TSP_NO AND n.REC_LOC_ID = l.ID_LOC WHERE l.TSP_NO = {tsp} AND l.EFF_DT_TO < n.END_GAS_DAY GROUP BY l.ID_LOC, l.EFF_DT_TO"
+    proves: "whether any location is end-dated while nominations still exist past its EFF_DT_TO (the accumulation-stall trigger)"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "location(s) end-dated with later noms — fix the location end date (and raise the qpec.ini job timeout), then re-run CUSTACCTACCUM"
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "no end-dated locations with later noms — this rule does not apply, keep evaluating"

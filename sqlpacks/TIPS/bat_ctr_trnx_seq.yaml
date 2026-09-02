@@ -1,0 +1,13 @@
+name: bat_ctr_trnx_seq
+product: TIPS
+queries:
+  - id: q1
+    sql: "SELECT (SELECT LAST_NUMBER FROM ALL_SEQUENCES WHERE SEQUENCE_NAME = 'QTRAN_CTR_TRNX_ID_SQ') - (SELECT MAX(CTR_TRNX_ID) FROM QTRAN_CTR_TRNX_ID) AS seq_gap FROM DUAL"
+    proves: "whether the QTRAN_CTR_TRNX_ID_SQ sequence next value has fallen behind MAX(CTR_TRNX_ID) (the TRANSCONTR PK_QTRAN_CTR_TRNX_ID failure, ADO #164770; derived from the two checks in SKILL_ADO_TIPS_Allocations_PPA_Imbalance_FBJS.md §10-A)"
+    interpret:
+      - when: "rows[0].seq_gap <= 0"
+        verdict: CONFIRMED
+        meaning: "sequence is at/behind the table MAX — resync the sequence above MAX (operational unblock), then rerun IMBALANCE"
+      - when: "rows[0].seq_gap >= 1"
+        verdict: FALLTHROUGH
+        meaning: "sequence is ahead of the table MAX — this rule does not apply, keep evaluating"

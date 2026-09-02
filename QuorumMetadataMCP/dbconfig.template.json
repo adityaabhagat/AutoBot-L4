@@ -1,0 +1,234 @@
+{
+  "environments": {
+    "QLS_DEV_OLEDB": {
+      "type": "oracle-oledb",
+      "user": "LIS",
+      "password": "your-password-here",
+      "database": "QINT_CORE_DEV17QLS"
+    },
+    "NRM_DEV17": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL05.QDEV.NET\\SQL2019",
+      "database": "NRM_DEV17UPS_QFC"
+    },
+    "APHU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL05.QDEV.NET\\SQL2019",
+      "database": "APH_DEV17UPS_QFC"
+    },
+    "ASTU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL01.QDEV.NET\\SQL2017",
+      "database": "AST_DEV17UPS_QFC"
+    },
+    "MSSQL_CORE_HD_UPS_SUPA1": {
+      "type": "sqlserver",
+      "server": "QDSCORSQL01\\SQL2022",
+      "database": "CORE_SUPA1UPS_QFC"
+    },
+    "MSSQL_CORE_HD_UPS_DEVA1": {
+      "type": "sqlserver",
+      "server": "qdddevsql12\\sql2022",
+      "database": "CORE_DEVA1UPS_QFC"
+    },
+    "ASTU_HD_DEV17_DUP": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL01.QDEV.NET\\SQL2017",
+      "database": "AST_DEV17UPS_QFC"
+    },
+    "BEPU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QHOUDB32.QDEV.NET\\SQL02",
+      "database": "BEP_DEV17UPS_QFC"
+    },
+    "BTYU_DEV16": {
+      "type": "sqlserver",
+      "server": "QHOUDB32.QDEV.NET",
+      "database": "BTY_DEV16UPS_QFC"
+    },
+    "BRMU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL02.QDEV.NET\\SQL2017",
+      "database": "BRM_DEV17UPS_QFC"
+    },
+    "CRCU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL03.QDEV.NET\\SQL2019",
+      "database": "CRC_DEV17UPS_QFC"
+    },
+    "CNRU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL09.QDEV.NET\\SQL2019",
+      "database": "CNR_DEV17UPS_QFC"
+    },
+    "CCIU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL01.QDEV.NET\\SQL2017",
+      "database": "CCI_DEV17UPS_QFC"
+    },
+    "CENU_DEV16": {
+      "type": "sqlserver",
+      "server": "QHOUDB28.QDEV.NET\\SQL03",
+      "database": "CEN_DEV16UPS_QFC"
+    },
+    "DAYU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL03.QDEV.NET\\SQL2019",
+      "database": "DAY_DEV17UPS_QFC"
+    },
+    "ENCU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL01.QDEV.NET\\SQL2017",
+      "database": "ENC_DEV17UPS_QFC"
+    },
+    "ERFU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL05\\SQL2019",
+      "database": "ERF_DEV17UPS_QFC"
+    },
+    "ENRU_HD_DEV1715": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL02.QDEV.NET\\SQL2017",
+      "database": "ENR_DEV1715UPS_QFC"
+    },
+    "EQCU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL04.QDEV.NET\\SQL2017",
+      "database": "EQC_DEV17UPS_QFC"
+    },
+    "FDLU_DEV16": {
+      "type": "sqlserver",
+      "server": "QHOUDB28.QDEV.NET\\SQL03",
+      "database": "FDL_DEV16UPS_QFC"
+    },
+    "GLEU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QHOUDB32.QDEV.NET\\SQL02",
+      "database": "GLE_DEV17UPS_QFC"
+    },
+    "GECU_DEV16": {
+      "type": "sqlserver",
+      "server": "QHOUDB33.QDEV.NET",
+      "database": "GEC_DEV16UPS_QFC"
+    },
+    "JNEU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL01.QDEV.NET\\SQL2017",
+      "database": "JNE_DEV17UPS_QFC"
+    },
+    "JDMU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QHOUDB25.QDEV.NET\\SQL04",
+      "database": "JDM_DEV17UPS_QFC"
+    },
+    "LUXU_DEV16": {
+      "type": "sqlserver",
+      "server": "QHOUDB25.QDEV.NET\\SQL03",
+      "database": "LUX_DEV16UPS_QFC"
+    },
+    "MACU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL01.QDEV.NET\\SQL2017",
+      "database": "MAC_DEV17UPS_QFC"
+    },
+    "MLNU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QHOUDB25.QDEV.NET\\SQL05",
+      "database": "MLN_DEV17UPS_QFC"
+    },
+    "MEWU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL03.QDEV.NET\\SQL2019",
+      "database": "MEW_DEV17UPS_QFC"
+    },
+    "MSTU_DEV16": {
+      "type": "sqlserver",
+      "server": "QHOUDB33.QDEV.NET\\SQL02",
+      "database": "MST_DEV17UPS_QFC"
+    },
+    "NOGU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL05.QDEV.NET\\SQL2019",
+      "database": "NOG_DEV17UPS_QFC"
+    },
+    "NWDU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL01.QDEV.NET\\SQL2017",
+      "database": "NWD_DEV17UPS_QFC"
+    },
+    "PERU_DEV16": {
+      "type": "sqlserver",
+      "server": "QHOUDB33.QDEV.NET\\SQL02",
+      "database": "PER_DEV17UPS_QFC"
+    },
+    "PRCU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL01.QDEV.NET\\SQL2017",
+      "database": "PRC_DEV17UPS_QFC"
+    },
+    "PNRU_DEV16": {
+      "type": "sqlserver",
+      "server": "QHOUDB28.QDEV.NET\\SQL03",
+      "database": "PNR_DEV16UPS_QFC"
+    },
+    "PRMU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL02.QDEV.NET\\SQL2017",
+      "database": "PRM_DEV17UPS_QFC"
+    },
+    "RLYU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL03.QDEV.NET\\SQL2019",
+      "database": "RLY_DEV17UPS_QFC"
+    },
+    "SNDU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL03.QDEV.NET\\SQL2019",
+      "database": "SND_DEV17UPS_QFC"
+    },
+    "SRCU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL01.QDEV.NET\\SQL2017",
+      "database": "SRC_DEV17UPS_QFC"
+    },
+    "SPRU_HD_DEV1715": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL02.QDEV.NET\\SQL2017",
+      "database": "SPR_DEV1715UPS_QFC"
+    },
+    "SEPU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL01.QDEV.NET\\SQL2017",
+      "database": "SEP_DEV17UPS_QFC"
+    },
+    "SUMU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QHOUDB33.QDEV.NET\\SQL02",
+      "database": "SUM_DEV17UPS_QFC"
+    },
+    "TPWU_HD_DEV17": {
+      "type": "sqlserver",
+      "server": "QDDDEVSQL02.QDEV.NET\\SQL2017",
+      "database": "TPW_DEV17UPS_QFC"
+    },
+    "WAGU_DEV16": {
+      "type": "sqlserver",
+      "server": "QHOUDB33\\SQL03",
+      "database": "WAG_DEV16UPS_QFC"
+    }
+  },
+  "connectionDefaults": {
+    "connectionTimeout": 30000,
+    "requestTimeout": 30000,
+    "sqlServerOptions": {
+      "encrypt": true,
+      "trustServerCertificate": true,
+      "enableArithAbort": true
+    },
+    "oracleOptions": {
+      "autoCommit": true,
+      "fetchArraySize": 1000,
+      "maxRows": 10000
+    }
+  }
+}

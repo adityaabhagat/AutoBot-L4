@@ -1,0 +1,13 @@
+name: plat_recall_notif_dup
+product: QPTM
+queries:
+  - id: q1
+    sql: "SELECT USER_ID, COUNT(*) AS dup_cnt FROM QCODE_RECALL_NOTIF_PERIOD GROUP BY USER_ID HAVING COUNT(*) > 1"
+    proves: "whether QCODE_RECALL_NOTIF_PERIOD carries duplicate code/decode rows (the web dictionary duplicate-key trigger)"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "duplicate recall-notification-period code rows exist — dedupe them to match core (ADO #1724570 data fix)"
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "no duplicate code rows — the duplicate-key exception comes from elsewhere; keep evaluating"

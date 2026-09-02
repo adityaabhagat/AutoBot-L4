@@ -1,0 +1,23 @@
+name: bat_imbal_bal_dup
+product: TIPS
+queries:
+  - id: q1
+    sql: "SELECT CTR_NO, CO_CD, ACCT_DT, PROD_DT, COUNT(*) AS dup_ct FROM QTRAN_IMBAL_ACCT_BAL GROUP BY CTR_NO, CO_CD, ACCT_DT, PROD_DT HAVING COUNT(*) > 1"
+    proves: "whether duplicate customer-account-balance rows exist in QTRAN_IMBAL_ACCT_BAL (the CUSTACCTBAL / posting-roll PK failure)"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "duplicates present — delete-duplicates script (ADO #1776936 pattern) then rerun; check patch level vs 2025.04 patch #3"
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "no dups in QTRAN_IMBAL_ACCT_BAL — check the posted mirror (q2)"
+  - id: q2
+    sql: "SELECT CTR_NO, CO_CD, ACCT_DT, PROD_DT, COUNT(*) AS dup_ct FROM QPOST_IMBAL_ACCT_BAL GROUP BY CTR_NO, CO_CD, ACCT_DT, PROD_DT HAVING COUNT(*) > 1"
+    proves: "same duplicate check on the posted mirror QPOST_IMBAL_ACCT_BAL (ADO #1772117 covers both tables)"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "duplicates present in the posted table — same delete-duplicates script scope must include QPOST_IMBAL_ACCT_BAL"
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "no duplicates in either table — this rule does not apply, keep evaluating"

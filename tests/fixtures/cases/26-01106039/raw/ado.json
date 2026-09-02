@@ -1,0 +1,4 @@
+﻿[
+  {"id": 1836277, "title": "EQC - BLSTAG_PAL_EXT is invalid object name in DEV and PRD for EQC", "state": "Proposed", "tags": "Triage Pending", "iteration": "", "description": "Invalid object name BLSTAG_PAL_EXT SQLState 42S02 NativeError 208 in QSQLID_INS_SEL_INVOICE_DOC_PAL_DAY. Found in 2024.04 MSSQL."},
+  {"id": 1836679, "title": "EDC.DEV17MID - DB Error BLSTAG_PAL_EXT", "state": "Closed", "tags": "", "iteration": "", "description": "Object inserted into DEV from a different instance."}
+]

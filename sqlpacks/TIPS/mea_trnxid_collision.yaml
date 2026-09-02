@@ -1,0 +1,15 @@
+name: mea_trnxid_collision
+product: TIPS
+# TRNX_ID exhaustion/collision on QTRAN_STD_ANALYSIS_BASE (MeasAnalysis unique constraint).
+# Source: SKILL_TIPS_Measurement_Ticketing.md §18-C (23-00916043)
+queries:
+  - id: q1
+    sql: "SELECT TRNX_ID, COUNT(*) AS DUP_CT FROM QTRAN_STD_ANALYSIS_BASE WHERE PROD_DT = '{prod_mth}' GROUP BY TRNX_ID HAVING COUNT(*) > 1"
+    proves: "whether TRNX_ID values collide in the standard-analysis rows for {prod_mth}"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "TRNX_ID collisions present — exhaustion/collision defect (23-00916043); short-term reset TRNX_ID to 0, long-term ADO #1617830 patch"
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "no TRNX_ID collisions for this production month — this rule does not apply, keep evaluating"

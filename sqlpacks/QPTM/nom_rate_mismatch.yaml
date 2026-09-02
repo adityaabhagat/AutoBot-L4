@@ -1,0 +1,23 @@
+name: nom_rate_mismatch
+product: QPTM
+queries:
+  - id: q1
+    sql: "SELECT COUNT(*) AS orphan_hdr FROM RTCTRL_RATE_HDR h LEFT JOIN RTCTRL_RATE_DTL d ON h.TSP_NO = d.TSP_NO AND h.RATE_ID = d.RATE_ID WHERE h.TSP_NO = {tsp} AND d.RATE_ID IS NULL"
+    proves: "whether rate header rows exist with no matching detail rows (orphaned headers — the 23-00930041 'rates 14157/14218' CAS-run-failure cause)"
+    interpret:
+      - when: "rows[0].orphan_hdr >= 1"
+        verdict: CONFIRMED
+        meaning: "orphaned RTCTRL_RATE_HDR rows found — rate header/detail mismatch breaks classification/CAS; clean up via script and re-run CANOMCLTG/CAS"
+      - when: "rows[0].orphan_hdr == 0"
+        verdict: FALLTHROUGH
+        meaning: "no orphaned headers — check the reverse direction (q2)"
+  - id: q2
+    sql: "SELECT COUNT(*) AS orphan_dtl FROM RTCTRL_RATE_DTL d LEFT JOIN RTCTRL_RATE_HDR h ON d.TSP_NO = h.TSP_NO AND d.RATE_ID = h.RATE_ID WHERE d.TSP_NO = {tsp} AND h.RATE_ID IS NULL"
+    proves: "whether rate detail rows point at a missing/deleted header (the reverse mismatch, 22-00581584 NOM CLASS ERROR pattern)"
+    interpret:
+      - when: "rows[0].orphan_dtl >= 1"
+        verdict: CONFIRMED
+        meaning: "orphaned RTCTRL_RATE_DTL rows found — rate mismatch confirmed; clean up via script and re-run CANOMCLTG/CAS"
+      - when: "rows[0].orphan_dtl == 0"
+        verdict: FALLTHROUGH
+        meaning: "no rate header/detail mismatch either direction — this rule does not apply; the CAS run failure has another cause (segment/path setup, batch hang)"

@@ -1,0 +1,16 @@
+name: plt_ro_profile_limits
+product: TIPS
+queries:
+  - id: q1
+    sql: "SELECT LIMIT FROM DBA_PROFILES WHERE PROFILE = (SELECT PROFILE FROM DBA_USERS WHERE USERNAME = '{client}_READ_ONLY') AND RESOURCE_NAME = 'LOGICAL_READS_PER_CALL'"
+    proves: "whether the read-only reporting account's Oracle resource profile caps IO per call (the ORA-02394/ORA-02395 cause)"
+    interpret:
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "no {client}_READ_ONLY account/profile found on this DB - verify the RO account name manually"
+      - when: "rows[0].LIMIT == 'UNLIMITED'"
+        verdict: REFUTED
+        meaning: "IO-per-call limit already UNLIMITED - profile caps are not the cause"
+      - when: "rowcount > 0"
+        verdict: INFERRED
+        meaning: "profile carries a non-UNLIMITED IO limit - DBA should set LOGICAL_READS_PER_CALL/SESSION to UNLIMITED on the RO profile"

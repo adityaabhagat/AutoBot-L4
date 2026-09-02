@@ -1,0 +1,20 @@
+name: mea_imbal_seq_precision
+product: TIPS
+# Imbalance activity sequence QTRAN_IMBAL_ACCT_ACTIVITY_D_SQ vs ACCT_ACTIVITY_DTL_ID precision.
+# Oracle-only (ALL_TAB_COLUMNS). Product standard after the fix is NUMBER(19); remember the
+# QRMTIPS_CAW schema copy as well (three tables total).
+# Source: SKILL_TIPS_Master_Data_Contracts.md §16-D (25-01014345, ADO #1723573)
+queries:
+  - id: q1
+    sql: "SELECT TABLE_NAME, COLUMN_NAME, DATA_PRECISION FROM ALL_TAB_COLUMNS WHERE COLUMN_NAME = 'ACCT_ACTIVITY_DTL_ID' AND TABLE_NAME IN ('QTRAN_IMBAL_ACCT_ACTIVITY_DTL', 'QPOST_IMBAL_ACCT_ACTIVITY_DTL') ORDER BY TABLE_NAME"
+    proves: "whether the ACCT_ACTIVITY_DTL_ID column precision is still below the product-standard NUMBER(19)"
+    interpret:
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "column not found — non-Oracle platform or different schema; interpret manually"
+      - when: "rows[0].DATA_PRECISION <= 11"
+        verdict: CONFIRMED
+        meaning: "precision at or below 11 — the sequence-overflow defect state; widen to NUMBER(19) per ADO #1723573 (check every returned row, plus the QRMTIPS_CAW copy)"
+      - when: "rows[0].DATA_PRECISION >= 19"
+        verdict: FALLTHROUGH
+        meaning: "first table already at product-standard NUMBER(19) — verify the remaining rows manually; if all are 19, precision is not the cause"

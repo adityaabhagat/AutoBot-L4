@@ -1,0 +1,13 @@
+name: qdo_seq_missing
+product: QDO
+queries:
+  - id: q1
+    sql: "SELECT name FROM sys.sequences WHERE name = 'TRANS_GRP_SEQ_NO'"
+    proves: "whether the TRANS_GRP_SEQ_NO database sequence exists in this DB (dropped-during-cutover signature)"
+    interpret:
+      - when: "rowcount == 0"
+        verdict: CONFIRMED
+        meaning: "sequence missing — re-create TRANS_GRP_SEQ_NO (the 25-01060843 cutover signature)"
+      - when: "rowcount > 0"
+        verdict: FALLTHROUGH
+        meaning: "sequence present — not the dropped-sequence case; consider the QARCH_TRAN_SEQ post-refresh reset rule instead"

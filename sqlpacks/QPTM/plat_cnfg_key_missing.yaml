@@ -1,0 +1,13 @@
+name: plat_cnfg_key_missing
+product: QPTM
+queries:
+  - id: q1
+    sql: "SELECT KEY_GRP_NM, KEY_NM, KEY_VAL FROM qarch_cnfg_ctrl WHERE KEY_NM IN ('NUM_STREAMING_OBJECTS','NAESB30','SHOW_UP_DN_CONTRACT_PICKLIST_IN_GRID','DISABLE_NOMINATION_SUBMISSION_BY_CONTRACT')"
+    proves: "whether the config keys the middletier reports as missing actually exist in the config-control table"
+    interpret:
+      - when: "rowcount == 0"
+        verdict: CONFIRMED
+        meaning: "none of the commonly-missing keys exist in qarch_cnfg_ctrl — the middletier is defaulting them and logging GetConfigKey.Missing; create the keys with their code defaults (25-01031118 pattern)"
+      - when: "rowcount > 0"
+        verdict: INFERRED
+        meaning: "some of the keys are defined — compare the defined set against the exact key names in the log flood and create only the absent ones"

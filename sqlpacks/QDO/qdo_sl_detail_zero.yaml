@@ -1,0 +1,13 @@
+name: qdo_sl_detail_zero
+product: QDO
+queries:
+  - id: q1
+    sql: "SELECT TRANS_SEQ_NO, SL_NO, SL_DETAIL_NO, COUNT(*) AS ct FROM RSTG_DVD_OWNR_FUND_RLS WHERE SL_DETAIL_NO = 0 GROUP BY TRANS_SEQ_NO, SL_NO, SL_DETAIL_NO"
+    proves: "whether staged release rows were written with SL_DETAIL_NO = 0 (the int32-overflow blank-funds signature, ADO 1713151)"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "SL_DETAIL_NO = 0 rows present — the int32-overflow defect; confirm the client build carries the int64 fix"
+      - when: "rowcount == 0"
+        verdict: REFUTED
+        meaning: "no zeroed SL_DETAIL_NO rows — this defect signature is absent, keep evaluating"

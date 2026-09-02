@@ -1,0 +1,16 @@
+name: plt_gas_stmt_invoice_no
+product: TIPS
+queries:
+  - id: q1
+    sql: "SELECT CHARACTER_MAXIMUM_LENGTH AS col_len FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'QTIP_RPTS_SETTLE_GAS_STMT' AND COLUMN_NAME = 'INVOICE_NO'"
+    proves: "whether QTIP_RPTS_SETTLE_GAS_STMT.INVOICE_NO is too short for the MMDD-{contract} value SP_QTIP_SETTLE_GAS_STMT builds (silent truncation blanks the gas statements)"
+    interpret:
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "column not found via INFORMATION_SCHEMA (Oracle env or different schema) - check the column width manually"
+      - when: "rows[0].col_len <= 10"
+        verdict: CONFIRMED
+        meaning: "INVOICE_NO still VARCHAR(10) - the 23-00919231 truncation defect applies; widen to 17"
+      - when: "rows[0].col_len >= 17"
+        verdict: REFUTED
+        meaning: "column already widened - this defect does not apply, keep evaluating"

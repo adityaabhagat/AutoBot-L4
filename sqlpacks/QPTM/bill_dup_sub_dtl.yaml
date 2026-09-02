@@ -1,0 +1,15 @@
+# Verifies the tripled-rate / duplicate billing-detail cluster (rule QPTM-BILL-017).
+# Source SQL: SKILL_ADO_QPTM_Billing_Invoice_Rates.md §14-B.
+name: bill_dup_sub_dtl
+product: QPTM
+queries:
+  - id: q1
+    sql: "SELECT ACTIVITY_DT, TOC_CD, RATE, ENG_QTY, COUNT(*) AS DUP_CT FROM BLTRAN_INVOICE_SUB_DTL WHERE TSP_NO = {tsp} AND ACCTG_MTH = '{prod_mth}' AND CTR_NO = '{contract}' GROUP BY ACTIVITY_DT, TOC_CD, RATE, ENG_QTY HAVING COUNT(*) > 1"
+    proves: "whether duplicate identical rate+qty invoice sub-detail rows exist for the contract (expect 1 row per gas day / TOC / path)"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "duplicate sub-detail rows present — the tripled-charge billing-detail defect; re-run BLINVGEN after the ADO #1632428 fix is consumed"
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "no duplicate sub-detail rows — this rule does not apply, keep evaluating"

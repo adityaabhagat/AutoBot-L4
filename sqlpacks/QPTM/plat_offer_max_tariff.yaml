@@ -1,0 +1,13 @@
+name: plat_offer_max_tariff
+product: QPTM
+queries:
+  - id: q1
+    sql: "SELECT COUNT(*) AS null_rate_cnt FROM CRCTRL_OFFER_DTL WHERE TSP_NO = {tsp} AND MAX_TARIFF_RATE IS NULL"
+    proves: "whether offer detail rows exist for this TSP with no resolved Max Tariff rate (Rate Resolution batch not run)"
+    interpret:
+      - when: "rows[0].null_rate_cnt >= 1"
+        verdict: INFERRED
+        meaning: "offer detail rows with NULL MAX_TARIFF_RATE exist for this TSP — the Rate Resolution batch has not tied in the max tariff (24-00953290 signature); identify the client's offer among them and run Rate Resolution"
+      - when: "rows[0].null_rate_cnt == 0"
+        verdict: FALLTHROUGH
+        meaning: "no unresolved max-tariff offer rows for this TSP — the null-value error has another cause; keep evaluating"

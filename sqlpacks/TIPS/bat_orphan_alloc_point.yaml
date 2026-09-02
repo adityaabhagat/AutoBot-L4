@@ -1,0 +1,13 @@
+name: bat_orphan_alloc_point
+product: TIPS
+queries:
+  - id: q1
+    sql: "SELECT * FROM QTRAN_ALLOC_POINT P LEFT JOIN QTRAN_TRNX_ID T ON P.TRNX_ID = T.TRNX_ID WHERE T.TRNX_ID IS NULL"
+    proves: "whether QTRAN_ALLOC_POINT rows are tied to nonexistent TRNX_IDs (verbatim orphan check from case 22-00527472)"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "orphan allocation-point rows present — delete them via a Cloud Ops script and rerun ALLOCATE"
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "no orphan rows — this rule does not apply, keep evaluating"

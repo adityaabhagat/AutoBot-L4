@@ -1,0 +1,13 @@
+name: nom_dup_loc_path
+product: QPTM
+queries:
+  - id: q1
+    sql: "SELECT TSP_NO, LOC_ID, SEG_NO, PATH_ID, COUNT(*) AS dup_cnt FROM NNCTRL_LOC_PATH WHERE TSP_NO = {tsp} GROUP BY TSP_NO, LOC_ID, SEG_NO, PATH_ID, FLOW_IND, EFF_DT_FROM, EFF_DT_TO HAVING COUNT(*) > 1"
+    proves: "whether duplicate Location Path Maintenance rows exist for the TSP (dup path rows double/triple CAS and EBB volumes — 24-00966311 / 25-01017371 pattern)"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "duplicate location-path rows found — delete the dupes and re-run CANOMCLTG (see recipe nom_dup_locpath_cleanup)"
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "no duplicate path rows — the doubled-volume symptom is likely the concurrent-retrieve defect (two users on CAS Maintenance at once, 24-00973852); fall through to the code-defect rule"

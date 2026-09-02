@@ -1,0 +1,15 @@
+# Verifies the missing Reallocation/PPA pop-up trigger setup (rule QPTM-BILL-015).
+# Source SQL: SKILL_ADO_QPTM_Allocations_PPA_Imbalance.md §16-B (code table 27310).
+name: bill_realloc_ppa_xref
+product: QPTM
+queries:
+  - id: q1
+    sql: "SELECT * FROM BLXREF_REALLOC_PPA WHERE TBL_NM = 'ALCTRL_MEAS_VOL'"
+    proves: "whether measurement-volume changes are registered as reallocation/PPA triggers in code table 27310"
+    interpret:
+      - when: "rowcount == 0"
+        verdict: CONFIRMED
+        meaning: "no trigger row for ALCTRL_MEAS_VOL in BLXREF_REALLOC_PPA — the pop-up cannot fire; add the row with reallocate-ind checked, PPA-ind unchecked"
+      - when: "rowcount > 0"
+        verdict: INFERRED
+        meaning: "trigger rows exist — manually verify the reallocate/PPA indicator flags for the changed column, that allocations already ran for the gas day, and that the accounting month is closed"

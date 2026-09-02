@@ -1,0 +1,15 @@
+# Verifies the orphan rate-detail cluster (rule QPTM-BILL-028).
+# Verbatim detector from SKILL_Billing.md §17-E (ADO #1756911); {prod_mth} used as the cutoff date.
+name: bill_orphan_rate_dtl
+product: QPTM
+queries:
+  - id: q1
+    sql: "SELECT DISTINCT H.RATE_HDR_ID FROM RTCTRL_RATE_DTL H LEFT JOIN RTCTRL_RATE_HDR D ON H.TSP_NO = D.TSP_NO AND H.RATE_HDR_ID = D.RATE_HDR_ID AND H.EFF_DT_FROM = D.EFF_DT_FROM AND H.EFF_DT_TO = D.EFF_DT_TO WHERE D.TSP_NO IS NULL AND H.EFF_DT_TO >= '{prod_mth}'"
+    proves: "whether orphaned RTCTRL_RATE_DTL rows exist (detail with no matching RTCTRL_RATE_HDR parent on TSP + header id + effective dates)"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "orphan rate-detail rows present — the system-wide billing/CAS corruption source; end-date or delete them (recipe bill_orphan_rate_cleanup)"
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "no orphan rate details at/after the cutoff — this rule does not apply, keep evaluating"

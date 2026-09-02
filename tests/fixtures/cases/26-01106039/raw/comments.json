@@ -1,0 +1,4 @@
+﻿[
+  {"CommentBody": "Reproduced in EQC DEV. Invoice Generation BLINVGEN Run All PPAs fails in registered SQL QSQLID_INS_SEL_INVOICE_DOC_PAL_DAY with SQL 208 Invalid object name 'BLSTAG_PAL_EXT'. PAL statement records were not successfully inserted. Logged Bug 1836277.", "CreatedDate": "2026-07-01T10:00:00.000+0000"},
+  {"CommentBody": "DEV fixed 2026-07-06 by inserting BLSTAG_PAL_EXT from another instance (WI 1836679). PRD and UAT still missing the object; invoice 260675 shows Adj = 0 for the PPA.", "CreatedDate": "2026-07-07T09:00:00.000+0000"}
+]

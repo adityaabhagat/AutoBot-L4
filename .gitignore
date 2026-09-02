@@ -1,0 +1,26 @@
+# ---- credentials & local config (NEVER commit) ----
+CONNECTION_CONFIG.md
+QuorumMetadataMCP/dbconfig.json
+.claude/settings.local.json
+*.env
+
+# ---- large binaries (team copies these separately — see docs/TEAM_SETUP.md) ----
+QuorumMetadataMCP/*.exe
+QuorumMetadataMCP/*.pdb
+QuorumMetadataMCP/*.dll
+
+# ---- proprietary source cache (optional, regenerable; most sensitive artifact) ----
+products/*/code_cache/
+
+# ---- generated indexes (rebuild: python engine/kb.py build --all) ----
+products/*/kb_index/
+
+# ---- live case workspaces (work product, not shared code) ----
+cases/*
+!cases/README.md
+
+# ---- python ----
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/

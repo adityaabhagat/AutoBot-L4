@@ -1,0 +1,15 @@
+name: mea_split_decimal_zero
+product: TIPS
+# Zero/missing Split Decimal at Meter Split -> S_DECIMAL=0 in Paystation -> settlement shows 0.
+# Source: SKILL_TIPS_Measurement_Ticketing.md §18-B (26-01091612, 24-00937128)
+queries:
+  - id: q1
+    sql: "SELECT MTR_NO, PROD_DT, S_DECIMAL FROM QTRAN_PAYSTATION WHERE PROD_DT = '{prod_mth}' AND (S_DECIMAL = 0 OR S_DECIMAL IS NULL)"
+    proves: "whether any paystation row for {prod_mth} carries a zero/NULL split decimal (the settlement-shows-0 signature)"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "zero/NULL S_DECIMAL rows found — the 26-01091612 signature; fix the Meter Split decimal (others = 1) and rebuild the split"
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "no zero split decimals this production month — the settlement zero has another cause (check CCT for the prod month); keep evaluating"

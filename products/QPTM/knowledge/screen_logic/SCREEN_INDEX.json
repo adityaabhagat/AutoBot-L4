@@ -1,0 +1,6062 @@
+{
+ "generated": "2026-07-05",
+ "counts": {
+  "web": 168,
+  "classic": 151
+ },
+ "webScreens": [
+  {
+   "kind": "screen",
+   "name": "ActiveContracts",
+   "module": "Contracts",
+   "sourcePath": "/Quorum.QPTM.Web/Views/ActiveContracts",
+   "notes": "ActiveContracts.cshtml \u2014 active contracts grid/query",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "ContractMaintenance",
+   "module": "Contracts",
+   "sourcePath": "/Quorum.QPTM.Web/Views/ContractMaintenance",
+   "notes": "ContractMaintenance.cshtml + 31 tab partials: _General(+PopUp/ClientFields/PickFields), _Agents, _AuthorizedOverrun, _Contacts, _ContractQuantity, _Dates, _FSSSchedule, _Imbalance(+ClientFields), _InjWthPeriods, _Invoice, _LeaseDetailsGrid, _Locations(+Grid), _PALISSCumulative/_PALISSTrade(+Grid), _Rates, _RelatedK, _SchdCapOvrd, _SegmentCapacity, _SegmentRights, _Text, _UserDefined, _ZoneSegmentCapacity. Biggest screen in repo; has _ClientFields extension points for client overrides",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "Contracts (landing)",
+   "module": "Contracts",
+   "sourcePath": "/Quorum.QPTM.Web/Views/Contracts",
+   "notes": "Index.cshtml \u2014 Contracts module landing page",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "CtrCntctOvrdMassChange",
+   "module": "Contracts",
+   "sourcePath": "/Quorum.QPTM.Web/Views/CtrCntctOvrdMassChange",
+   "notes": "Index.cshtml \u2014 contract contact override mass change",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "NewRFSActivity",
+   "module": "Contracts",
+   "sourcePath": "/Quorum.QPTM.Web/Views/NewRFSActivity",
+   "notes": "NewRFSActivity.cshtml \u2014 new Request-For-Service activity entry",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "wizard",
+   "name": "RFSWizardV2",
+   "module": "Contracts",
+   "sourcePath": "/Quorum.QPTM.Web/Views/RFSWizardV2",
+   "notes": "RFSWizardV2.cshtml + 30 partials (steps _Start/_Query/_BasicInfo/_Location(+Form)/_QtyRates/_Contacts/_AlternatePoints/_InjWthPeriods/_Evergreen/_PAL/_UnsoldCapacity/_Texts/_Errors/_Approve + _SummaryPage_* set). Request For Service contract-origination wizard; driven by QPTM.wizardV2.js",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "RFSApproval",
+   "module": "Contracts",
+   "sourcePath": "/Quorum.QPTM.Web/Views/RFSApproval",
+   "notes": "Index.cshtml + 14 partials (_ApprovalQueue, _ApprovalApprove, _ApprovalAward, _ApprovalSummary + _ApprovalSummary_* sections). RFS approval queue for TSP analysts",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "TypeOfServiceSetup",
+   "module": "Contracts",
+   "sourcePath": "/Quorum.QPTM.Web/Views/TypeOfServiceSetup",
+   "notes": "TypeOfServiceSetup.cshtml + partials _CapacityRelease/_ContractRules/_ContractTabs/_RFSTabs \u2014 TOS config controlling which tabs/rules apply on Contract & RFS screens",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "TOSSetup",
+   "module": "Contracts",
+   "sourcePath": "/Quorum.QPTM.Web/Views/TOSSetup",
+   "notes": "TOSSetup.cshtml \u2014 Type of Service setup (companion config screen)",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "SeasonalProfile",
+   "module": "Contracts",
+   "sourcePath": "/Quorum.QPTM.Web/Views/SeasonalProfile",
+   "notes": "SeasonalProfile.cshtml + _SeasonalProfile_DetailsGrid.cshtml \u2014 seasonal quantity profiles (contract MDQ profiling; distinct from RateSeasonalProfileMaintenance)",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "NominationSubmission",
+   "module": "Nominations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/NominationSubmission",
+   "notes": "NominationSubmission.cshtml + 16 partials: _PNTNominationsTab/_PTNominationsTab (pathed-non-threaded vs pathed-threaded models), _PNTDelGridWithTotals/_PNTRecGridWithTotals/_PNTPathGridOnly/_PNTPathGridWithTotals, _PathPopup/_PTPathPopup, _LocationSummaryGrid, _BulkCopyNoms, _PendingXfer, _BidTrans_Selection, _HourlyProfile_Selection, _AdditionalTotalsFields, _naesbNomForm (NAESB print). Primary shipper nomination entry screen",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "base-class",
+   "name": "NominationSubmissionBase",
+   "module": "Nominations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/NominationSubmissionBase",
+   "notes": "No main view \u2014 10 shared partials inherited by NominationSubmission and LCNominationSubmission: _Classification, _Copy, _DeliveryPopup, _ReceiptPopup, _ErrorsGrid, _ErrorsTab, _Header_SvcReqTotals, _Import, _LocationSummaryTab, _PathSummaryTab",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "LCNominationSubmission",
+   "module": "Nominations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/LCNominationSubmission",
+   "notes": "LCNominationSubmission.cshtml + partials _PNTLCNominationsTab, _PNTLCUpstreamGridWithTotals, _PNTLCDownstreamGridWithTotals, _LocationSummaryGrid \u2014 location/lease-centric nomination submission variant built on NominationSubmissionBase",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "NominationMaintenance",
+   "module": "Nominations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/NominationMaintenance",
+   "notes": "NominationMaintenance.cshtml + _Classification, _PathPopup, _UpstreamPopup, _DownstreamPopup \u2014 TSP-side nomination maintenance",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "NominationAutogen",
+   "module": "Nominations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/NominationAutogen",
+   "notes": "NominationAutogen.cshtml + tab views NomAutogen_GeneralTab/_ContractTab/_CustomAccountTab/_SourceNomLocationTab/_TargetNomContractsTab (note: tabs NOT underscore-prefixed) \u2014 auto-generation of nominations",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "NominationErrors",
+   "module": "Nominations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/NominationErrors",
+   "notes": "NominationErrors.cshtml \u2014 nomination validation error viewer (ENMQR/rule errors)",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "NominationErrorOverrides",
+   "module": "Nominations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/NominationErrorOverrides",
+   "notes": "NominationErrorOverrides.cshtml \u2014 override nomination validation errors",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "NominationCuts",
+   "module": "Nominations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/NominationCuts",
+   "notes": "NominationCuts.cshtml \u2014 view of scheduling cuts applied to nominations",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "NominationTitleXfer",
+   "module": "Nominations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/NominationTitleXfer",
+   "notes": "NominationTitleXfer.cshtml \u2014 title transfer nominations",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "NomClassificationMaintenance",
+   "module": "Nominations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/NomClassificationMaintenance",
+   "notes": "NomClassificationMaintenance.cshtml \u2014 nomination classification maintenance",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "NominationConfigureUserPreference",
+   "module": "Nominations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/NominationConfigureUserPreference",
+   "notes": "Index.cshtml \u2014 user grid/column preferences for nomination screens",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "PostNominationSubmissionTemplate",
+   "module": "Nominations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/PostNominationSubmissionTemplate",
+   "notes": "Index.cshtml \u2014 post-nomination submission template",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "ValidationRuleAssignment",
+   "module": "Nominations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/ValidationRuleAssignment",
+   "notes": "ValidationRuleAssignment.cshtml \u2014 assign validation rules (QCTRL_VALD_RULE); used across nom/EDI validation config",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "LifeCycle",
+   "module": "Nominations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/LifeCycle",
+   "notes": "LifeCycle.cshtml \u2014 transaction life-cycle trace (nom \u2192 confirmed \u2192 scheduled \u2192 allocated)",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "ConfirmationSummary",
+   "module": "Scheduling/Confirmations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/ConfirmationSummary",
+   "notes": "ConfirmationSummary.cshtml",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "widget",
+   "name": "ConfirmationSummaryQuickView",
+   "module": "Scheduling/Confirmations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/ConfirmationSummaryQuickView",
+   "notes": "Index.cshtml \u2014 quick-view variant",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "ConfirmationResponse",
+   "module": "Scheduling/Confirmations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/ConfirmationResponse",
+   "notes": "ConfirmationResponse.cshtml + _HourlyProfile, _SendMail, _DownloadReport, _naesbConfForm (NAESB confirmation print) \u2014 operator confirmation response entry",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "OperatorConfirmations",
+   "module": "Scheduling/Confirmations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/OperatorConfirmations",
+   "notes": "OperatorConfirmations.cshtml \u2014 operator-persona confirmations list",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "ScheduledQuantity",
+   "module": "Scheduling/Confirmations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/ScheduledQuantity",
+   "notes": "Index.cshtml \u2014 scheduled quantity viewer",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "SchedulingCapacityOverrideMaint",
+   "module": "Scheduling/Confirmations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/SchedulingCapacityOverrideMaint",
+   "notes": "SchedulingCapacityOverrideMaint.cshtml \u2014 scheduling capacity overrides",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "EPSQMaintenance",
+   "module": "Scheduling/Confirmations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/EPSQMaintenance",
+   "notes": "EPSQMaintenance.cshtml \u2014 Elapsed Prorated Scheduled Quantity maintenance",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "CASummaryMaintenance",
+   "module": "Scheduling/Confirmations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/CASummaryMaintenance",
+   "notes": "CASummaryMaintenance.cshtml + _Graphical, _GraphicalTabular, _Tabular, _NomDetail, _NomTransGroupDetail, _RuleSet \u2014 Capacity Allocation summary (scheduling engine rule-set/capacity view)",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "CASReductionOrder",
+   "module": "Scheduling/Confirmations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/CASReductionOrder",
+   "notes": "CASReductionOrder.cshtml \u2014 capacity-allocation/scheduling reduction (cut) order config",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "LeaseSchedulingConfigurationMaintenance",
+   "module": "Scheduling/Confirmations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/LeaseSchedulingConfigurationMaintenance",
+   "notes": "LeaseSchedulingConfigurationMaintenance.cshtml",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "PathBalanceVolumeApproval",
+   "module": "Scheduling/Confirmations",
+   "sourcePath": "/Quorum.QPTM.Web/Views/PathBalanceVolumeApproval",
+   "notes": "PathBalanceVolumeApproval.cshtml + _ProposalTab, _SvcReqSummaryTab",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "CapacityRelease (landing)",
+   "module": "Capacity Release",
+   "sourcePath": "/Quorum.QPTM.Web/Views/CapacityRelease",
+   "notes": "Index.cshtml \u2014 Capacity Release module landing",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "wizard",
+   "name": "OfferWizardV2",
+   "module": "Capacity Release",
+   "sourcePath": "/Quorum.QPTM.Web/Views/OfferWizardV2",
+   "notes": "OfferWizardV2.cshtml + 27 partials (steps _Start/_Query/_Detail/_BiddingInfo/_PrearrangedBidder/_RecallReputInfo/_AlternatePoints/_AdditionalTerms/_IndicatorsDisclosuresContengency/_ContactInfo/_Approval/_Withdrawal + full _SummaryPage_* set + _DownloadOfferReport) \u2014 release offer creation wizard",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "OfferViewer",
+   "module": "Capacity Release",
+   "sourcePath": "/Quorum.QPTM.Web/Views/OfferViewer",
+   "notes": "OfferViewer.cshtml \u2014 posted offers viewer",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "wizard",
+   "name": "BidWizardV2",
+   "module": "Capacity Release",
+   "sourcePath": "/Quorum.QPTM.Web/Views/BidWizardV2",
+   "notes": "BidWizardV2.cshtml + 12 partials (_Start/_Query/_Detail/_AlternatePoints/_AdditionalTerms/_Indicators/_ContactInfo/_Withdrawal/_Navigation/_HeaderBidWizardV2/_SummaryPage/_DownloadBidReport) \u2014 bid entry wizard",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "BidViewer",
+   "module": "Capacity Release",
+   "sourcePath": "/Quorum.QPTM.Web/Views/BidViewer",
+   "notes": "BidViewer.cshtml + BidViewer_OLD.cshtml (legacy version retained)",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "LongTermBidViewer",
+   "module": "Capacity Release",
+   "sourcePath": "/Quorum.QPTM.Web/Views/LongTermBidViewer",
+   "notes": "LongTermBidViewer.cshtml",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "CRAward",
+   "module": "Capacity Release",
+   "sourcePath": "/Quorum.QPTM.Web/Views/CRAward",
+   "notes": "CRAward.cshtml + _CRAward_HeaderTab, _CRAward_AwardsTab, _DownloadAwardReport \u2014 award processing",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "CapacityReleaseAwardedBids",
+   "module": "Capacity Release",
+   "sourcePath": "/Quorum.QPTM.Web/Views/CapacityReleaseAwardedBids",
+   "notes": "CapacityReleaseAwardedBids.cshtml \u2014 awarded bids posting",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "CapacityReleaseOffer",
+   "module": "Capacity Release",
+   "sourcePath": "/Quorum.QPTM.Web/Views/CapacityReleaseOffer",
+   "notes": "CapacityReleaseOffer.cshtml",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "AwardAmendments",
+   "module": "Capacity Release",
+   "sourcePath": "/Quorum.QPTM.Web/Views/AwardAmendments",
+   "notes": "AwardAmendments.cshtml",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "RecallReput",
+   "module": "Capacity Release",
+   "sourcePath": "/Quorum.QPTM.Web/Views/RecallReput",
+   "notes": "RecallReput.cshtml \u2014 recall/reput of released capacity",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "WithdrawalSummary",
+   "module": "Capacity Release",
+   "sourcePath": "/Quorum.QPTM.Web/Views/WithdrawalSummary",
+   "notes": "WithdrawalSummary.cshtml \u2014 offer/bid withdrawal summary",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "InventoryAccounts",
+   "module": "Inventory/Storage",
+   "sourcePath": "/Quorum.QPTM.Web/Views/InventoryAccounts",
+   "notes": "InventoryAccounts.cshtml + _DailyActivityTab, _DailyBalanceTab, _MonthlyActivityTab, _MonthlyBalanceTab",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "InventoryAdjustments",
+   "module": "Inventory/Storage",
+   "sourcePath": "/Quorum.QPTM.Web/Views/InventoryAdjustments",
+   "notes": "InventoryAdjustments.cshtml",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "InventoryImbalances",
+   "module": "Inventory/Storage",
+   "sourcePath": "/Quorum.QPTM.Web/Views/InventoryImbalances",
+   "notes": "InventoryImbalances.cshtml",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "InventoryStorageBalance",
+   "module": "Inventory/Storage",
+   "sourcePath": "/Quorum.QPTM.Web/Views/InventoryStorageBalance",
+   "notes": "InventoryStorageBalance.cshtml",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "StorageTransferMaintForm",
+   "module": "Inventory/Storage",
+   "sourcePath": "/Quorum.QPTM.Web/Views/StorageTransferMaintForm",
+   "notes": "StorageTransferMaintForm.cshtml \u2014 storage transfer maintenance",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "RatchetSchedule",
+   "module": "Inventory/Storage",
+   "sourcePath": "/Quorum.QPTM.Web/Views/RatchetSchedule",
+   "notes": "RatchetSchedule.cshtml + _RatchetSchedule_DetailsGrid \u2014 storage ratchet schedules",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "TSPInventoryConfigurations",
+   "module": "Inventory/Storage",
+   "sourcePath": "/Quorum.QPTM.Web/Views/TSPInventoryConfigurations",
+   "notes": "TSPInventoryConfigurations.cshtml \u2014 TSP-level inventory config",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "CustomerAccountQuery",
+   "module": "Inventory/Storage",
+   "sourcePath": "/Quorum.QPTM.Web/Views/CustomerAccountQuery",
+   "notes": "CustomerAccountQuery.cshtml \u2014 customer (storage/imbalance) account query",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "CustomerAccountSummary",
+   "module": "Inventory/Storage",
+   "sourcePath": "/Quorum.QPTM.Web/Views/CustomerAccountSummary",
+   "notes": "CustomerAccountSummary.cshtml",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "AuthToPostImbal",
+   "module": "Imbalance",
+   "sourcePath": "/Quorum.QPTM.Web/Views/AuthToPostImbal",
+   "notes": "AuthToPostImbal.cshtml + _AuthToPostImbalTab, _ActivityTab, _BalanceTab, _DailyBalanceTab, _ContractsTab \u2014 authorization to post imbalances",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "PostedImbalance",
+   "module": "Imbalance",
+   "sourcePath": "/Quorum.QPTM.Web/Views/PostedImbalance",
+   "notes": "PostedImbalance.cshtml \u2014 posted imbalance viewer",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "ImbalTradingMaintForm",
+   "module": "Imbalance",
+   "sourcePath": "/Quorum.QPTM.Web/Views/ImbalTradingMaintForm",
+   "notes": "ImbalTradingMaintForm.cshtml \u2014 imbalance trading maintenance",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "OBAInventoryImbalances",
+   "module": "Imbalance",
+   "sourcePath": "/Quorum.QPTM.Web/Views/OBAInventoryImbalances",
+   "notes": "OBAInventoryImbalances.cshtml \u2014 Operational Balancing Agreement imbalances",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "Invoicing (landing)",
+   "module": "Invoicing/Billing",
+   "sourcePath": "/Quorum.QPTM.Web/Views/Invoicing",
+   "notes": "Index.cshtml \u2014 Invoicing module landing",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "InvoiceMaintenance",
+   "module": "Invoicing/Billing",
+   "sourcePath": "/Quorum.QPTM.Web/Views/InvoiceMaintenance",
+   "notes": "InvoiceMaintenance.cshtml + _InvoiceHeaderTab, _HeaderByContractTab, _DetailTab, _SubDetailByContractTab, _SubDetailByTOCTab",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "InvoiceGroupMaintenance",
+   "module": "Invoicing/Billing",
+   "sourcePath": "/Quorum.QPTM.Web/Views/InvoiceGroupMaintenance",
+   "notes": "InvoiceGroupMaintenance.cshtml + _ContractsTab, _CopiesTab, _DocumentsTab",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "InvoiceMsgMaintenance",
+   "module": "Invoicing/Billing",
+   "sourcePath": "/Quorum.QPTM.Web/Views/InvoiceMsgMaintenance",
+   "notes": "InvoiceMsgMaintenance.cshtml \u2014 invoice message maintenance",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "ChartOfAccounts",
+   "module": "Invoicing/Billing",
+   "sourcePath": "/Quorum.QPTM.Web/Views/ChartOfAccounts",
+   "notes": "ChartOfAccounts.cshtml",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "TypeOfChargeMaintenance",
+   "module": "Invoicing/Billing",
+   "sourcePath": "/Quorum.QPTM.Web/Views/TypeOfChargeMaintenance",
+   "notes": "TypeOfChargeMaintenance.cshtml + _Attributes, _Rules, _TocAssociation, _Tos \u2014 TOC config",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "TOSChargeBasisSetup",
+   "module": "Invoicing/Billing",
+   "sourcePath": "/Quorum.QPTM.Web/Views/TOSChargeBasisSetup",
+   "notes": "TOSChargeBasisSetup.cshtml \u2014 charge basis per Type of Service",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "TspBillingConfiguration",
+   "module": "Invoicing/Billing",
+   "sourcePath": "/Quorum.QPTM.Web/Views/TspBillingConfiguration",
+   "notes": "TspBillingConfiguration.cshtml + _General, _DocStat (Scripts folder named BillingTspConfig)",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "PenaltySubmission",
+   "module": "Invoicing/Billing",
+   "sourcePath": "/Quorum.QPTM.Web/Views/PenaltySubmission",
+   "notes": "PenaltySubmission.cshtml",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "PenaltyResults",
+   "module": "Invoicing/Billing",
+   "sourcePath": "/Quorum.QPTM.Web/Views/PenaltyResults",
+   "notes": "PenaltyResults.cshtml + _PenaltyDetails, _PenaltyDetails_Pool, _PenaltyDetails_Tier",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "HourlyPenaltySchedule",
+   "module": "Invoicing/Billing",
+   "sourcePath": "/Quorum.QPTM.Web/Views/HourlyPenaltySchedule",
+   "notes": "HourlyPenaltySchedule.cshtml \u2014 hourly penalty schedule config",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "TierMaintenance",
+   "module": "Rates",
+   "sourcePath": "/Quorum.QPTM.Web/Views/TierMaintenance",
+   "notes": "TierMaintenance.cshtml \u2014 rate/penalty tier maintenance",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "RateMaintenance",
+   "module": "Rates",
+   "sourcePath": "/Quorum.QPTM.Web/Views/RateMaintenance",
+   "notes": "RateMaintenance.cshtml + _GeneralTab, _LocationDetailsGridTab, _LocationDetailsMatrixTab(+MatrixGrid), _RateContractAssocTab, _RateInventoryAssocTab, _RateTosAssocTab",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "RateQuery",
+   "module": "Rates",
+   "sourcePath": "/Quorum.QPTM.Web/Views/RateQuery",
+   "notes": "RateQuery.cshtml",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "RateSeasonalProfileMaintenance",
+   "module": "Rates",
+   "sourcePath": "/Quorum.QPTM.Web/Views/RateSeasonalProfileMaintenance",
+   "notes": "RateSeasonalProfileMaintenance.cshtml (Scripts folder has typo 'RateSeasonalProfileMaintenace')",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "RateTocObjectAssociation",
+   "module": "Rates",
+   "sourcePath": "/Quorum.QPTM.Web/Views/RateTocObjectAssociation",
+   "notes": "RateTocObjectAssociation.cshtml \u2014 rate/TOC object association",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "IndexMaintenance",
+   "module": "Rates",
+   "sourcePath": "/Quorum.QPTM.Web/Views/IndexMaintenance",
+   "notes": "IndexMaintenance.cshtml + _IndexPricesTab, _CalculatedIndicesTab \u2014 price index maintenance",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "FlowingGas (landing)",
+   "module": "Measurement",
+   "sourcePath": "/Quorum.QPTM.Web/Views/FlowingGas",
+   "notes": "Index.cshtml \u2014 Flowing Gas module landing (measurement/allocation/imbalance umbrella)",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "MeasurementEntry",
+   "module": "Measurement",
+   "sourcePath": "/Quorum.QPTM.Web/Views/MeasurementEntry",
+   "notes": "MeasurementEntry.cshtml + _ByMonthPopup",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "MeasurementResults",
+   "module": "Measurement",
+   "sourcePath": "/Quorum.QPTM.Web/Views/MeasurementResults",
+   "notes": "MeasurementResults.cshtml",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "HourlyMeasurementMaintenance",
+   "module": "Measurement",
+   "sourcePath": "/Quorum.QPTM.Web/Views/HourlyMeasurementMaintenance",
+   "notes": "HourlyMeasurementMaintenance.cshtml",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "HourlyMeasurementResults",
+   "module": "Measurement",
+   "sourcePath": "/Quorum.QPTM.Web/Views/HourlyMeasurementResults",
+   "notes": "HourlyMeasurementResults.cshtml",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "OperatorMeasurement",
+   "module": "Measurement",
+   "sourcePath": "/Quorum.QPTM.Web/Views/OperatorMeasurement",
+   "notes": "OperatorMeasurement.cshtml \u2014 operator-persona measurement view",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "GasAnalysisSearch",
+   "module": "Measurement",
+   "sourcePath": "/Quorum.QPTM.Web/Views/GasAnalysisSearch",
+   "notes": "GasAnalysisSearch.cshtml \u2014 gas quality/analysis search",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "DailyAllocatedQuantityMaintenance",
+   "module": "Measurement",
+   "sourcePath": "/Quorum.QPTM.Web/Views/DailyAllocatedQuantityMaintenance",
+   "notes": "Allocation. DailyAllocatedQuantityMaintenance.cshtml + _DailyAllocationTab, _SummaryAllocationTab, _HeaderServiceReqFields, _ParameterPopup, _AllocationTransactionType, _AllocationTransaction_Grid, _AllocationTransaction_Diagram (visual allocation diagram)",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "MonthlyAllocatedQuantityMaintenance",
+   "module": "Measurement",
+   "sourcePath": "/Quorum.QPTM.Web/Views/MonthlyAllocatedQuantityMaintenance",
+   "notes": "Allocation. MonthlyAllocatedQuantityMaintenance.cshtml + _MonthlyAllocatedGrid, _HeaderServiceReqFields, _ParameterPopup, _AllocationTransactionTypeMonthlyAlloc, _AllocationTransactionMonthlyAlloc_Grid/_Diagram",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "ReallocationMaintenance",
+   "module": "Measurement",
+   "sourcePath": "/Quorum.QPTM.Web/Views/ReallocationMaintenance",
+   "notes": "Allocation. ReallocationMaintenance.cshtml + _ToProcessTab, _ProcessedTab",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "PPAEventMaintenance",
+   "module": "Measurement",
+   "sourcePath": "/Quorum.QPTM.Web/Views/PPAEventMaintenance",
+   "notes": "Prior Period Adjustment events. PPAEventMaintenance.cshtml + _ToProcessTab, _ProcessedTab",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "PdaSubmission",
+   "module": "Measurement",
+   "sourcePath": "/Quorum.QPTM.Web/Views/PdaSubmission",
+   "notes": "Predetermined Allocation. PdaSubmission.cshtml + _naesbPDAForm (NAESB PDA print). Scripts folder: PDASubmission",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "ClassificationRulesEntryMaintenance",
+   "module": "Measurement",
+   "sourcePath": "/Quorum.QPTM.Web/Views/ClassificationRulesEntryMaintenance",
+   "notes": "Allocation classification rules. ClassificationRulesEntryMaintenance.cshtml + _TransGrp partial",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "LocationMaintenance",
+   "module": "Locations/Pipeline Admin",
+   "sourcePath": "/Quorum.QPTM.Web/Views/LocationMaintenance",
+   "notes": "LocationMaintenance.cshtml + 17 tab partials: _Details, _Geographic, _Capacity, _CapacityRateArea, _InterConnect, _Ownership, _Producers, _Brokers, _Contacts, _AssociatedNames, _ChildLocations, _ChildLocationForAllocation, _SupplierLocation, _LDC, _Affidavit, _UserDefined",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "LocationGroupMaintenance",
+   "module": "Locations/Pipeline Admin",
+   "sourcePath": "/Quorum.QPTM.Web/Views/LocationGroupMaintenance",
+   "notes": "LocationGroupMaintenance.cshtml + _LocationGroups, _Locations, _SystemLocationGroups, _AssociatedQuantities, _OtherAttributes, _SecurityGroups, _SecurityUsers, _Viewer",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "LocationGroupLookup",
+   "module": "Locations/Pipeline Admin",
+   "sourcePath": "/Quorum.QPTM.Web/Views/LocationGroupLookup",
+   "notes": "LocationGroupLookup.cshtml",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "LocationGroupPathMaintenance",
+   "module": "Locations/Pipeline Admin",
+   "sourcePath": "/Quorum.QPTM.Web/Views/LocationGroupPathMaintenance",
+   "notes": "LocationGroupPathMaintenance.cshtml",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "LocationPathMaintenance",
+   "module": "Locations/Pipeline Admin",
+   "sourcePath": "/Quorum.QPTM.Web/Views/LocationPathMaintenance",
+   "notes": "LocationPathMaintenance.cshtml",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "LocationContactMassChange",
+   "module": "Locations/Pipeline Admin",
+   "sourcePath": "/Quorum.QPTM.Web/Views/LocationContactMassChange",
+   "notes": "LocationContactMassChange.cshtml",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "DefaultAgents",
+   "module": "Locations/Pipeline Admin",
+   "sourcePath": "/Quorum.QPTM.Web/Views/DefaultAgents",
+   "notes": "DefaultAgents.cshtml \u2014 default agent assignments",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "TspConfigurationSettings",
+   "module": "Locations/Pipeline Admin",
+   "sourcePath": "/Quorum.QPTM.Web/Views/TspConfigurationSettings",
+   "notes": "TspConfigurationSettings.cshtml \u2014 TSP-level configuration settings (config keys)",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "TPAMaintenance",
+   "module": "EDI",
+   "sourcePath": "/Quorum.QPTM.Web/Views/TPAMaintenance",
+   "notes": "TPAMaintenance.cshtml + _GeneralTab, _EDIServTab, _DatasetsTab \u2014 Trading Partner Agreement config (EDCTRL_TPA_HDR)",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "EDTransaction",
+   "module": "EDI",
+   "sourcePath": "/Quorum.QPTM.Web/Views/EDTransaction",
+   "notes": "EDTransaction.cshtml \u2014 EDI transaction viewer (EDTRAN_TRANSACTION)",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "IndexOfCustomers",
+   "module": "Reports",
+   "sourcePath": "/Quorum.QPTM.Web/Views/IndexOfCustomers",
+   "notes": "FERC Index of Customers posting. IndexOfCustomers.cshtml + _ContractTab, _LocationsTab, _AgentsTab, _TspTab",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "QPTMNoticePosting",
+   "module": "Reports",
+   "sourcePath": "/Quorum.QPTM.Web/Views/QPTMNoticePosting",
+   "notes": "EBB notice postings. QPTMNoticePosting.cshtml + _NoticePosting_General, _NoticeSubTypes, _Recipients, _Users, _TSPUserTypes, _BA_ContactTypes",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "SupplementalDocuments",
+   "module": "Reports",
+   "sourcePath": "/Quorum.QPTM.Web/Views/SupplementalDocuments",
+   "notes": "SupplementalDocuments.cshtml + _CurrentTab, _ArchiveTab \u2014 posted supplemental documents",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "Home",
+   "module": "Dashboard/Widgets",
+   "sourcePath": "/Quorum.QPTM.Web/Views/Home",
+   "notes": "Index.cshtml \u2014 application home/dashboard host",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "widget",
+   "name": "ContactsWidget",
+   "module": "Dashboard/Widgets",
+   "sourcePath": "/Quorum.QPTM.Web/Views/ContactsWidget",
+   "notes": "Index.cshtml \u2014 contacts widget host page",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "widget",
+   "name": "Shared/Widgets",
+   "module": "Dashboard/Widgets",
+   "sourcePath": "/Quorum.QPTM.Web/Views/Shared/Widgets",
+   "notes": "Dashboard widget library: .cshtml widgets = ApplicationTime, CapacityRelease, Contacts, Contracts, Cycles(+CyclesWidget_Partial), InvoiceSummary, MeasurementClose, Nominations, NoticePostings, OperatorConfirmations, OperatorInventory, OperatorMeasurement, RFS, SchedulerInventory, StorageBalance, TitleTransfers + _CycleStatus.cshtml partial. Also *.preview.html static previews incl. persona variants (ContactsAccountant/ContractAdmin/Operator/Scheduler) and NominationCycle/ConfirmationCycle/SchedulingCycle previews with no matching .cshtml (rendered by CyclesWidget)",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "base-class",
+   "name": "Shared (layout/common)",
+   "module": "Shared/Infrastructure",
+   "sourcePath": "/Quorum.QPTM.Web/Views/Shared",
+   "notes": "_StylesAndScriptsQPTM.cshtml (global CSS/JS bundle include \u2014 QPTM equivalent of _Layout asset registration) and _TSPActionHub.cshtml (TSP action hub shared partial). NOTE: no _Layout.cshtml/_ViewStart here \u2014 master layout lives in the base application-web layer (APL.QPTM.Application.Web), this repo contributes QPTM-specific shared pieces only",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "popup",
+   "name": "Shared/PPAReallocationDialog",
+   "module": "Shared/Infrastructure",
+   "sourcePath": "/Quorum.QPTM.Web/Views/Shared/PPAReallocationDialog",
+   "notes": "Shared dialog: PPAReallocationDialog.cshtml + _PPATab, _ReallocationTab \u2014 reused PPA/reallocation popup (Measurement domain)",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "base-class",
+   "name": "NominationSubmissionBase partial set",
+   "module": "Shared/Infrastructure",
+   "sourcePath": "/Quorum.QPTM.Web/Views/NominationSubmissionBase",
+   "notes": "(also listed under Nominations) base partial set consumed by both nomination submission screens",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "Sitemap",
+   "module": "Shared/Infrastructure",
+   "sourcePath": "/Quorum.QPTM.Web/Views/Sitemap",
+   "notes": "Sitemap.cshtml \u2014 application menu/sitemap",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "Office",
+   "module": "Shared/Infrastructure",
+   "sourcePath": "/Quorum.QPTM.Web/Views/Office",
+   "notes": "Office add-in pages: Excel.cshtml, ExcelHelp, ExcelInfo, Outlook.cshtml, OutlookHelp, OfficeAddinInstall, _Contracts partial \u2014 Excel/Outlook add-in hosting",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "OnCallCalendar",
+   "module": "Shared/Infrastructure",
+   "sourcePath": "/Quorum.QPTM.Web/Views/OnCallCalendar",
+   "notes": "OnCallCalendar.cshtml + _Calendar partial",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "NotificationPreference",
+   "module": "Shared/Infrastructure",
+   "sourcePath": "/Quorum.QPTM.Web/Views/NotificationPreference",
+   "notes": "NotificationPreference.cshtml \u2014 user notification preferences",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "UserContactForm",
+   "module": "Shared/Infrastructure",
+   "sourcePath": "/Quorum.QPTM.Web/Views/UserContactForm",
+   "notes": "UserContactForm.cshtml",
+   "ui": "web",
+   "layer": "core"
+  },
+  {
+   "kind": "screen",
+   "name": "Confirmations (Operator persona widget)",
+   "module": "Confirmations",
+   "sourcePath": "/Quorum.QPTM.Web.Controllers/Personas/Operator/QUIControllerConfirmations.cs",
+   "notes": "Operator-persona dashboard view of confirmations; security object presumably QVpConfirmations",
+   "ui": "web",
+   "layer": "persona-viewport"
+  },
+  {
+   "kind": "screen",
+   "name": "OBA Inventory Imbalances (Operator persona widget)",
+   "module": "Imbalance",
+   "sourcePath": "/Quorum.QPTM.Web.Controllers/Personas/Operator/QUIControllerOBAInventoryImbalances.cs",
+   "notes": "Operator-persona view of Operational Balancing Agreement inventory imbalances",
+   "ui": "web",
+   "layer": "persona-viewport"
+  },
+  {
+   "kind": "screen",
+   "name": "Operator Measured Volumes (Operator persona widget)",
+   "module": "Measurement / Allocation",
+   "sourcePath": "/Quorum.QPTM.Web.Controllers/Personas/Operator/QUIControllerOperatorMeasuredVol.cs",
+   "notes": "READ FULLY. [QSecurityObject(\"QVpOperatorMeasuredVol\")], extends QUIControllerMeasuredVolume_Base. Adds RetrieveFromService (GasDay = current gas day - 1 via IQPTMCycleService, data via IQPTMMeasurementWidget.GetOperatorMeasuredVolumes), KPI NumVariances (rows where |DailyQtyVariance|>DailyQtyTolerance), quick action ExecuteALRX54 launching batch ALRX54 (IQPTMBatchProcessService.LaunchALRX54) for the selected record. Params class QUICOperMeasVolParams registers GasDay (RequiredForQuery|AutoPush). Read-only \u2014 save/validate throw in base.",
+   "ui": "web",
+   "layer": "persona-viewport"
+  },
+  {
+   "kind": "screen",
+   "name": "Active Contracts (Scheduler persona widget)",
+   "module": "Contracts",
+   "sourcePath": "/Quorum.QPTM.Web.Controllers/Personas/Scheduler/QUIControllerActiveContracts.cs",
+   "notes": "Scheduler-persona list of active transportation/storage contracts",
+   "ui": "web",
+   "layer": "persona-viewport"
+  },
+  {
+   "kind": "screen",
+   "name": "Available Offers (Scheduler persona widget)",
+   "module": "Capacity Release",
+   "sourcePath": "/Quorum.QPTM.Web.Controllers/Personas/Scheduler/QUIControllerAvailableOffers.cs",
+   "notes": "Scheduler-persona view of open capacity release offers",
+   "ui": "web",
+   "layer": "persona-viewport"
+  },
+  {
+   "kind": "screen",
+   "name": "Bids Awarded (Scheduler persona widget)",
+   "module": "Capacity Release",
+   "sourcePath": "/Quorum.QPTM.Web.Controllers/Personas/Scheduler/QUIControllerBidsAwarded.cs",
+   "notes": "Scheduler-persona view of awarded capacity release bids",
+   "ui": "web",
+   "layer": "persona-viewport"
+  },
+  {
+   "kind": "screen",
+   "name": "Inventory Imbalances (Scheduler persona widget)",
+   "module": "Imbalance",
+   "sourcePath": "/Quorum.QPTM.Web.Controllers/Personas/Scheduler/QUIControllerInventoryImbalances.cs",
+   "notes": "Scheduler-persona shipper inventory imbalance positions",
+   "ui": "web",
+   "layer": "persona-viewport"
+  },
+  {
+   "kind": "screen",
+   "name": "Inventory Storage Balances (Scheduler persona widget)",
+   "module": "Storage / Imbalance",
+   "sourcePath": "/Quorum.QPTM.Web.Controllers/Personas/Scheduler/QUIControllerInventoryStorageBalances.cs",
+   "notes": "Scheduler-persona storage inventory balance positions",
+   "ui": "web",
+   "layer": "persona-viewport"
+  },
+  {
+   "kind": "screen",
+   "name": "Nomination Cuts (Scheduler persona widget)",
+   "module": "Scheduling / Confirmations",
+   "sourcePath": "/Quorum.QPTM.Web.Controllers/Personas/Scheduler/QUIControllerNominationCuts.cs",
+   "notes": "READ FULLY. [QSecurityObject(\"QVpNominationCuts\")], extends QPTMInterfaceControllerBase directly. Registers two grids: [QControllerRootBind] QDOListContainer<ConfirmationSummaryDO> NomCutsListCurrentGasDay + NomCutsListNextGasDay; KPI NomCutsCount; cycle-label state (Cycles/CycleTypes/IdCycleCurrentGasDay/IdCycleNextGasDay from NAESB cycle type codes). DoQuery finds last CLOSED nomination cycle before the open cycle per gas day (IQPTMCycleWidget.GetCycleInfo, DeadlineCategory.Nomination) then IQPTMNominationWidget.GetConfirmationsCuts(tsp, today, tomorrow), split by gas day. DoSave/DoValidate/DoClone empty (read-only); DoReadStream re-runs DoQuery (live re-query on restore). Params QUICNomCutsParams registers GasDay (RequiredForQuery|AutoPush).",
+   "ui": "web",
+   "layer": "persona-viewport"
+  },
+  {
+   "kind": "screen",
+   "name": "Nomination Errors (Scheduler persona widget)",
+   "module": "Nominations",
+   "sourcePath": "/Quorum.QPTM.Web.Controllers/Personas/Scheduler/QUIControllerNominationErrors.cs",
+   "notes": "Scheduler-persona view of nomination validation/processing errors",
+   "ui": "web",
+   "layer": "persona-viewport"
+  },
+  {
+   "kind": "screen",
+   "name": "Nomination Title Transfer (Scheduler persona widget)",
+   "module": "Nominations",
+   "sourcePath": "/Quorum.QPTM.Web.Controllers/Personas/Scheduler/QUIControllerNominationTitleXfer.cs",
+   "notes": "Scheduler-persona view of title-transfer nominations",
+   "ui": "web",
+   "layer": "persona-viewport"
+  },
+  {
+   "kind": "screen",
+   "name": "RFS Activity (Scheduler persona widget)",
+   "module": "Contracts / Request for Service",
+   "sourcePath": "/Quorum.QPTM.Web.Controllers/Personas/Scheduler/QUIControllerRFSActivity.cs",
+   "notes": "Scheduler-persona view of Request For Service activity",
+   "ui": "web",
+   "layer": "persona-viewport"
+  },
+  {
+   "kind": "base-class",
+   "name": "QUIControllerMeasuredVolume_Base",
+   "module": "Measurement / Allocation",
+   "sourcePath": "/Quorum.QPTM.Web.Controllers/Personas/QUIControllerMeasuredVolume_Base.cs",
+   "notes": "READ FULLY. Abstract, extends QPTMInterfaceControllerBase; sits at /Personas root (shared across personas). Owns grid registration ([QControllerRootBind] QDOListContainer<OperatorMeasuredVolumeDO> MeasuredVolumesList), DoNew (defaults TspNo via GetCurrentTspNo), DoQuery -> abstract RetrieveFromService(), DoClone/DoSave/DoValidate throw NotImplementedException (read-only widgets), stream persistence via QStreamer(NetDataContract) writing MeasuredVolumes in 100-row chunks, and AttachDataObjectEvents override wiring DOEvents so ObjectID serializes and selected grid row re-matches after stream reload. Exposes IQPTMMeasurementWidget as MeasurementService.",
+   "ui": "web",
+   "layer": "persona-viewport"
+  },
+  {
+   "kind": "widget",
+   "name": "InventoryWidgetAPL",
+   "module": "Inventory / Dashboard",
+   "sourcePath": "APL.QPTM.Web:/APL.QPTM.Web/Views/Shared/Widgets/InventoryWidgetAPL.cshtml",
+   "notes": "APL 'Inventory Position' dashboard widget. Partial refresh view _InventoryWidgetAPL.cshtml; VM InventoryWidgetAPLVM; data via APLWidgetAccessController.InventoryWidgetPartial() using IAPLService_InventoryWidget_APL and TSP config INV_APL_WIDGET_ACCT; L2 drill = InventoryAPL screen; IN62 report link. Deployed copy: APL.QPTM.Application.Web:/Quorum.QPTM.Application.Web/Views/Shared/Widgets/InventoryWidgetAPL.cshtml",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "widget",
+   "name": "BorderNomWidgetAPL",
+   "module": "Nominations / Dashboard",
+   "sourcePath": "APL.QPTM.Web:/APL.QPTM.Web/Views/Shared/Widgets/BorderNomWidgetAPL.cshtml",
+   "notes": "APL Border Nominations widget; VM BorderNomWidgetVM with L1ActionURL deep-link into NominationSubmission (TspNo/SvcReqProp/BegGasDay/EndGasDay); counts QtyMismatch/MissingYours/MissingOthers from BorderNominationsController.GetBorderNomsCount; L2 = BorderNominations screen",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "widget",
+   "name": "ImbalanceTradesWidgetAPL",
+   "module": "Imbalance / Dashboard",
+   "sourcePath": "APL.QPTM.Web:/APL.QPTM.Web/Views/Shared/Widgets/ImbalanceTradesWidgetAPL.cshtml",
+   "notes": "APL Imbalance Trades widget; VM ImbalanceTradesWidgetAPLVM; L2 = ImbalanceTrades screen (QUIControllerImbalanceTrades_APL)",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "widget",
+   "name": "ITBiddingWidgetAPL",
+   "module": "Capacity/RFS Bidding / Dashboard",
+   "sourcePath": "APL.QPTM.Web:/APL.QPTM.Web/Views/Shared/Widgets/ITBiddingWidgetAPL.cshtml",
+   "notes": "APL IT & Daily Firm Bidding widget; VM ITBiddingWidgetVM; shows Bid Submission/Notification deadlines + Award status from RFS TSP config keys (BidSubmission, BidNotification, BidCapacityLink) and RFS header statuses; JSON refresh GetRFSWidgetData; L2 = ITDailyFirmBidding screen",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "widget",
+   "name": "PALWidgetAPL",
+   "module": "Park and Loan / Dashboard",
+   "sourcePath": "APL.QPTM.Web:/APL.QPTM.Web/Views/Shared/Widgets/PALWidgetAPL.cshtml",
+   "notes": "APL Park-And-Loan widget; VM PALWidgetVM; GetPALData JSON returns active/expired park & loan deal counts + inventory positions (IAPLService_ContractDataAccess_APL.GetPALL1Data); PAL_REPORT_LINK TSP config; L2 = PAL screen",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "widget",
+   "name": "YDayWidgetAPL",
+   "module": "Imbalance Trading / Dashboard",
+   "sourcePath": "APL.QPTM.Web:/APL.QPTM.Web/Views/Shared/Widgets/YDayWidgetAPL.cshtml",
+   "notes": "APL 'Yesterday' imbalance-trading-window widget; VM YDayVM; GetYDayData JSON: yesterday gas day, window OPEN/CLOSED from TSP config DAILY_IMBALANCE_TRADING_WINDOW_OPEN, description from InventoryTspConfigDO.YDayWindow. No dedicated L2 screen",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "widget",
+   "name": "NominationsWidget",
+   "module": "Nominations / Dashboard",
+   "sourcePath": "APL.QPTM.Application.Web:/Quorum.QPTM.Application.Web/Views/Shared/Widgets/NominationsWidget.cshtml",
+   "notes": "Core QPTM widget (source Quorum.QPTM.Web:/Quorum.QPTM.Web/Views/Shared/Widgets/); present in APL host",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "widget",
+   "name": "NoticePostingsWidget",
+   "module": "Notices / Dashboard",
+   "sourcePath": "APL.QPTM.Application.Web:/Quorum.QPTM.Application.Web/Views/Shared/Widgets/NoticePostingsWidget.cshtml",
+   "notes": "Core QPTM notices widget; closest match to 'Notices' widget. Host also has QNoticePostingsWidget.cshtml (QFC framework variant, not in core QPTM repo)",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "widget",
+   "name": "TitleTransfersWidget",
+   "module": "Nominations-Title Transfer / Dashboard",
+   "sourcePath": "APL.QPTM.Application.Web:/Quorum.QPTM.Application.Web/Views/Shared/Widgets/TitleTransfersWidget.cshtml",
+   "notes": "Core QPTM title transfers widget; L2 = NominationTitleXfer views",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "widget",
+   "name": "CyclesWidget",
+   "module": "Scheduling-Cycles / Dashboard",
+   "sourcePath": "APL.QPTM.Application.Web:/Quorum.QPTM.Application.Web/Views/Shared/Widgets/CyclesWidget.cshtml",
+   "notes": "Core cycles widget + CyclesWidget_Partial.cshtml + _CycleStatus.cshtml partial; one view backs 3 registered variants (NominationCycleWidget / ConfirmationCycleWidget / SchedulingCycleWidget \u2014 preview.html only). Separate 'Cycle Changes' widget ships as NuGet Quorum.QPTM.Widget.CycleChanges 17.6.0 (no source in these repos)",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "widget",
+   "name": "RFSWidget",
+   "module": "RFS / Dashboard",
+   "sourcePath": "APL.QPTM.Application.Web:/Quorum.QPTM.Application.Web/Views/Shared/Widgets/RFSWidget.cshtml",
+   "notes": "Core Request-For-Service widget",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "widget",
+   "name": "CapacityReleaseWidget",
+   "module": "Capacity Release / Dashboard",
+   "sourcePath": "APL.QPTM.Application.Web:/Quorum.QPTM.Application.Web/Views/Shared/Widgets/CapacityReleaseWidget.cshtml",
+   "notes": "Core capacity release widget",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "widget",
+   "name": "ContractsWidget",
+   "module": "Contracts / Dashboard",
+   "sourcePath": "APL.QPTM.Application.Web:/Quorum.QPTM.Application.Web/Views/Shared/Widgets/ContractsWidget.cshtml",
+   "notes": "Core contracts widget",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "widget",
+   "name": "ContactsWidget",
+   "module": "Contacts / Dashboard",
+   "sourcePath": "APL.QPTM.Application.Web:/Quorum.QPTM.Application.Web/Views/Shared/Widgets/ContactsWidget.cshtml",
+   "notes": "Core contacts widget; persona preview variants ContactsAccountantWidget / ContactsContractAdminWidget / ContactsOperatorWidget / ContactsSchedulerWidget (.preview.html only, same cshtml); companion screen Views/ContactsWidget/Index.cshtml",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "widget",
+   "name": "InvoiceSummaryWidget",
+   "module": "Invoicing / Dashboard",
+   "sourcePath": "APL.QPTM.Application.Web:/Quorum.QPTM.Application.Web/Views/Shared/Widgets/InvoiceSummaryWidget.cshtml",
+   "notes": "Core invoice summary widget",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "widget",
+   "name": "MeasurementCloseWidget",
+   "module": "Measurement / Dashboard",
+   "sourcePath": "APL.QPTM.Application.Web:/Quorum.QPTM.Application.Web/Views/Shared/Widgets/MeasurementCloseWidget.cshtml",
+   "notes": "Core measurement close widget",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "widget",
+   "name": "OperatorMeasurementWidget",
+   "module": "Measurement / Dashboard",
+   "sourcePath": "APL.QPTM.Application.Web:/Quorum.QPTM.Application.Web/Views/Shared/Widgets/OperatorMeasurementWidget.cshtml",
+   "notes": "Core operator measurement widget; L2 = OperatorMeasurement screen",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "widget",
+   "name": "OperatorConfirmationsWidget",
+   "module": "Confirmations / Dashboard",
+   "sourcePath": "APL.QPTM.Application.Web:/Quorum.QPTM.Application.Web/Views/Shared/Widgets/OperatorConfirmationsWidget.cshtml",
+   "notes": "Core operator confirmations widget; L2 = OperatorConfirmations screen",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "widget",
+   "name": "OperatorInventoryWidget",
+   "module": "Inventory / Dashboard",
+   "sourcePath": "APL.QPTM.Application.Web:/Quorum.QPTM.Application.Web/Views/Shared/Widgets/OperatorInventoryWidget.cshtml",
+   "notes": "Core operator inventory widget",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "widget",
+   "name": "SchedulerInventoryWidget",
+   "module": "Inventory-Scheduling / Dashboard",
+   "sourcePath": "APL.QPTM.Application.Web:/Quorum.QPTM.Application.Web/Views/Shared/Widgets/SchedulerInventoryWidget.cshtml",
+   "notes": "Core scheduler inventory widget",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "widget",
+   "name": "StorageBalanceWidget",
+   "module": "Inventory-Storage / Dashboard",
+   "sourcePath": "APL.QPTM.Application.Web:/Quorum.QPTM.Application.Web/Views/Shared/Widgets/StorageBalanceWidget.cshtml",
+   "notes": "Core storage balance widget; L2 = InventoryStorageBalance screen",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "widget",
+   "name": "ApplicationTimeWidget",
+   "module": "General / Dashboard",
+   "sourcePath": "APL.QPTM.Application.Web:/Quorum.QPTM.Application.Web/Views/Shared/Widgets/ApplicationTimeWidget.cshtml",
+   "notes": "Core clock/application-time widget",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "widget",
+   "name": "MessageWidget",
+   "module": "Framework / Dashboard",
+   "sourcePath": "APL.QPTM.Application.Web:/Quorum.QPTM.Application.Web/Views/Shared/Widgets/MessageWidget.cshtml",
+   "notes": "Host/QFC-framework-level widget (NOT in core Quorum.QPTM.Web repo); closest present analog to 'Process Alerts'",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "widget",
+   "name": "QAdvancedSearch / QSearchWidget",
+   "module": "Framework-Search / Dashboard",
+   "sourcePath": "APL.QPTM.Application.Web:/Quorum.QPTM.Application.Web/Views/Shared/Widgets/QAdvancedSearch.cshtml",
+   "notes": "QFC framework search widgets (QSearchWidget.cshtml alongside); results screens Views/AdvancedSearchWidgetResults/ and Shared/_SearchWidgetResults.cshtml; not in core QPTM repo",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "widget",
+   "name": "_RemoteWidget",
+   "module": "Framework / Dashboard",
+   "sourcePath": "APL.QPTM.Application.Web:/Quorum.QPTM.Application.Web/Views/Shared/Widgets/_RemoteWidget.cshtml",
+   "notes": "QFC partial for hosting remote/cross-module widgets; not in core QPTM repo",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "screen",
+   "name": "APLContractMaintenance",
+   "module": "Contracts",
+   "sourcePath": "APL.QPTM.Web:/APL.QPTM.Web.Core/Controllers/APLContractMaintenanceController.cs",
+   "notes": "APL-ONLY screen (view /APL.QPTM.Web/Views/APLContractMaintenance/Index.cshtml). Replaces core ContractMaintenance route: registration binds QUIControllerContractMaintenanceAPL with SecurityId 'ContractMaintenance', DisplayName 'Contract Maintenance'",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "screen",
+   "name": "BorderNominations",
+   "module": "Nominations",
+   "sourcePath": "APL.QPTM.Web:/APL.QPTM.Web.Core/Controllers/BorderNominationsController.cs",
+   "notes": "APL-ONLY L2 screen (ShowAsScreen=false, widget drill-down). BorderNominationsController : QMvcQPTMBaseScreenController<QUIControllerBorderNominations, BorderNomL2VM>; SecurityId QVpBorderNominations; view /APL.QPTM.Web/Views/BorderNominations/BorderNominations.cshtml; VMs BorderNomVM/NnctrlBorderNomVwVM",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "screen",
+   "name": "ITDailyFirmBidding",
+   "module": "Capacity/RFS Bidding",
+   "sourcePath": "APL.QPTM.Web:/APL.QPTM.Web.Core/Controllers/ITDailyFirmBiddingController.cs",
+   "notes": "APL-ONLY screen 'IT and Daily Firm Bidding'; QUIControllerITDailyFirmBidding; SecurityId QUCITDailyFirmBidding; menu-registered (constructor takes menuPath); VMs ITDailyFirmBiddingVM, CDRequestTypeITBiddingVM",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "screen",
+   "name": "ImbalanceTrades",
+   "module": "Imbalance",
+   "sourcePath": "APL.QPTM.Web:/APL.QPTM.Web.Core/Controllers/ImbalanceTradesController.cs",
+   "notes": "APL-ONLY L2 screen (ShowAsScreen=false); QUIControllerImbalanceTrades_APL; SecurityId QVpImbalanceTrades_APL; view /APL.QPTM.Web/Views/ImbalanceTrades/ImbalanceTrades.cshtml. Distinct from core ImbalTradingMaintForm screen",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "screen",
+   "name": "InventoryAPL",
+   "module": "Inventory",
+   "sourcePath": "APL.QPTM.Web:/APL.QPTM.Web.Core/Controllers/InventoryAPLController.cs",
+   "notes": "APL-ONLY L2 screen 'Inventory Position' (ShowAsScreen=false); QUIControllerInventoryAPL; SecurityId QVPINVENTORYAPL; VMs InventoryAPLVM, InventoryImbalanceAPLVM; IN62 report execution endpoint ExecuteIN62",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "screen",
+   "name": "PAL",
+   "module": "Park and Loan",
+   "sourcePath": "APL.QPTM.Web:/APL.QPTM.Web.Core/Controllers/PALController.cs",
+   "notes": "APL-ONLY L2 screen (ShowAsScreen=false); QUIControllerPAL_APL; SecurityId QVpPAL_APL; view /APL.QPTM.Web/Views/PAL/PAL.cshtml; VM PALVM",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "screen",
+   "name": "RFSBidApproval",
+   "module": "RFS",
+   "sourcePath": "APL.QPTM.Web:/APL.QPTM.Web.Core/Controllers/RFSBidApprovalController.cs",
+   "notes": "APL-ONLY screen 'RFS Bid Approval'; QUIControllerRFSBidApproval; SecurityId QUCRFSBidApproval; menu-registered; VMs RFSBidApprovalRootVM, RFSHeaderVM/RFSHeaderCompleteVM/RFSLocationVM(Ext)",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "base-class",
+   "name": "APLWidgetAccessController",
+   "module": "Dashboard",
+   "sourcePath": "APL.QPTM.Web:/APL.QPTM.Web.Core/Controllers/APLWidgetAccessController.cs",
+   "notes": "Extends WidgetAccessControllerBase (Quorum.QFC.Web.Controllers). DoGetAvailableWidgets()=QWebContext.GetAllRegisteredWidgets(); DoDetails() switch on APLConstants.WidgetTypes renders the 6 APL widget partials; JSON endpoints GetRFSWidgetData, GetYDayData, GetPALData, InventoryWidgetPartial",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "screen",
+   "name": "NominationMaintenance (APL override)",
+   "module": "Nominations",
+   "sourcePath": "APL.QPTM.Web:/APL.QPTM.Web.Core/UIControllers/QUIControllerNominationMaintenanceAPL.cs",
+   "notes": "Core screen overridden, not new: QUIControllerNominationMaintenanceAPL : QUIControllerNominationMaintenance (Quorum.QPTM.Controllers); adds UrlLinkParam auto-query (deep link from BorderNom widget); params subclass QUICNominationMaintenanceParamsAPL; re-registered with SecurityId QVpSOANominationMaintenance in ClientScreenRegistrationSpecs.cs; uses core view",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "screen",
+   "name": "ImbalTradingMaintForm (APL override)",
+   "module": "Imbalance",
+   "sourcePath": "APL.QPTM.Web:/APL.QPTM.Web.Core/UIControllers/QUIControllerImbalTradingMaintFormAPL .cs",
+   "notes": "Core screen overridden via QUIControllerImbalTradingMaintFormAPL (note space in filename); SecurityId QUCImbalanceTradingMaintenanceForm, DisplayName 'Imbalance Trading Forms'; uses core view",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "base-class",
+   "name": "ClientScreenRegistrationSpecs",
+   "module": "Admin/Registration",
+   "sourcePath": "APL.QPTM.Web:/APL.QPTM.Web/ScreenRegistration/ClientScreenRegistrationSpecs.cs",
+   "notes": "Central APL screen registry: 9 ScreenRegistration subclasses mapping UIControllerType/SecurityId/MvcController/DisplayName; ShowAsScreen=false marks widget-backing L2 screens (ImbalanceTrades, PAL, InventoryAPL, BorderNominations)",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "base-class",
+   "name": "EsuiteInterfaceControllerBase / EsuiteBulkInterfaceControllerBase / EsuiteEffectiveDatedInterfaceController",
+   "module": "Esuite Integration",
+   "sourcePath": "APL.QPTM.Web:/APL.QPTM.Web.Core/UIControllers/EsuiteInterfaceControllerBase.cs",
+   "notes": "APL-only UIController base classes for Esuite interface screens (host references Quorum.Esuite.* 17.30.25 packages)",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "screen",
+   "name": "Dashboard",
+   "module": "Dashboard",
+   "sourcePath": "APL.QPTM.Application.Web:/Quorum.QPTM.Application.Web/Views/Dashboard/Dashboard.cshtml",
+   "notes": "Persona dashboard shell (QFC framework level, not in core QPTM repo); companion partials Shared/_DashboardViewer.cshtml, _DashboardEditor.cshtml, _DashboardEditorAddWidget.cshtml, _WidgetConfigDataEditor(.Settings).cshtml",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "screen",
+   "name": "DashboardEditor",
+   "module": "Dashboard",
+   "sourcePath": "APL.QPTM.Application.Web:/Quorum.QPTM.Application.Web/Views/DashboardEditor/DashboardEditor.cshtml",
+   "notes": "Dashboard layout editor + _DashboardImport.cshtml; framework-level (Quorum.QFC.Web.CoreScreens), present in host only",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "screen",
+   "name": "DisconnectedWidget",
+   "module": "Dashboard",
+   "sourcePath": "APL.QPTM.Application.Web:/Quorum.QPTM.Application.Web/Views/DisconnectedWidget/DisconnectedWidget.cshtml",
+   "notes": "Fallback view when a widget loses connectivity; framework-level",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  },
+  {
+   "kind": "screen",
+   "name": "Quorum.QPTM.Application.Web (host project)",
+   "module": "Host",
+   "sourcePath": "APL.QPTM.Application.Web:/Quorum.QPTM.Application.Web/Quorum.QPTM.Application.Web.csproj",
+   "notes": "The deployable composition host; ~160 Views folders = QFC framework screens + core QPTM screens (Quorum.QPTM.Web 17.29.23) + LDC screens (Quorum.QPTM.LDC.Web 17.8.2) + APL screens/widgets (APL.QPTM.Web 17.2.9); no Controllers folder \u2014 all controllers come from referenced assemblies; repo is marked isFork:true (fork of base application host repo); same <CLIENT>.QPTM.Application.Web pattern exists for BLH/CHN/CMX/CNP/DOH/DRS/DTE etc.",
+   "ui": "web",
+   "layer": "apl-client-layer"
+  }
+ ],
+ "classicScreens": [
+  {
+   "ui": "classic",
+   "screenClass": "QVpDailyAllocatedQuantityMaintenance",
+   "securityId": "QVpDailyAllocatedQuantityMaintenance",
+   "name": "Daily Allocated Quantity Maintenance",
+   "module": "Allocation/Measurement",
+   "folder": "PipelineMgrAL",
+   "kind": "screen",
+   "notes": "Class QVpDailyAllocatedQuantityMaintenance, tab header/detail form (QTFormView<QDBVpTabHeaderDetailPipelineMgr>, IDD_DAILYALLOCATEDQUANTITYMAINTENANCE). Tabs: Daily (QVpDailyAllocatedQuantityMaintenance_Daily.cpp), Summary (QVpDailyAllocatedQuantityMaintenance_Summary.cpp). Registered in RegisterScreensAl.cpp as ID_DAILYALLOCATEDQUANTITYMAINTENANCE, DLL PipelineMgrAL.dll. Daily allocation qty entry/maintenance vs measured/scheduled qty, ALCTRL alloc table/view (mcs_sAlctrlAllocTable/View), trans-type tiers, RSQ location handling.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Allocations",
+      "Daily Allocated Quantity Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Allocations",
+      "Daily Allocated Quantity Maintenance"
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Flowing Gas",
+      "Allocation",
+      "Daily Allocated Quantity Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Allocations",
+      "Daily Allocated Quantity Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpMonthlyAllocatedQuantityMaintenance",
+   "securityId": "QVpMonthlyAllocatedQuantityMaintenance",
+   "name": "Monthly Allocated Quantity Maintenance",
+   "module": "Allocation/Measurement",
+   "folder": "PipelineMgrAL",
+   "kind": "screen",
+   "notes": "Class QVpMonthlyAllocatedQuantityMaintenance. Tabs: Monthly (QVpMonthlyAllocatedQuantityMaintenance_Monthly.cpp). Registered as ID_MONTHLYALLOCATEDQUANTITYMAINTENANCE, DLL PipelineMgrAL.dll. Monthly allocation quantities with Prod Period / Through-MTD fields, totals for meas/sched/prev-tier/alloc/variance.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Allocations",
+      "Monthly Allocated Quantity Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Flowing Gas",
+      "Allocation",
+      "Monthly Allocated Quantity Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Allocations",
+      "Monthly Allocated Quantity Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpPreDeterminedAllocationSubmission",
+   "securityId": "QVpPreDeterminedAllocationSubmission",
+   "name": "Pre-Determined Allocation Submission",
+   "module": "Allocation/Measurement",
+   "folder": "PipelineMgrAL",
+   "kind": "screen",
+   "notes": "Class QVpPreDeterminedAllocationSubmission, IDD_PREDETERMINEDALLOCATIONSUBMISSION. No tab files; single grid screen with PDA header fields (Prep/Recipient/PDA TT/PDA Freq/Load Effective Noms) and 'PDA Form' button (IDC_BTN_FORM) launching the Form popup. Registered as ID_PREDETERMINEDALLOCATIONSUBMISSION, DLL PipelineMgrAL.dll.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Allocations",
+      "PDA Submission..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Allocations",
+      "PDA Submission"
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Flowing Gas",
+      "Pre-determined Allocation",
+      "PDA Submission..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpPreDeterminedAllocationSubmissionFormDlg",
+   "securityId": "QVpPreDeterminedAllocationSubmissionFormDlg",
+   "name": "Pre-Determined Allocation Submission Form",
+   "module": "Allocation/Measurement",
+   "folder": "PipelineMgrAL",
+   "kind": "popup",
+   "notes": "Class QVpPreDeterminedAllocationSubmissionFormDlg, IDD_DLG_PREDETERMINEDALLOCATIONSUBMISSIONFORM. Add/Change single PDA record form (alloc method, rank ind/lvl, limit value, rec/del loc, up/dn K, pkg IDs). Not registered in RegisterScreensAl.cpp \u2014 child popup of PDA Submission screen.",
+   "classicMenuPaths": [],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpAllocationPlanMaintenance",
+   "securityId": "QVpAllocationPlanMaintenance",
+   "name": "Allocation Plan Maintenance",
+   "module": "Allocation/Measurement",
+   "folder": "PipelineMgrALInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Allocations",
+      "Allocation Plan Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpAllocationTransactionType",
+   "securityId": "QVpAllocationTransactionType",
+   "name": "Allocation Transaction Type",
+   "module": "Allocation/Measurement",
+   "folder": "PipelineMgrALInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Allocations",
+      "Allocation Transaction Type..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpFuelTypeOfChargeRanking",
+   "securityId": "QVpFuelTypeOfChargeRanking",
+   "name": "Fuel Type Of Charge Ranking",
+   "module": "Allocation/Measurement",
+   "folder": "PipelineMgrALInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Allocations",
+      "Fuel Type Of Charge Ranking..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpGasAnalysis",
+   "securityId": "QVpGasAnalysis",
+   "name": "Gas Analysis",
+   "module": "Allocation/Measurement",
+   "folder": "PipelineMgrALInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Allocations",
+      "Gas Analysis Viewer..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Allocations",
+      "Gas Analysis Search"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpMeasurementEntry",
+   "securityId": "QVpMeasurementEntry",
+   "name": "Measurement Entry",
+   "module": "Allocation/Measurement",
+   "folder": "PipelineMgrALInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Allocations",
+      "Measurement Entry..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Allocations",
+      "Measurement Entry"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpMeasurementResults",
+   "securityId": "QVpMeasurementResults",
+   "name": "Measurement Results",
+   "module": "Allocation/Measurement",
+   "folder": "PipelineMgrALInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Allocations",
+      "Measurement Results..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Allocations",
+      "Measurement Results"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpMonthlyVolumeQuantitiesDlg",
+   "securityId": "QVpMonthlyVolumeQuantitiesDlg",
+   "name": "Monthly Volume Quantities Dlg",
+   "module": "Allocation/Measurement",
+   "folder": "PipelineMgrALInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpReallocationStatus",
+   "securityId": "QVpReallocationStatus",
+   "name": "Reallocation Status",
+   "module": "Allocation/Measurement",
+   "folder": "PipelineMgrALInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Allocations",
+      "Reallocation Status..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Allocations",
+      "Reallocation Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpInvoiceDetailMaintenance",
+   "securityId": "QVpInvoiceDetailMaintenance",
+   "name": "Invoice Detail Maintenance (QVpInvoiceDetailMaintenance)",
+   "module": "Billing/Invoicing",
+   "folder": "PipelineMgrBL",
+   "kind": "screen",
+   "notes": "Registered as ID_INVOICEDETAILMAINTENANCE. No tabs. Invoice detail line maintenance.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Billing",
+      "Invoice Detail Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Invoicing",
+      "Invoice",
+      "Invoice Detail Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpInvoiceHeaderByContractTOS",
+   "securityId": "QVpInvoiceHeaderByContractTOS",
+   "name": "Invoice Header By Contract TOS (QVpInvoiceHeaderByContractTOS)",
+   "module": "Billing/Invoicing",
+   "folder": "PipelineMgrBL",
+   "kind": "screen",
+   "notes": "Registered as ID_INVOICEHEADERBYCONTRACTTOS. No tabs. Invoice headers filtered by contract / type of service.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Billing",
+      "Invoice Header by Contract/TOS..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Invoicing",
+      "Invoice",
+      "Invoice Header by Contract/TOS..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpInvoiceHeaderMaintenance",
+   "securityId": "QVpInvoiceHeaderMaintenance",
+   "name": "Invoice Header Maintenance (QVpInvoiceHeaderMaintenance)",
+   "module": "Billing/Invoicing",
+   "folder": "PipelineMgrBL",
+   "kind": "screen",
+   "notes": "Registered in RegisterScreensBL.cpp as ID_INVOICEHEADERMAINTENANCE (PipelineMgrBL.dll). No tab files. Invoice header create/approve/finalize maintenance.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Billing",
+      "Invoice Header Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Invoicing",
+      "Invoice",
+      "Invoice Header Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Billing",
+      "Invoice Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpInvoiceHeaderMaintenanceRIL",
+   "securityId": "QVpInvoiceHeaderMaintenanceRIL",
+   "name": "Invoice Header Maintenance RIL (QVpInvoiceHeaderMaintenanceRIL)",
+   "module": "Billing/Invoicing",
+   "folder": "PipelineMgrBL",
+   "kind": "screen",
+   "notes": "NOT registered in RegisterScreensBL.cpp. Client-override subclass of QVpInvoiceHeaderMaintenance (same IDD_INVOICEHEADERMAINTENANCE); header comment 'only specific to RIL' (SIR 3926, 6/24/08). Adds status-transition validations (Approved/Final/Preliminary/PrelimApp), bill-period roll order, missing-period-day checks.",
+   "classicMenuPaths": [],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpInvoiceSubDetailMaintenance",
+   "securityId": "QVpInvoiceSubDetailMaintenance",
+   "name": "Invoice Sub Detail Maintenance (QVpInvoiceSubDetailMaintenance)",
+   "module": "Billing/Invoicing",
+   "folder": "PipelineMgrBL",
+   "kind": "screen",
+   "notes": "Registered as ID_INVOICESUBDETAILMAINTENANCE. No tabs. Invoice sub-detail maintenance.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Billing",
+      "Invoice Sub-Detail Summary..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Invoicing",
+      "Invoice",
+      "Invoice Sub-Detail Summary..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpInvoiceSubDetailMaintenanceTOC",
+   "securityId": "QVpInvoiceSubDetailMaintenanceTOC",
+   "name": "Invoice Sub Detail Maintenance TOC (QVpInvoiceSubDetailMaintenanceTOC)",
+   "module": "Billing/Invoicing",
+   "folder": "PipelineMgrBL",
+   "kind": "screen",
+   "notes": "Registered as ID_INVOICESUBDETAILMAINTENANCETOC. No tabs. TOC (type-of-charge) variant of invoice sub-detail maintenance.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Billing",
+      "Invoice Sub TOC Detail Summary..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Invoicing",
+      "Invoice",
+      "Invoice Sub TOC Detail Summary..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpReallocationPPAPopUp",
+   "securityId": "QVpReallocationPPAPopUp",
+   "name": "Reallocation PPA Pop Up (QVpReallocationPPAPopUp)",
+   "module": "Billing/Invoicing",
+   "folder": "PipelineMgrBL",
+   "kind": "popup",
+   "notes": "Dialog, not a registered screen: QTDialogM(QDBVpTabHeaderDetail, QDlgPipelineMgr, IDD_REALLOCATION_PPA_POPUP). 2 tabs: Alloc (QVpReallocationPPAPopUp_Alloc), PPA (QVpReallocationPPAPopUp_PPA). Launched with user id + update date for reallocation / prior-period-adjustment workflow.",
+   "classicMenuPaths": [],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpSubAccount",
+   "securityId": "QVpSubAccount",
+   "name": "Sub Account (QVpSubAccount)",
+   "module": "Billing/Invoicing",
+   "folder": "PipelineMgrBL",
+   "kind": "screen",
+   "notes": "Registered as ID_SUBACCOUNT. No tabs. Sub-account maintenance for billing.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Billing",
+      "Sub Account Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpBillPeriodMaintenance",
+   "securityId": "QVpBillPeriodMaintenance",
+   "name": "Bill Period Maintenance",
+   "module": "Billing/Invoicing",
+   "folder": "PipelineMgrBLInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Billing",
+      "Bill Period Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpChartOfAccount",
+   "securityId": "QVpChartOfAccount",
+   "name": "Chart Of Account",
+   "module": "Billing/Invoicing",
+   "folder": "PipelineMgrBLInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Billing",
+      "Chart of Accounts..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "System Setup",
+      "Billing",
+      "Chart Of Accounts"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpInvoiceGroup",
+   "securityId": "QVpInvoiceGroup",
+   "name": "Invoice Group",
+   "module": "Billing/Invoicing",
+   "folder": "PipelineMgrBLInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Billing",
+      "Invoice Group Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Invoicing",
+      "Invoice Group Maintenance"
+     ],
+     "hidden": true,
+     "inactive": true
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Billing",
+      "Invoice Group Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpInvoiceMsgMaintenance",
+   "securityId": "QVpInvoiceMsgMaintenance",
+   "name": "Invoice Msg Maintenance",
+   "module": "Billing/Invoicing",
+   "folder": "PipelineMgrBLInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Billing",
+      "Invoice Messages..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "System Setup",
+      "Billing",
+      "Invoice Message Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpPPAEventMaintenance",
+   "securityId": "QVpPPAEventMaintenance",
+   "name": "P P A Event Maintenance",
+   "module": "Billing/Invoicing",
+   "folder": "PipelineMgrBLInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Billing",
+      "PPA Event Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Billing",
+      "PPA Event Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpPenaltyResults",
+   "securityId": "QVpPenaltyResults",
+   "name": "Penalty Results",
+   "module": "Billing/Invoicing",
+   "folder": "PipelineMgrBLInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Billing",
+      "Penalty Results..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Billing",
+      "Penalty Results"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpPenaltySubmission",
+   "securityId": "QVpPenaltySubmission",
+   "name": "Penalty Submission",
+   "module": "Billing/Invoicing",
+   "folder": "PipelineMgrBLInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Billing",
+      "Penalty Submission..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpPenaltyTierDetailDlg",
+   "securityId": "QVpPenaltyTierDetailDlg",
+   "name": "Penalty Tier Detail Dlg",
+   "module": "Billing/Invoicing",
+   "folder": "PipelineMgrBLInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpTSPBillingConfigurations",
+   "securityId": "QVpTSPBillingConfigurations",
+   "name": "T S P Billing Configurations",
+   "module": "Billing/Invoicing",
+   "folder": "PipelineMgrBLInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Billing",
+      "Billing Configurations..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "System Setup",
+      "Billing",
+      "TSP Billing Configurations"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpConfirmationLocationQuickView",
+   "securityId": "QVpConfirmationLocationQuickView",
+   "name": "Confirmation Location Quick View",
+   "module": "Confirmations",
+   "folder": "PipelineMgrCF",
+   "kind": "screen",
+   "notes": "Registered in RegisterScreensCF.cpp via QREGISTERSCREENSAPI(QVpConfirmationLocationQuickView, ID_CONFIRMATIONLOCATIONQUICKVIEW, \"PipelineMgrCF.dll\"). Security name 'Confirmation Location Quick View', ID QVpConfirmationLocationQuickView; context loc_id. Classic MFC QTFormView (header/detail, IDD_CONFIRMATIONLOCATIONQUICKVIEW), fully read-only location inquiry: header pactrl_loc, detail pactrl_loc_contact, attributes grid pactrl_loc_attr, operating capacity grid pactrl_loc_cap (date-effective, Issue 86554). As-Of Date filter drives eff_dt_from/to fixed where; registered queries conf_loc/SelectConfLocAssocID and SelectConfLocGrpID resolve interconnect DRN/LOC and zone/area/segment/sub-segment groups. No tabs.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Confirmations",
+      "Location Quick View..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Nominations",
+      "Confirmation",
+      "Confirmation Location Quick View..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpConfirmationResponseFilterDlg",
+   "securityId": "QVpConfirmationResponseFilterDlg",
+   "name": "Confirmation Response Filter",
+   "module": "Confirmations",
+   "folder": "PipelineMgrCF",
+   "kind": "popup",
+   "notes": "Registered in RegisterScreensCF.cpp via QREGISTERSCREENSAPI(QVpConfirmationResponseFilterDlg, ID_CONFIRMATIONRESPONSEFILTERDLG, \"PipelineMgrCF.dll\"). Security name 'Confirmation Response Filter', ID QVpConfirmationResponseFilterDlg. QTDialog derived from QTVFilterDlg (IDD_DLG_CONFIRMATIONRESPONSEFILTER) \u2014 tree-view filter popup for the Confirmation Response screen. Filter fields: location (pactrl_loc.loc_id), location group (pactrl_loc_grp), analyst contact (pactrl_loc_contact/kctrl_contact), confirming party (kctrl_bp_entity_hdr via primary_bp_no), exclude-CBE indicator (pactrl_loc_attr), gas day (cfctrl_conf). Uses filter data class QTVFilterDataConfirmationResponse (same folder, non-screen helper). OnOK resolves location group hierarchy via QPipelineMgrUtility::ResolveLocGroupHierarchy.",
+   "classicMenuPaths": [],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpLifeCycle",
+   "securityId": "QVpLifeCycle",
+   "name": "Life Cycle",
+   "module": "Confirmations",
+   "folder": "PipelineMgrCF",
+   "kind": "screen",
+   "notes": "Registered in RegisterScreensCF.cpp via QREGISTERSCREENSAPI(QVpLifeCycle, ID_LIFECYCLE, \"PipelineMgrCF.dll\"). Security name 'Life Cycle', ID QVpLifeCycle. Classic MFC QTFormView multi-row query grid (IDD_LIFECYCLE), read-only nomination lifecycle trace on table nnctrl_lifecycle joined to nnctrl_nom_hdr/nnctrl_nom_dtl. Gas-day range filter required (error CFLIFEE001); external users limited to 1-month range (CFLIFEE003, Issue 31023) and must supply rec_loc/del_loc/sr_bp/sr_ctr (CFLIFEE002, Issue 6502). Context data: gas_day(+from/to), cycle_id, rec/del loc, sr/rec/del bp+ctr, pkg_id, rec/del_pkg_id, nom_id. Lease-nom source columns shown for internal users when NOMINATIONS/LEASE_NOM_DISTINCT_PATHS=true (Issue 85065); route_cd column visibility driven by TSP config CONTRACTUAL_PATHS_START_DT. No tabs.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Confirmations",
+      "Life Cycle..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Nominations",
+      "Confirmation",
+      "Life Cycle..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Confirmations",
+      "Life Cycle"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpConfirmationLevel",
+   "securityId": "QVpConfirmationLevel",
+   "name": "Confirmation Level",
+   "module": "Confirmations",
+   "folder": "PipelineMgrCFInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Confirmations",
+      "Confirmation Level..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "System Setup",
+      "Confirmations",
+      "Confirmation Level"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpConfirmationPlanLocation",
+   "securityId": "QVpConfirmationPlanLocation",
+   "name": "Confirmation Plan Location",
+   "module": "Confirmations",
+   "folder": "PipelineMgrCFInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Confirmations",
+      "Confirmation Plan Location..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpConfirmationPlanSecurity",
+   "securityId": "QVpConfirmationPlanSecurity",
+   "name": "Confirmation Plan Security",
+   "module": "Confirmations",
+   "folder": "PipelineMgrCFInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Confirmations",
+      "Confirmation Plan Security..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpConfirmationPlanSetup",
+   "securityId": "QVpConfirmationPlanSetup",
+   "name": "Confirmation Plan Setup",
+   "module": "Confirmations",
+   "folder": "PipelineMgrCFInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Confirmations",
+      "Confirmation Plan..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpUserNotificationContactAssignment",
+   "securityId": "QVpUserNotificationContactAssignment",
+   "name": "User Notification Contact Assignment (QVpUserNotificationContactAssignment)",
+   "module": "Corporate/Notifications",
+   "folder": "PipelineMgrCP",
+   "kind": "screen",
+   "notes": "Display name 'User Notification Contact Assignment'; registered in RegisterScreensCP.cpp, menu ID ID_CORPORATE_USER_NOTIFICATION_CONTACT_ASSIGNMENT. No tabs. Assigns contacts to a notification event for a BP; table qarch_event_notify_contact, header qarch_event + kctrl_bp_entity_hdr; context event_id/event_descr/notification_method_cd/importance_cd/bp_no/bp_nm/app_layer_cd; validates contact membership in Service Requester (registered query user_notification_contact_assignment/validate_contact_ids); errors CPUNCAE001/002; on close links back to Subscription Manager.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Corporate",
+      "User Notification Contact Assignment..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpUserNotificationSubscriptionManager",
+   "securityId": "QVpUserNotificationSubscriptionManager",
+   "name": "User Notification Subscription Manager (QVpUserNotificationSubscriptionManager)",
+   "module": "Corporate/Notifications",
+   "folder": "PipelineMgrCP",
+   "kind": "screen",
+   "notes": "Display name 'User Notification Subscription Manager'; security ID = class name; registered in RegisterScreensCP.cpp, menu ID ID_CORPORATE_USER_NOTIFICATION_SUBSCRIPTION_MANAGER in PipelineMgrCP.dll. No tabs. Lists event notification subscriptions per Service Requester (BP); table qarch_event_notify_contact (keys event_id, contact_id), filter kctrl_bp_entity_hdr; dbl-click or Add Notification button links to Contact Assignment screen; external-user BP security check (error CPUNSME001); config key NOTIFICATIONS/SVCREQ_READONLY_FOR_EXT.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Corporate",
+      "User Notification Subscription Manager..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Corporate",
+      "E-Mail Documents..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpBidViewer",
+   "securityId": "QVpBidViewer",
+   "name": "Bid Viewer (QVpBidViewer)",
+   "module": "Capacity Release",
+   "folder": "PipelineMgrCR",
+   "kind": "screen",
+   "notes": "Registered as ID_BIDVIEWER. No tabs. Viewer/list of CR bids.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Capacity Release",
+      "Bid Summary..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Capacity Release",
+      "Bids",
+      "Bid Summary..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpCapRelAward",
+   "securityId": "QVpCapRelAward",
+   "name": "Capacity Release Award (QVpCapRelAward)",
+   "module": "Capacity Release",
+   "folder": "PipelineMgrCR",
+   "kind": "screen",
+   "notes": "Registered as ID_CAPRELAWARD. 3 tabs: Header, Awards, ExtAwards. Award maintenance for capacity release.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Capacity Release",
+      "Award..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Capacity Release",
+      "Awards",
+      "Award..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpCapRelAwardAmendments",
+   "securityId": "QVpCapRelAwardAmendments",
+   "name": "Capacity Release Award Amendments (QVpCapRelAwardAmendments)",
+   "module": "Capacity Release",
+   "folder": "PipelineMgrCR",
+   "kind": "screen",
+   "notes": "Registered as ID_CAPRELAWARDAMENDMENTS. No tab files. Amendments to CR awards.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Capacity Release",
+      "Award Amendments..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Capacity Release",
+      "Award Amendments"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpCapRelBid",
+   "securityId": "QVpCapRelBid",
+   "name": "Capacity Release Bid (QVpCapRelBid)",
+   "module": "Capacity Release",
+   "folder": "PipelineMgrCR",
+   "kind": "screen",
+   "notes": "Registered as ID_CAPRELBID. 7 tabs: General, Detail, Approval, Contingency, DiscRate, PreapprovedText, Withdrawal. Bid entry/maintenance for capacity release.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Capacity Release",
+      "Bid..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Capacity Release",
+      "Bids",
+      "Bid..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpCapRelOffer",
+   "securityId": "QVpCapRelOffer",
+   "name": "Capacity Release Offer (QVpCapRelOffer)",
+   "module": "Capacity Release",
+   "folder": "PipelineMgrCR",
+   "kind": "screen",
+   "notes": "Registered in RegisterScreensCR.cpp as ID_CAPRELOFFER (PipelineMgrCR.dll). 11 tabs: General, Detail, Additional, Approval, Contact, Contingency, DiscRate, PreArrangedBidder, PreapprovedText, RecallReput, Withdrawal (files QVpCapRelOffer_<Tab>.cpp/.h). Main offer entry/maintenance screen for capacity release offers.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Capacity Release",
+      "Offer..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Capacity Release",
+      "Offers",
+      "Offer..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE SCHEDULER",
+     "menuPath": [
+      "Capacity Release",
+      "Offers",
+      "Offers"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpCapRelOfferViewer",
+   "securityId": "QVpCapRelOfferViewer",
+   "name": "Capacity Release Offer Viewer (QVpCapRelOfferViewer)",
+   "module": "Capacity Release",
+   "folder": "PipelineMgrCR",
+   "kind": "screen",
+   "notes": "Registered as ID_CAPRELOFFERVIEWER. No tabs. Read-only/summary viewer of CR offers.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Capacity Release",
+      "Offer Summary..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Capacity Release",
+      "Offers",
+      "Offer Summary..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpCapRelWithdrawalSummary",
+   "securityId": "QVpCapRelWithdrawalSummary",
+   "name": "Capacity Release Withdrawal Summary (QVpCapRelWithdrawalSummary)",
+   "module": "Capacity Release",
+   "folder": "PipelineMgrCR",
+   "kind": "screen",
+   "notes": "NOT registered in RegisterScreensCR.cpp (likely launched from another screen or registered in core). QFormView-based (QTFormViewM, IDD_CAPRELWITHDRAWAL_SUMMARY). Header comment: created 9/17/09 issue #30392, copied from QVpCapRelOfferViewer. Shows withdrawn-bid grid with upstream/downstream EPSQ totals/variance, TSP+Cycle combos, EPSQ override security object (msc_sOvrdEPSQSecObj).",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Capacity Release",
+      "Withdrawal Summary..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Capacity Release",
+      "Withdrawal Summary..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpRecallReput",
+   "securityId": "QVpRecallReput",
+   "name": "Recall Reput (QVpRecallReput)",
+   "module": "Capacity Release",
+   "folder": "PipelineMgrCR",
+   "kind": "screen",
+   "notes": "Registered as ID_CR_RECALLREPUT. No tabs. Recall/reput processing for released capacity.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Capacity Release",
+      "Recall/Reput..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Capacity Release",
+      "Awards",
+      "Recall/Reput..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpTimeline",
+   "securityId": "QVpTimeline",
+   "name": "Timeline",
+   "module": "Capacity Release",
+   "folder": "PipelineMgrCR",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Capacity Release",
+      "Timeline..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpTimelineResults",
+   "securityId": "QVpTimelineResults",
+   "name": "Timeline Results",
+   "module": "Capacity Release",
+   "folder": "PipelineMgrCRInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Capacity Release",
+      "Timeline Results..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpIndexOfCustomersContracts",
+   "securityId": "QVpIndexOfCustomersContracts",
+   "name": "Index Of Customers Contracts",
+   "module": "NAESB/Index of Customers",
+   "folder": "PipelineMgrCWInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "NAESB",
+      "Index Of Customers - Contracts..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpIndexOfCustomersLocations",
+   "securityId": "QVpIndexOfCustomersLocations",
+   "name": "Index Of Customers Locations",
+   "module": "NAESB/Index of Customers",
+   "folder": "PipelineMgrCWInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "NAESB",
+      "Index Of Customers - Locations..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpDatasetLoopDefinition",
+   "securityId": "QVpDatasetLoopDefinition",
+   "name": "Dataset Loop Definition",
+   "module": "EDI",
+   "folder": "PipelineMgrED",
+   "kind": "screen",
+   "notes": "Base QDBVpHeaderDetailPipelineMgr (header/detail), IDD_DATASETLOOPDEFINITION. No tabs. Defines EDI dataset loop structures. Not registered in RegisterScreensED.cpp (that file registers nothing; ED screen registration lives elsewhere, likely PipelineMgrEDInt).",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "EDI",
+      "Dataset Loop Definition..."
+     ],
+     "hidden": true,
+     "inactive": true
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpDatasetSegmentDefinition",
+   "securityId": "QVpDatasetSegmentDefinition",
+   "name": "Dataset Segment Definition",
+   "module": "EDI",
+   "folder": "PipelineMgrED",
+   "kind": "screen",
+   "notes": "Base QDBVpHeaderDetailPipelineMgr, IDD_DATASETSEGMENTDEFINITION. No tabs. Defines EDI dataset segment structures.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "EDI",
+      "Segment Definition..."
+     ],
+     "hidden": true,
+     "inactive": true
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpEDIDatasetDefinition",
+   "securityId": "QVpEDIDatasetDefinition",
+   "name": "E D I Dataset Definition",
+   "module": "EDI",
+   "folder": "PipelineMgrED",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "EDI",
+      "Dataset Definition..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpEDIDependentRule",
+   "securityId": "QVpEDIDependentRule",
+   "name": "EDI Dependent Rule",
+   "module": "EDI",
+   "folder": "PipelineMgrED",
+   "kind": "screen",
+   "notes": "Base QDBVpFilterDetailPipelineMgr (filter/detail), IDD_EDIDEPENDENTRULE, overrides ValidateMandatory. No tabs. Maintains EDI dependent/conditional element rules.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "EDI",
+      "EDI Dependent Rule..."
+     ],
+     "hidden": true,
+     "inactive": true
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpEDITPAElementUsage",
+   "securityId": "QVpEDITPAElementUsage",
+   "name": "EDI TPA Element Usage",
+   "module": "EDI",
+   "folder": "PipelineMgrED",
+   "kind": "screen",
+   "notes": "Base QDBVpMultiRowQryEditPipelineMgr, IDD_EDITPAELEMENTUSAGE. No tabs. Maintains trading-partner-agreement element usage (which EDI elements a TPA uses).",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "EDI",
+      "TPA Element Usage..."
+     ],
+     "hidden": true,
+     "inactive": true
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpEDITPAMaintenance",
+   "securityId": "QVpEDITPAMaintenance",
+   "name": "E D I T P A Maintenance",
+   "module": "EDI",
+   "folder": "PipelineMgrED",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "EDI",
+      "TPA Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "EDI",
+      "TPA Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpEDITemplateDefinition",
+   "securityId": "QVpEDITemplateDefinition",
+   "name": "EDI Template Definition",
+   "module": "EDI",
+   "folder": "PipelineMgrED",
+   "kind": "screen",
+   "notes": "Tabbed screen, base QDBVpTabHeaderDetailPipelineMgr, IDD_EDITEMPLATEDEFINITION. Tabs in folder: Elements (QVpEDITemplateDefinition_Elements.cpp), Segments (QVpEDITemplateDefinition_Segments.cpp). Defines EDI map/templates.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "EDI",
+      "Template Definition..."
+     ],
+     "hidden": true,
+     "inactive": true
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpEDITransactionSubmittal",
+   "securityId": "QVpEDITransactionSubmittal",
+   "name": "EDI Transaction Submittal",
+   "module": "EDI",
+   "folder": "PipelineMgrED",
+   "kind": "screen",
+   "notes": "Base QDBVpSimplePipelineMgr, IDD_EDITRANSACTIONSUBMITTAL, has OnBtnNextSubmittalID handler. No tabs. Submits/resubmits EDI transactions.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "EDI",
+      "Transaction Submittal..."
+     ],
+     "hidden": true,
+     "inactive": true
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpEDIViewer",
+   "securityId": "QVpEDIViewer",
+   "name": "EDI Viewer",
+   "module": "EDI",
+   "folder": "PipelineMgrED",
+   "kind": "screen",
+   "notes": "Only tab page present: Translated (QVpEDIViewer_Translated.cpp, base QDBVpTabGridEditPipelineMgr, IDD_EDIVIEWER_TRANSLATED). Parent QVpEDIViewer.cpp/.h confirmed via code search in /Native/PipelineMgrEDInt/.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "EDI",
+      "Dataset Viewer..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpEDITransactions",
+   "securityId": "QVpEDITransactions",
+   "name": "E D I Transactions",
+   "module": "EDI",
+   "folder": "PipelineMgrEDInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "EDI",
+      "Transaction History..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "EDI",
+      "EDI Transaction Viewer"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpCustomerAccount",
+   "securityId": "QVpCustomerAccount",
+   "name": "Customer Account",
+   "module": "Inventory/Imbalance",
+   "folder": "PipelineMgrIN",
+   "kind": "screen",
+   "notes": "Class QVpCustomerAccount. Tabs (6): Activity, Adjustments, Authorize, Balance, Contracts, Details (QVpCustomerAccount_*.cpp). Registered in RegisterScreensIN.cpp as ID_CUSTOMERACCOUNT, DLL PipelineMgrIN.dll. Customer account maintenance incl. balances/adjustments/authorization.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Inventory Accounts",
+      "Customer Accounts",
+      "Customer Account Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Flowing Gas",
+      "Imbalance",
+      "Customer Accounts",
+      "Authorization to Post Imbalance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Flowing Gas",
+      "Imbalance",
+      "Authorization to Post Imbalances..."
+     ],
+     "hidden": true,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Flowing Gas",
+      "Imbalance",
+      "Imbalance Account Inquiry..."
+     ],
+     "hidden": true,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Inventory Accounts",
+      "Customer Accounts",
+      "Authorization to Post Imbalance"
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Inventory Accounts",
+      "Customer Accounts",
+      "Authorization to Post Imbalances"
+     ],
+     "hidden": false
+    },
+    {
+     "persona": "PIPELINE SCHEDULER",
+     "menuPath": [
+      "Flowing Gas",
+      "Imbalance",
+      "Customer Accounts",
+      "Authorization to Post Imbalances"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpCustomerAcctQuery",
+   "securityId": "QVpCustomerAcctQuery",
+   "name": "Customer Account Query",
+   "module": "Inventory/Imbalance",
+   "folder": "PipelineMgrIN",
+   "kind": "screen",
+   "notes": "Class QVpCustomerAcctQuery. Registered as IDD_CUSTOMER_ACCT_QUERY (dialog resource id used as screen id), DLL PipelineMgrIN.dll. Query/search screen for customer accounts; no tab files.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Inventory Accounts",
+      "Customer Account Query..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Flowing Gas",
+      "Imbalance",
+      "Customer Accounts",
+      "Customer Account Query..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Inventory Accounts",
+      "Customer Accounts",
+      "Customer Account Query"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpImbalanceTradingMaintenance",
+   "securityId": "QVpImbalanceTradingMaintenance",
+   "name": "Imbalance Trading Maintenance",
+   "module": "Inventory/Imbalance",
+   "folder": "PipelineMgrIN",
+   "kind": "screen",
+   "notes": "Class QVpImbalanceTradingMaintenance. Registered as ID_IMBALANCETRADINGMAINTENANCE, DLL PipelineMgrIN.dll. Shipper imbalance trade maintenance (grid view); no tab files.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Inventory Accounts",
+      "Imbalance Trades",
+      "Imbalance Trading Summary..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Flowing Gas",
+      "Imbalance",
+      "Imbalance Trades",
+      "Imbalance Trading Summary..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Flowing Gas",
+      "Imbalance",
+      "Imbalance Trade Notification..."
+     ],
+     "hidden": true,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Inventory Accounts",
+      "Imbalance Trades",
+      "Imbalance Trading Summary"
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpImbalanceTradingMaintenanceForm",
+   "securityId": "QVpImbalanceTradingMaintenanceForm",
+   "name": "Imbalance Trading Maintenance Form",
+   "module": "Inventory/Imbalance",
+   "folder": "PipelineMgrIN",
+   "kind": "screen",
+   "notes": "Class QVpImbalanceTradingMaintenanceForm. Registered as its OWN screen (ID_IMBALANCETRADINGMAINTENANCEFORM, DLL PipelineMgrIN.dll) \u2014 form-style companion to the grid Imbalance Trading Maintenance screen, not a child popup.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Inventory Accounts",
+      "Imbalance Trades",
+      "Imbalance Trading Form..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Flowing Gas",
+      "Imbalance",
+      "Imbalance Trades",
+      "Imbalance Trading Form..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Inventory Accounts",
+      "Imbalance Trades",
+      "Imbalance Trading Form"
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpManualPostingQuantityDlg",
+   "securityId": "QVpManualPostingQuantityDlg",
+   "name": "Manual Posting Quantity",
+   "module": "Inventory/Imbalance",
+   "folder": "PipelineMgrIN",
+   "kind": "popup",
+   "notes": "Class QVpManualPostingQuantityDlg (Dlg suffix). NOT registered in RegisterScreensIN.cpp \u2014 popup dialog for manual posting of quantities, launched from an IN screen (likely Customer Account/Storage Transfer).",
+   "classicMenuPaths": [],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpShipperImbalanceSummary",
+   "securityId": "QVpShipperImbalanceSummary",
+   "name": "Shipper Imbalance Summary",
+   "module": "Inventory/Imbalance",
+   "folder": "PipelineMgrIN",
+   "kind": "screen",
+   "notes": "Class QVpShipperImbalanceSummary. Registered as ID_SHIPPERIMBALANCESUMMARY, DLL PipelineMgrIN.dll. Summary/inquiry of shipper imbalance positions; no tab files.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Inventory Accounts",
+      "Customer Accounts",
+      "Customer Account Summary..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Flowing Gas",
+      "Imbalance",
+      "Customer Accounts",
+      "Customer Account Summary..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Flowing Gas",
+      "Imbalance",
+      "Customer Account Summary..."
+     ],
+     "hidden": true,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Inventory Accounts",
+      "Customer Accounts",
+      "Customer Account Summary"
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Inventory Accounts",
+      "Customer Account Summary..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Inventory Accounts",
+      "Customer Accounts",
+      "Customer Account Summary"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpStorageTransferGrid",
+   "securityId": "QVpStorageTransferGrid",
+   "name": "Storage Transfer Grid",
+   "module": "Inventory/Imbalance",
+   "folder": "PipelineMgrIN",
+   "kind": "screen",
+   "notes": "Class QVpStorageTransferGrid. Registered as ID_STORAGETRANSFERGRID, DLL PipelineMgrIN.dll. Grid-style storage transfer screen (companion to Storage Transfer Maintenance); no tab files.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Inventory Accounts",
+      "Storage Transfers",
+      "Storage Transfer Summary..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Flowing Gas",
+      "Imbalance",
+      "Storage Transfers",
+      "Storage Transfer Summary..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Inventory Accounts",
+      "Storage Transfers",
+      "Storage Transfer Summary"
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpStorageTransferMaintenance",
+   "securityId": "QVpStorageTransferMaintenance",
+   "name": "Storage Transfer Maintenance",
+   "module": "Inventory/Imbalance",
+   "folder": "PipelineMgrIN",
+   "kind": "screen",
+   "notes": "Class QVpStorageTransferMaintenance. Registered as ID_STORAGETRANSFERMAINTENANCE, DLL PipelineMgrIN.dll. Storage transfer entry/maintenance; no tab files.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Inventory Accounts",
+      "Storage Transfers",
+      "Storage Transfer Maintenance Form..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Flowing Gas",
+      "Imbalance",
+      "Storage Transfers",
+      "Storage Transfer Maintenance Form..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Inventory Accounts",
+      "Storage Transfers",
+      "Storage Transfer Maintenance Form"
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpInventory",
+   "securityId": "QVpInventory",
+   "name": "Inventory",
+   "module": "Inventory/Imbalance",
+   "folder": "PipelineMgrINInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Inventory Accounts",
+      "Inventory Accounts..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Inventory Accounts",
+      "TSP Inventory"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpInventoryAdjustments",
+   "securityId": "QVpInventoryAdjustments",
+   "name": "Inventory Adjustments",
+   "module": "Inventory/Imbalance",
+   "folder": "PipelineMgrINInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Inventory Accounts",
+      "Inventory Adjustments..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Inventory Accounts",
+      "Inventory Adjustments"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpTradingRulesMaintenance",
+   "securityId": "QVpTradingRulesMaintenance",
+   "name": "Trading Rules Maintenance",
+   "module": "Inventory/Imbalance",
+   "folder": "PipelineMgrINInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Inventory Accounts",
+      "Trading Rules Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpContractMaintenance",
+   "securityId": "QVpContractMaintenance",
+   "name": "Contract Maintenance",
+   "module": "Contracts/RFS",
+   "folder": "PipelineMgrK",
+   "kind": "screen",
+   "notes": "PARENT SCREEN NOT IN THESE FOLDERS \u2014 these folders contribute 6 tab pages to QVpContractMaintenance. Tabs in /Native/PipelineMgrK (native MFC, base QDBVpTabGridEditPipelineMgr): SOPLDLimits (QVpContractMaintenance_SOPLDLimits.cpp), SOPLDSetup (QVpContractMaintenance_SOPLDSetup.cpp, IDD_CONTRACTMAINTENANCE_SOPLDSETUP, runs SOP LD / MDQ-adjustment batch process via QBatchProcessExecutionController, validations on SOP LD type/TOC/percent/fiscal dates), SOPLocations (QVpContractMaintenance_SOPLocations.cpp). Tabs in /Native/SOAContracts (C++/CLI QTabChildDlg wrappers hosting .NET controls, IDD_DOTNETCONTROL): LocPathMDQ (QVpContractMaintenance_LocPathMDQ.cpp), LocZoneMDQ (QVpContractMaintenance_LocZoneMDQ.cpp), Rates (QVpContractMaintenance_Rates.cpp hosting Quorum.QPTM.Controls.QCntlRatesTab; events incl. OnLaunchScreen, OnSetTSPAndContract, security/config/context-data requests). SOAContracts registration file RegisterScreensContractScreens.cpp registers no screens (QVpSOANominationSubmission registration commented out); it only does .NET environment init.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Contracts",
+      "Contract Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Contracts",
+      "Contract Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpLongTermBidViewer",
+   "securityId": "QVpLongTermBidViewer",
+   "name": "Long Term Bid Viewer",
+   "module": "Contracts/RFS",
+   "folder": "PipelineMgrK",
+   "kind": "screen",
+   "notes": "Standalone native MFC screen (QTFormViewM macro: base QDBVpFilterHeaderDetailPipelineMgr / QFormView, dialog IDD_LONG_TERM_BID_VIEWER). Registered in /Native/PipelineMgrK/RegisterScreensK.cpp -> QREGISTERSCREENSAPI(QVpLongTermBidViewer, IDD_LONG_TERM_BID_VIEWER, \"PipelineMgrK.dll\"). Purpose: view long-term (capacity release/RFS) bids with a competing-bids grid, RFS-number filter (PIKID_RFS_LTV_RFS_NO=26806), auto-refresh timer, timezone/current-time display, internal-vs-external user awareness, user-agent BP effective-date mapping. No tab pages.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Contracts",
+      "Long Term Bid Viewer..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Contracts",
+      "Long Term Bid Viewer..."
+     ],
+     "hidden": true,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpAggregateQuantitySplitDlg",
+   "securityId": "QVpAggregateQuantitySplitDlg",
+   "name": "Aggregate Quantity Split Dlg",
+   "module": "Contracts/RFS",
+   "folder": "PipelineMgrKInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpContractContactMassChange",
+   "securityId": "QVpContractContactMassChange",
+   "name": "Contract Contact Mass Change",
+   "module": "Contracts/RFS",
+   "folder": "PipelineMgrKInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Contracts",
+      "Contract-Contact Override Mass Change..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Contracts",
+      "Contract Contact Mass Change"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpContractsDefaultAgents",
+   "securityId": "QVpContractsDefaultAgents",
+   "name": "Contracts Default Agents",
+   "module": "Contracts/RFS",
+   "folder": "PipelineMgrKInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Business Associates",
+      "Default Agents..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Business Associate",
+      "Default Agents"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpCurrentMDIQAndMDWQDlg",
+   "securityId": "QVpCurrentMDIQAndMDWQDlg",
+   "name": "Current M D I Q And M D W Q Dlg",
+   "module": "Contracts/RFS",
+   "folder": "PipelineMgrKInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpRatchetMaintenance",
+   "securityId": "QVpRatchetMaintenance",
+   "name": "Ratchet Maintenance",
+   "module": "Contracts/RFS",
+   "folder": "PipelineMgrKInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Contracts",
+      "Ratchet Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Contracts",
+      "Ratchet Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpRequestForService",
+   "securityId": "QVpRequestForService",
+   "name": "Request For Service",
+   "module": "Contracts/RFS",
+   "folder": "PipelineMgrKInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpRequestForServiceApprovalQueue",
+   "securityId": "QVpRequestForServiceApprovalQueue",
+   "name": "Request For Service Approval Queue",
+   "module": "Contracts/RFS",
+   "folder": "PipelineMgrKInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Contracts",
+      "Request For Service Approval Queue..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpSeasonalProfileMaintenance",
+   "securityId": "QVpSeasonalProfileMaintenance",
+   "name": "Seasonal Profile Maintenance",
+   "module": "Contracts/RFS",
+   "folder": "PipelineMgrKInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Contracts",
+      "Seasonal Profile Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Contracts",
+      "Contract Seasonal Profile Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpTOSMaintenance",
+   "securityId": "QVpTOSMaintenance",
+   "name": "T O S Maintenance",
+   "module": "Contracts/RFS",
+   "folder": "PipelineMgrKInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Contracts",
+      "TOS Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "System Setup",
+      "Contracts",
+      "Type Of Service Setup"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpTabGridEditMultiApprovalText",
+   "securityId": "QVpTabGridEditMultiApprovalText",
+   "name": "Tab Grid Edit Multi Approval Text",
+   "module": "Contracts/RFS",
+   "folder": "PipelineMgrKInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpNominationConfigurationUserPreferences",
+   "securityId": "QVpNominationConfigurationUserPreferences",
+   "name": "Nomination Configuration User Preferences",
+   "module": "Nominations",
+   "folder": "PipelineMgrNN",
+   "kind": "screen",
+   "notes": "Class QVpNominationConfigurationUserPreferences, tabbed screen (base QDBVpTabHeaderDetailPipelineMgr via QTFormViewM, IDD_NOMINATIONCONFIGURATIONUSERPREFERENCES). Tabs: General (QVpNominationConfigurationUserPreferences_General.cpp), Cash For Fuel (QVpNominationConfigurationUserPreferences_CashForFuel.cpp). Registered in RegisterScreensNN.cpp as ID_NOMINATIONCONFIGURATIONUSERPREFERENCES, DLL PipelineMgrNN.dll. Purpose: per-user nomination configuration/preferences incl. NAESB date behavior flags.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Nominations",
+      "Nomination Configuration User Preferences..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Nominations",
+      "Nomination",
+      "Nomination Configuration User Preferences..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpNominationErrorOverrides",
+   "securityId": "QVpNominationErrorOverrides",
+   "name": "Nomination Error Overrides",
+   "module": "Nominations",
+   "folder": "PipelineMgrNN",
+   "kind": "screen",
+   "notes": "Class QVpNominationErrorOverrides, multi-row query/edit screen (base QDBVpMultiRowQryEditPipelineMgr, IDD_NOMINATIONERROROVERRIDES). Registered in RegisterScreensNN.cpp as ID_SCREENS_NOMINATIONS_VALIDATIONERROROVERRIDES (aka Validation Error Overrides), DLL PipelineMgrNN.dll. Purpose: override nomination validation errors. No tabs.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Nominations",
+      "Nomination Error Overrides..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Nominations",
+      "Nomination Error Overrides"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpNominationConfigurationSystemPreferences",
+   "securityId": "QVpNominationConfigurationSystemPreferences",
+   "name": "Nomination Configuration System Preferences",
+   "module": "Nominations/Validation",
+   "folder": "PipelineMgrNNInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Nominations",
+      "Nomination Configuration System Preferences..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpValidationRuleAssignment",
+   "securityId": "QVpValidationRuleAssignment",
+   "name": "Validation Rule Assignment",
+   "module": "Nominations/Validation",
+   "folder": "PipelineMgrNNInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Pipeline Administration",
+      "Validation Rule Assignment..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "System Setup",
+      "Pipeline Administration",
+      "Validation Rule Assignment"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpValidationRuleMaintenance",
+   "securityId": "QVpValidationRuleMaintenance",
+   "name": "Validation Rule Maintenance",
+   "module": "Nominations/Validation",
+   "folder": "PipelineMgrNNInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Pipeline Administration",
+      "Validation Rule Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpValidationRuleXRef",
+   "securityId": "QVpValidationRuleXRef",
+   "name": "Validation Rule X Ref",
+   "module": "Nominations/Validation",
+   "folder": "PipelineMgrNNInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Pipeline Administration",
+      "Validation Rule Cross-Reference"
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpLocationGroupLookup",
+   "securityId": "QVpLocationGroupLookup",
+   "name": "Location Group Lookup (QVpLocationGroupLookup)",
+   "module": "Pipeline Admin",
+   "folder": "PipelineMgrPA",
+   "kind": "screen",
+   "notes": "Display name 'Location Group Lookup'; security ID QVpLocationGroupLookup; registered in RegisterScreensPA.cpp with menu ID ID_LOCATIONGROUPLOOKUP in PipelineMgrPA.dll. No tabs. Filter/detail lookup of location-group ranges; table patran_loc_grp_loc_grp_range (keys eff_dt, tsp_no, loc_id, loc_grp_id, loc_grp_type_cd); context data loc_id; external users get link menu suppressed.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Locations",
+      "Location Group Lookup..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Location",
+      "Location Group Lookup"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpNotificationPreferences",
+   "securityId": "QVpNotificationPreferences",
+   "name": "Notification Preferences (QVpNotificationPreferences)",
+   "module": "Pipeline Admin",
+   "folder": "PipelineMgrPA",
+   "kind": "screen",
+   "notes": "Display name 'Notification Preferences'; security ID QVpNotificationPreferences; registered in RegisterScreensPA.cpp, menu ID ID_NOTIFICATIONPREFERENCES. No tabs; base QDBVpFilterDetailPipelineMgr. Contact notice preferences per TSP; table PACTRL_CONTACT_NOTICE_PREF (keys contact_id, tsp_no, notice_type_cd), lookup kctrl_contact; context contact_id; auto-populates user default contact from registered query user_notification_contact_assignment/default_contact_id; Update button renamed to Submit (NAESB 2.0, SIR 97441).",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Notice",
+      "Notification Preferences..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Notification Preferences",
+      "Notification Preferences..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "internal",
+     "menuPath": [
+      "System",
+      "Notification Preferences..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "System Setup",
+      "Contact Notice Preferences"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpAfterHrsOnCallCal",
+   "securityId": "QVpAfterHrsOnCallCal",
+   "name": "After Hrs On Call Cal",
+   "module": "Pipeline Admin",
+   "folder": "PipelineMgrPAInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Nominations",
+      "On Call Calendar..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Nominations",
+      "On Call Calendar"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpCASReductionOrder",
+   "securityId": "QVpCASReductionOrder",
+   "name": "C A S Reduction Order",
+   "module": "Pipeline Admin",
+   "folder": "PipelineMgrPAInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Scheduling",
+      "Classification Rule Setup",
+      "CAS Reduction Order Maintenance"
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpClassificationRuleSetTransGrp",
+   "securityId": "QVpClassificationRuleSetTransGrp",
+   "name": "Classification Rule Set Trans Grp",
+   "module": "Pipeline Admin",
+   "folder": "PipelineMgrPAInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Scheduling",
+      "Classification Rule Setup",
+      "Classification Rule Transaction Groups"
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpClassificationRulesEntryMaintenance",
+   "securityId": "QVpClassificationRulesEntryMaintenance",
+   "name": "Classification Rules Entry Maintenance",
+   "module": "Pipeline Admin",
+   "folder": "PipelineMgrPAInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Scheduling",
+      "Classification Rule Setup",
+      "Classification Rules Entry Maintenance"
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpCycles",
+   "securityId": "QVpCycles",
+   "name": "Cycles",
+   "module": "Pipeline Admin",
+   "folder": "PipelineMgrPAInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Pipeline Administration",
+      "Cycles..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpELIRuleMaintenance",
+   "securityId": "QVpELIRuleMaintenance",
+   "name": "E L I Rule Maintenance",
+   "module": "Pipeline Admin",
+   "folder": "PipelineMgrPAInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpFacilityMaintenance",
+   "securityId": "QVpFacilityMaintenance",
+   "name": "Facility Maintenance",
+   "module": "Pipeline Admin",
+   "folder": "PipelineMgrPAInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Pipeline Administration",
+      "Facility Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpHolidayMaintenance",
+   "securityId": "QVpHolidayMaintenance",
+   "name": "Holiday Maintenance",
+   "module": "Pipeline Admin",
+   "folder": "PipelineMgrPAInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Pipeline Administration",
+      "TSP Holiday Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpLocationContactMassChange",
+   "securityId": "QVpLocationContactMassChange",
+   "name": "Location Contact Mass Change",
+   "module": "Pipeline Admin",
+   "folder": "PipelineMgrPAInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Locations",
+      "Location Contact Mass Change..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpLocationDefaultHeatingFactor",
+   "securityId": "QVpLocationDefaultHeatingFactor",
+   "name": "Location Default Heating Factor",
+   "module": "Pipeline Admin",
+   "folder": "PipelineMgrPAInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Locations",
+      "Location Default Heating Factor..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpLocationGroupMaintenance",
+   "securityId": "QVpLocationGroupMaintenance",
+   "name": "Location Group Maintenance",
+   "module": "Pipeline Admin",
+   "folder": "PipelineMgrPAInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Locations",
+      "Location Group Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Location",
+      "Location Group Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpLocationGroupPathMaintenance",
+   "securityId": "QVpLocationGroupPathMaintenance",
+   "name": "Location Group Path Maintenance",
+   "module": "Pipeline Admin",
+   "folder": "PipelineMgrPAInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Scheduling",
+      "Location Group Path Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpLocationMaintenance",
+   "securityId": "QVpLocationMaintenance",
+   "name": "Location Maintenance",
+   "module": "Pipeline Admin",
+   "folder": "PipelineMgrPAInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Locations",
+      "Location Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Location",
+      "Location Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpLocationPathMaintenance",
+   "securityId": "QVpLocationPathMaintenance",
+   "name": "Location Path Maintenance",
+   "module": "Pipeline Admin",
+   "folder": "PipelineMgrPAInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Scheduling",
+      "Location Path Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "System Setup",
+      "Scheduling",
+      "Location Path Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpNomClassificationMaint",
+   "securityId": "QVpNomClassificationMaint",
+   "name": "Nom Classification Maint",
+   "module": "Pipeline Admin",
+   "folder": "PipelineMgrPAInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Scheduling",
+      "Classification Rule Setup",
+      "Nomination Classification Maintenance"
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "System Setup",
+      "Scheduling",
+      "Classification Rule Setup",
+      "Nomination Classification Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpNoticeSetup",
+   "securityId": "QVpNoticeSetup",
+   "name": "Notice Setup",
+   "module": "Pipeline Admin",
+   "folder": "PipelineMgrPAInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpNoticeSetupPLTM",
+   "securityId": "QVpNoticeSetupPLTM",
+   "name": "Notice Setup P L T M",
+   "module": "Pipeline Admin",
+   "folder": "PipelineMgrPAInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Notice",
+      "Notice Posting..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpPreapprovedText",
+   "securityId": "QVpPreapprovedText",
+   "name": "Preapproved Text",
+   "module": "Pipeline Admin",
+   "folder": "PipelineMgrPAInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Pipeline Administration",
+      "Preapproved Text..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpSchedObjectRuleSetMaint",
+   "securityId": "QVpSchedObjectRuleSetMaint",
+   "name": "Sched Object Rule Set Maint",
+   "module": "Pipeline Admin",
+   "folder": "PipelineMgrPAInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Scheduling",
+      "Classification Rule Setup",
+      "Scheduling Object/Rule Set Maintenance"
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "System Setup",
+      "Scheduling",
+      "Scheduling Object Rule Set Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpSchedulingCapacityOverride",
+   "securityId": "QVpSchedulingCapacityOverride",
+   "name": "Scheduling Capacity Override",
+   "module": "Pipeline Admin",
+   "folder": "PipelineMgrPAInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Scheduling",
+      "Location Scheduling Capacity Override..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Scheduling",
+      "Scheduling Capacity Override Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpTSPConfigurationSettings",
+   "securityId": "QVpTSPConfigurationSettings",
+   "name": "T S P Configuration Settings",
+   "module": "Pipeline Admin",
+   "folder": "PipelineMgrPAInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Configuration Settings",
+      "TSP..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Pipeline Administration",
+      "TSP Configuration Settings..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "System Setup",
+      "TSP Configuration Settings"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpTSPMaintenance",
+   "securityId": "QVpTSPMaintenance",
+   "name": "T S P Maintenance",
+   "module": "Pipeline Admin",
+   "folder": "PipelineMgrPAInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Pipeline Administration",
+      "TSP Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "System Setup",
+      "Pipeline Administration",
+      "Tsp Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpEPSQMaintenance",
+   "securityId": "QVpEPSQMaintenance",
+   "name": "E P S Q Maintenance",
+   "module": "Path Balancing",
+   "folder": "PipelineMgrPBInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Confirmations",
+      "EPSQ Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Confirmations",
+      "EPSQ Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpPathBalanceVolApproval",
+   "securityId": "QVpPathBalanceVolApproval",
+   "name": "Path Balance Vol Approval",
+   "module": "Path Balancing",
+   "folder": "PipelineMgrPBInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Confirmations",
+      "Path Balance Volume Approval..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Confirmations",
+      "Path Balance Volume Approval"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpRateQuery",
+   "securityId": "QVpRateQuery",
+   "name": "Rate Query (QVpRateQuery)",
+   "module": "Rates",
+   "folder": "PipelineMgrRT",
+   "kind": "screen",
+   "notes": "Only screen in PipelineMgrRT.dll. Registered in RegisterScreensRT.cpp as ID_RATEQUERY. No tab files. Rate lookup/query screen.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Rates",
+      "Rate Query..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Rates",
+      "Rate/Offer Query"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpDiscountOfferMaintenance",
+   "securityId": "QVpDiscountOfferMaintenance",
+   "name": "Discount Offer Maintenance",
+   "module": "Rates",
+   "folder": "PipelineMgrRTInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Rates",
+      "Discount Offer Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpIndexMaintenance",
+   "securityId": "QVpIndexMaintenance",
+   "name": "Index Maintenance",
+   "module": "Rates",
+   "folder": "PipelineMgrRTInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Rates",
+      "Index Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Rates",
+      "Index Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpRateMaintenance",
+   "securityId": "QVpRateMaintenance",
+   "name": "Rate Maintenance",
+   "module": "Rates",
+   "folder": "PipelineMgrRTInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Rates",
+      "Rate Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Rates",
+      "Rate Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpRateSeasonalProfileMaintenance",
+   "securityId": "QVpRateSeasonalProfileMaintenance",
+   "name": "Rate Seasonal Profile Maintenance",
+   "module": "Rates",
+   "folder": "PipelineMgrRTInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Rates",
+      "Seasonal Profile Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Rates",
+      "Rate Seasonal Profile Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpTOCProcessAssociation",
+   "securityId": "QVpTOCProcessAssociation",
+   "name": "T O C Process Association",
+   "module": "Rates",
+   "folder": "PipelineMgrRTInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Rates",
+      "TOC - Object Association..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "System Setup",
+      "Rates",
+      "TOC - Object Setup"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpTOCTOSRuleMaintenance",
+   "securityId": "QVpTOCTOSRuleMaintenance",
+   "name": "T O C T O S Rule Maintenance",
+   "module": "Rates",
+   "folder": "PipelineMgrRTInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Rates",
+      "TOC - TOS Rule Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "System Setup",
+      "Rates",
+      "TOC - TOS Setup"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpTOSChargeBasisMaintenance",
+   "securityId": "QVpTOSChargeBasisMaintenance",
+   "name": "T O S Charge Basis Maintenance",
+   "module": "Rates",
+   "folder": "PipelineMgrRTInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Rates",
+      "TOS - Charge Basis Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "System Setup",
+      "Rates",
+      "TOS - Charge Basis Setup"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpTierMaintenance",
+   "securityId": "QVpTierMaintenance",
+   "name": "Tier Maintenance",
+   "module": "Rates",
+   "folder": "PipelineMgrRTInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Rates",
+      "Tier Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Rates",
+      "Tier Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpTypeOfChargeMaintenance",
+   "securityId": "QVpTypeOfChargeMaintenance",
+   "name": "Type Of Charge Maintenance",
+   "module": "Rates",
+   "folder": "PipelineMgrRTInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Rates",
+      "Type Of Charge Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "System Setup",
+      "Rates",
+      "Type Of Charge Setup"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpTypeofChargeMaintenance",
+   "securityId": "QVpTypeofChargeMaintenance",
+   "name": "Typeof Charge Maintenance",
+   "module": "Rates",
+   "folder": "PipelineMgrRTInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Rates",
+      "Type Of Charge Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "System Setup",
+      "Rates",
+      "Type Of Charge Setup"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpCASVolApprovalMaintenance",
+   "securityId": "QVpCASVolApprovalMaintenance",
+   "name": "C A S Vol Approval Maintenance",
+   "module": "Scheduling",
+   "folder": "PipelineMgrSCInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Scheduling",
+      "Scheduling Volume Approval / Maintenance..."
+     ],
+     "hidden": true,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpLeaseSchedulingMaintenance",
+   "securityId": "QVpLeaseSchedulingMaintenance",
+   "name": "Lease Scheduling Maintenance",
+   "module": "Scheduling",
+   "folder": "PipelineMgrSCInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Scheduling",
+      "Classification Rule Setup",
+      "Lease Scheduling Configuration"
+     ],
+     "hidden": true,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpSchedulingGroupEntryMaintenance",
+   "securityId": "QVpSchedulingGroupEntryMaintenance",
+   "name": "Scheduling Group Entry Maintenance",
+   "module": "Scheduling",
+   "folder": "PipelineMgrSCInt",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Scheduling",
+      "Scheduling Group/Entry Maintenance..."
+     ],
+     "hidden": true,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpSecurityUser",
+   "securityId": "QVpSecurityUser",
+   "name": "Pipeline Manager app/frame infrastructure",
+   "module": "Shared/Infrastructure",
+   "folder": "PipelineMgrShared",
+   "kind": "base-class",
+   "notes": "QPipelineMgrAppBase.cpp, QPipelineMgrDocBase.cpp, QPipelineMgrMainFrame.cpp, PipelineMgrDoc.cpp, PipelineMgrGlobalDoc.cpp, PipelineMgrView.cpp, QPipelineMgrUtility.cpp \u2014 the shared MFC app/document/main-frame code all PipelineMgr module DLLs plug into. Also in folder: ~70 QQryReg* registered-query definition classes under /Queries (map registered query names to screens, e.g. QQryRegNomVald, QQryRegCycles, QQryRegTSPMaintenance), ~25 QEventNotification* event classes, QVpSecurityUser tab parts, CAW branding assets (res/PipelineMgr_CAW_GS.ico, res/Splash_CAW_GS.bmp).",
+   "classicMenuPaths": [],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpSecurityUserPLTM",
+   "securityId": "QVpSecurityUserPLTM",
+   "name": "Security User Setup (QVpSecurityUserPLTM)",
+   "module": "Shared/Infrastructure",
+   "folder": "PipelineMgrShared",
+   "kind": "screen",
+   "notes": "Display name 'Security User Setup'; security ID QVpSecurityUserPLTM. QPTM override of framework security-user screen. Tabs (AddTabs order): 'Group Setup' (QVpSecurityUser_Group \u2014 file NOT in this folder, framework-level), 'Contact Info' (QVpSecurityUser_ContactInfo \u2014 not in folder), 'BP' (QVpSecurityUser_BP.cpp, in folder), 'TSP' (QVpSecurityUser_TSP.cpp, in folder). Tab files QVpSecurityUser_BP/_TSP grouped under this parent.",
+   "classicMenuPaths": [],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpTreeNavigationCAW",
+   "securityId": "QVpTreeNavigationCAW",
+   "name": "Tree Navigation C A W",
+   "module": "Shared/Infrastructure",
+   "folder": "PipelineMgrShared",
+   "kind": "screen",
+   "notes": "",
+   "classicMenuPaths": [],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpTreeNavigationTSP",
+   "securityId": "QVpTreeNavigationTSP",
+   "name": "TSP Navigation (QVpTreeNavigationTSP)",
+   "module": "Shared/Infrastructure",
+   "folder": "PipelineMgrShared",
+   "kind": "screen",
+   "notes": "Display name 'TSP Navigation'; security ID QVpTreeNavigationTSP. Dockable left-side tree navigation pane (tabs on bottom, master node type 3), tabs created dynamically from QTVTreeNavigationMgr node-master config per user security. Tab classes: QVpTreeNavigationTSP_Tree (standard tree tab, _Tree.cpp in folder), QVpTreeNavigationCAW_Tree (_Tree.cpp in folder; used for node level TSP_TAB_CAW; security name 'TSP Navigation - Tree', type enTabClassName; handles CHANGE PASSWORD folder node \u2014 CAW external build), QVpTreeNavigationMyFavorites_Tree (My Favorites tab, file elsewhere). TSP_TAB_NAV hidden for external users. Config keys PIPELINE/SHOW_TSP_NO_FIRST, PIPELINE/SHOW_TSP_NO_ON_TITLE_BAR. NOTE: QVpTreeNavigationCAW_Tree is a tab of this screen, not a separate screen.",
+   "classicMenuPaths": [],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpSOANominationAutoGen",
+   "securityId": "QVpSOANominationAutoGen",
+   "name": "SOA Nomination Auto Gen",
+   "module": "Nominations",
+   "folder": "SOAAutoGen",
+   "kind": "screen",
+   "notes": "Only screen in folder. SOA WinForms-hosted screen registered in RegisterScreensAutoGenScreens.cpp as ID_DOTNET_NOMINATION_AUTOGEN, DLL SOAAutoGen.dll. Auto-generation of nominations. IsCAWRegistrationAllowed()=false for this DLL (excluded from CAW registration).",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Nominations",
+      "Nomination AutoGen Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Nominations",
+      "Nomination Autogen Setup"
+     ],
+     "hidden": false
+    },
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "System Setup",
+      "Nominations",
+      "Nomination Autogen Setup"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpConfResponseOnlineRptDlg",
+   "securityId": "QVpConfResponseOnlineRptDlg",
+   "name": "Confirmation Response Online Report Dialog",
+   "module": "Confirmations",
+   "folder": "SOAConfirmations",
+   "kind": "popup",
+   "notes": "NOT registered as a screen (no DYNCREATE registration; constructed directly). Modal QTDialog (IDD_CONF_RESPONSE_ONLINE_RPT) launched from QVpSOAConfirmation::LinkToReport (Links > 'Online Confirmation Report...', ID_REPORT_ONLINE_CONFIRMATION, internal users only). Takes gas day, cycle ID, loc ID/name, TSP no; shows contact email-selection grid (QDBGrid) with send-email indicator column and Send button; fires batch report via QBatchProcessExecutionController with params PARAMID_EMAIL_LIST / PARAMID_EXPORT_TYPE / PARAMID_EXPORT_MODE.",
+   "classicMenuPaths": [],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpSOAConfirmation",
+   "securityId": "QVpSOAConfirmation",
+   "name": "SOA Confirmation (Confirmation Response)",
+   "module": "Confirmations",
+   "folder": "SOAConfirmations",
+   "kind": "screen",
+   "notes": "Registered in RegisterScreensConfirmationScreens.cpp via QREGISTERSCREENSAPI(QVpSOAConfirmation, ID_DOTNET_CONFIRMATION, \"SOAConfirmations.dll\"). Security name 'Confirmation Response', ID QVpSOAConfirmation; context data loc_id/cycle_id/gas_day. Wraps .NET QCntlConfirmationScreen. No tabs. On successful submit launches CFPSTRESP with DB-reconnect retry loop (TSP config NUMBER_OF_RETRIES, SECONDS_BEFORE_NEXT_RETRY, 15-min cap); path-balancing flags CONF_UPD_CALL_BALANCING_AFTER, CONF_RUN_PATH_BAL_FOR_PNT, CONF_ONLY_RUN_PATH_BAL_DURING_CONF_CYCLE (SIR 78541 note: logic duplicated in EDI and Auto Conf). Handles ConfirmBelowEPSQ event notification. Internal users get Links>Online Confirmation Report (ID_REPORT_ONLINE_CONFIRMATION) which opens QVpConfResponseOnlineRptDlg. Link targets: Life Cycle, Location Inquiry/Maintenance, Location Quick View, BP Contact Search, .NET Nomination Submission.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Confirmations",
+      "Confirmation Response..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Nominations",
+      "Confirmation",
+      "Confirmation Response..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Confirmations",
+      "Confirmation Response"
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpSOAConfirmationSummary",
+   "securityId": "QVpSOAConfirmationSummary",
+   "name": "SOA Confirmation Summary",
+   "module": "Confirmations",
+   "folder": "SOAConfirmations",
+   "kind": "screen",
+   "notes": "Registered via QREGISTERSCREENSAPI(QVpSOAConfirmationSummary, ID_DOTNET_CONFIRMATION_SUMMARY, \"SOAConfirmations.dll\"). Security name 'Confirmation Summary', ID QVpSOAConfirmationSummary; context tsp_no. Wraps .NET QCntlConfirmationSummaryScreen. No tabs. ConfirmationRequest event drills down to QVpSOAConfirmation via LinkContextDataScreen(\"QVpSOAConfirmation\"). SetContextData feeds Life Cycle (cycle_id/gas_day range), Location screens (loc_id), .NET Nomination Submission, and Confirmation. My Favorites params include gas_day, cycle, loc/loc-group/analyst/conf-party filters, exclude_zero/exclude_cbe/exclude_confirmed_loc.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Confirmations",
+      "Confirmation Summary..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Nominations",
+      "Confirmation",
+      "Confirmation Summary..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Confirmations",
+      "Confirmation Summary"
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Confirmations",
+      "Confirmation Summary"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpSOALCNominationSubmission",
+   "securityId": "QVpSOALCNominationSubmission",
+   "name": "SOA LC Nomination Submission",
+   "module": "Nominations",
+   "folder": "SOANominations",
+   "kind": "screen",
+   "notes": "File QVpSOALCNominationSubmission.cpp defines class QVpLCSOANominationSubmission hosting QCntlLCNominationScreen. NOT registered in RegisterScreensNominationScreens.cpp (registered elsewhere/override). Features: nomination import (OnNominationImport), clear zero-qty noms, bulk copy noms, post-submission process launch, cycle info from activity. LC variant of the nomination submission screen.",
+   "classicMenuPaths": [],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Nominations",
+      "Location Centric Nominations"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpSOAMiddleTierRefresh",
+   "securityId": "QVpSOAMiddleTierRefresh",
+   "name": "SOA Middle Tier Refresh",
+   "module": "Nominations",
+   "folder": "SOANominations",
+   "kind": "screen",
+   "notes": "Hosts QCntlMiddleTierCacheMaintenance. Admin/utility screen to refresh middle-tier cache. Not registered in the local RegisterScreens file.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Pipeline Administration",
+      "Middle Tier Cache Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpSOANomTemplate",
+   "securityId": "QVpSOANomTemplate",
+   "name": "SOA Nom Template (Nomination Template)",
+   "module": "Nominations",
+   "folder": "SOANominations",
+   "kind": "screen",
+   "notes": "Hosts .NET control QCntlNomTemplateScreen. Registered as ID_DOTNET_NOMINATION_TEMPLATE, DLL SOANominations.dll. Nomination template maintenance (MTT feature). Supports LinkToReport and My Favorites.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Nominations",
+      "Post Nomination Submission Template..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpSOANominationMaintenance",
+   "securityId": "QVpSOANominationMaintenance",
+   "name": "SOA Nomination Maintenance",
+   "module": "Nominations",
+   "folder": "SOANominations",
+   "kind": "screen",
+   "notes": "SOA WinForms-hosted screen. Registered as ID_DOTNET_NOMINATION_MAINT, DLL SOANominations.dll. Nomination maintenance (view/edit existing nominations).",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Nominations",
+      "Nomination Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Nominations",
+      "Nomination",
+      "Nomination Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Nominations",
+      "Nomination Maintenance"
+     ],
+     "hidden": false
+    },
+    {
+     "persona": "PIPELINE OPERATOR",
+     "menuPath": [
+      "Nomination Maintenance"
+     ],
+     "hidden": false
+    },
+    {
+     "persona": "PIPELINE SCHEDULER",
+     "menuPath": [
+      "Nominations",
+      "Nomination",
+      "Nomination Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpSOANominationNavigation",
+   "securityId": "QVpSOANominationNavigation",
+   "name": "SOA Nomination Navigation",
+   "module": "Nominations",
+   "folder": "SOANominations",
+   "kind": "screen",
+   "notes": "Hosts QCntlNomNavigation. Nomination navigation/search-and-drilldown screen with My Favorites support and record linking (PopulateLinkingRow). Not registered in the local RegisterScreens file.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Nominations",
+      "Nomination Navigation..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Nominations",
+      "Nomination",
+      "Nomination Navigation..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpSOANominationSubmission",
+   "securityId": "QVpSOANominationSubmission",
+   "name": "SOA Nomination Submission",
+   "module": "Nominations",
+   "folder": "SOANominations",
+   "kind": "screen",
+   "notes": "SOA-era MFC viewport hosting a .NET WinForms control (QTWinFormsViewM over QViewportSOAQPTMBase/QWinFormsViewQPTM). Registered in RegisterScreensNominationScreens.cpp as ID_DOTNET_NOMINATION_SUBMISSION, DLL SOANominations.dll. Main nomination entry/submission screen. Tabs handled inside the .NET control, no QVp tab files.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Nominations",
+      "Nomination Submission..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Nominations",
+      "Nomination",
+      "Nomination Submission..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Nominations",
+      "Nomination Submission"
+     ],
+     "hidden": false
+    },
+    {
+     "persona": "PIPELINE SCHEDULER",
+     "menuPath": [
+      "Nominations",
+      "Nomination",
+      "Nomination Submission"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpSOAHourlyMeasurementEntry",
+   "securityId": "QVpSOAHourlyMeasurementEntry",
+   "name": "SOA Hourly Measurement Entry",
+   "module": "Allocation/PDA",
+   "folder": "SOAPDASubmission",
+   "kind": "screen",
+   "notes": "Class QVpSOAHourlyMeasurementEntry. Registered as ID_MEASUREMENTENTRY_HOURLY under DLL name 'SOAPDAMaintenance.dll' (note: differs from project DLL). .NET-hosted hourly measurement entry screen. No tab files.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Allocations",
+      "Hourly Measurement Entry..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Allocations",
+      "Hourly Measurement Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpSOAPDASubmission",
+   "securityId": "QVpSOAPDASubmission",
+   "name": "SOA PDA Submission",
+   "module": "Allocation/PDA",
+   "folder": "SOAPDASubmission",
+   "kind": "screen",
+   "notes": "Class QVpSOAPDASubmission. Registered in RegisterPDASubmissionScreens.cpp as ID_DOTNET_PDA_MAINTENANCE, DLL SOAPDASubmission.dll. .NET-hosted PDA maintenance screen (C++/CLI wrapper; SOAPDASubmission.rc has zero dialog templates; register file bootstraps QPTMUserControlBase::EnvironmentInitializeQPTM). No tab files.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Allocations",
+      "PDA Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpSOAAdvancedArchive",
+   "securityId": "QVpSOAAdvancedArchive",
+   "name": "Advanced Archive Setup (QVpSOAAdvancedArchive)",
+   "module": "Pipeline Admin",
+   "folder": "SOAPipelineAdmin",
+   "kind": "screen",
+   "notes": "Display name 'Advanced Archive Setup'; security ID QVpSOAAdvancedArchive; registered in RegisterScreensPipelineAdminScreens.cpp, menu ID ID_DOTNET_ADVANCED_ARCHIVE. QWinFormsView .NET control host; context tsp_no; sets global context ObjectType=FORM/ObjectID=QVpSOAAdvancedArchive; requires QPTM Service running ('The QPTM Service is not available' if ReadyToCreate fails); supports My Favorites link.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Pipeline Administration",
+      "Advanced Archive Setup"
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpSOATSPMaintenance",
+   "securityId": "QVpSOATSPMaintenance",
+   "name": "TSP Maintenance (QVpSOATSPMaintenance)",
+   "module": "Pipeline Admin",
+   "folder": "SOAPipelineAdmin",
+   "kind": "screen",
+   "notes": "Display name 'TSP Maintenance'; security ID QVpSOATSPMaintenance; registered in RegisterScreensPipelineAdminScreens.cpp, menu ID ID_DOTNET_TSP_MAINTENANCE in SOAPipelineAdmin.dll. QWinFormsView host for managed control QCntlTSPMaintenance (Quorum.QPTM.Controls) \u2014 TSP (Transportation Service Provider) config maintenance; context tsp_no. Tabs live inside the .NET control, not in C++.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Pipeline Administration",
+      "TSP Inventory Configurations..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpSOARequestForService",
+   "securityId": "QVpSOARequestForService",
+   "name": "SOA Request For Service",
+   "module": "Contracts/RFS",
+   "folder": "SOARequestForService",
+   "kind": "screen",
+   "notes": "Standalone .NET-hosted screen (QTWinFormsViewM macro: base QViewportSOAQPTMBase / QWinFormsViewQPTM hosting WinForms control QCntlRFSContractScreen). Registered in /Native/SOARequestForService/RegisterSOARequestForServiceScreens.cpp -> QREGISTERSCREENSAPI(QVpSOARequestForService, ID_DONET_REQUEST_FOR_SERVICE, \"SOARequestForService.dll\") (note source typo 'DONET'); same file initializes .NET env via QPTMUserControlBase::EnvironmentInitializeQPTM(userID). Delegate events: OnSuccessfulRequestForServicePost, OnCalculateUnsoldCapacityClick, OnRFSApprovalDepartmentResponse, OnRFSSubmissionNotification, OnLaunchRFSServiceOrderReport, OnSuccessfulContractCreation. Cross-launches: RFS->Contract, RFS Unsold Capacity process, RFS Service Order report, Contract->Invoice Group, Contract->Customer Account. No tab pages.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Contracts",
+      "Request For Service..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "CAW",
+     "menuPath": [
+      "CAW Screens",
+      "Contracts",
+      "Request For Service..."
+     ],
+     "hidden": true,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpSOAGraphicalTabularScreen",
+   "securityId": "QVpSOAGraphicalTabularScreen",
+   "name": "SOA Graphical Tabular Screen (Scheduling - CAS Maintenance)",
+   "module": "Scheduling",
+   "folder": "SOAScheduling",
+   "kind": "screen",
+   "notes": "Registered in RegisterScreensSchedulingScreens.cpp via QREGISTERSCREENSAPI(QVpSOAGraphicalTabularScreen, ID_DOTNET_GRAPHICAL_TABULAR_SCREEN, \"SOASCheduling.dll\"). Security name 'Scheduling - CAS Maintenance', security ID QVpSOAGraphicalTabularScreen, context data tsp_no. C++/CLI QTWinFormsViewM host wrapping .NET control QCntlGraphicalTabularScreen (Quorum.QPTM.Controls) \u2014 the CAS graphical/tabular scheduling screen. No tabs. Launches batch processes: CANOMCLTG (sync out-of-date noms), RPT_CA29 (batch report), CFPSTRESP (post-confirmation submission on scheduling submit), optional CFAUTOCONF. Config keys: SCHEDULING/CAS_SHOW_PROGRESS_DIALOG_ON_SUBMIT, CONFIRMATIONS/RUN_CFAUTOCONF_ON_CAS_SUBMIT, TSP CONF_UPD_CALL_BALANCING_AFTER, CONF_RUN_PATH_BAL_FOR_PNT. My Favorites linking params: gas_day, cycle, scheduled_object_type, ratcheted, unratcheted.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Scheduling",
+      "CAS Maintenance"
+     ],
+     "hidden": true,
+     "inactive": true
+    },
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Scheduling",
+      "CAS Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": [
+    {
+     "persona": "PIPELINE INTERNAL",
+     "menuPath": [
+      "Scheduling",
+      "CAS Maintenance"
+     ],
+     "hidden": false
+    }
+   ]
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpSOAMultiGroupSchedulingScreen",
+   "securityId": "QVpSOAMultiGroupSchedulingScreen",
+   "name": "SOA Multi-Group Scheduling Screen",
+   "module": "Scheduling",
+   "folder": "SOAScheduling",
+   "kind": "screen",
+   "notes": "Compiled into SOAScheduling.dll (present in SOAScheduling.vcxproj) but NOT registered in RegisterScreensSchedulingScreens.cpp \u2014 reachable only via its static QSecurityObject / runtime-class name, or dormant. Security name 'Multi-Group Scheduling', ID QVpSOAMultiGroupSchedulingScreen; context tsp_no. QTWinFormsViewM host wrapping .NET QCntlMultiGroupSchedulingScreen. Minimal C++ shell (only OnCloseClick delegate). No tabs.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "Locations",
+      "Parallel Scheduling..."
+     ],
+     "hidden": false,
+     "inactive": false
+    },
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Scheduling",
+      "Parallel Scheduling..."
+     ],
+     "hidden": true,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  },
+  {
+   "ui": "classic",
+   "screenClass": "QVpSOARoutePathMaintScreen",
+   "securityId": "QVpSOARoutePathMaintScreen",
+   "name": "SOA Route Path Maintenance Screen",
+   "module": "Scheduling",
+   "folder": "SOAScheduling",
+   "kind": "screen",
+   "notes": "Compiled into SOAScheduling.dll but NOT registered in RegisterScreensSchedulingScreens.cpp (same pattern as Multi-Group). Security name 'Route Path Maintenance', ID QVpSOARoutePathMaintScreen; context tsp_no. QTWinFormsViewM host wrapping .NET QCntlRoutePathMaintScreen. Minimal shell; Initialize only trims Links menu per user settings (Issue 65699). No tabs.",
+   "classicMenuPaths": [
+    {
+     "build": "internal",
+     "menuPath": [
+      "Screens",
+      "System Setup",
+      "Scheduling",
+      "Route Path Maintenance..."
+     ],
+     "hidden": false,
+     "inactive": false
+    }
+   ],
+   "webMenuPaths": []
+  }
+ ]
+}

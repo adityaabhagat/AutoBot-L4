@@ -1,0 +1,15 @@
+# Verifies the lump-sum prebill cluster (rule QPTM-BILL-018).
+# Source SQL: SKILL_ADO_QPTM_Billing_Invoice_Rates.md §14-E.
+name: bill_lumpsum_prebill
+product: QPTM
+queries:
+  - id: q1
+    sql: "SELECT * FROM BLSTAG_INVOICE_CTR_DT WHERE TSP_NO = {tsp} AND CTR_NO = '{contract}' AND PROD_MTH > ACCTG_MTH"
+    proves: "whether pre-paid lump-sum staging rows exist for FUTURE production months (the prebill signature)"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "future-prod-month lump-sum staging rows present — the ADO #1670549 prebill defect condition"
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "no future-month staging rows — this rule does not apply, keep evaluating"

@@ -1,0 +1,13 @@
+name: plat_ctr_agg_split
+product: QPTM
+queries:
+  - id: q1
+    sql: "SELECT COUNT(*) AS split_rows FROM KCTRL_CTR_AGG_QTY_SPLIT_HDR WHERE TSP_NO = {tsp} AND CTR_NO = '{contract}'"
+    proves: "whether orphaned agent/aggregate-quantity-split rows are blocking the meter/location delete on the contract"
+    interpret:
+      - when: "rows[0].split_rows >= 1"
+        verdict: CONFIRMED
+        meaning: "KCTRL_CTR_AGG_QTY_SPLIT_HDR rows exist for the contract — these must be cleared before the location/meter can be removed (23-00928312 signature)"
+      - when: "rows[0].split_rows == 0"
+        verdict: INFERRED
+        meaning: "no agg-qty-split rows — the overlap is in the KVALD_CTR_AMEND amendment slices; run the SKILL_Contracts §16-B overlapping-slice SELECT manually and end-date the conflicting slice"

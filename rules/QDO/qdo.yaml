@@ -1,0 +1,456 @@
+product: QDO
+area: division-orders
+rules:
+
+  # ---------------------------------------------------------------- G1 — Expected Behavior
+  - id: QDO-QDO-001
+    gate: G1
+    priority: 10
+    match:
+      all: []
+      any: ["Invalid DOI Key Combination", "Must approve DOI before booking"]
+      none: []
+    recipe: qdo_doi_key_reversal
+    verdict: "Reverse/reclass of a voucher posted historically with an incomplete DOI key (NULL TIER) now fails the tightened code-block validation — by design, not a code bug; complete the historical DOI key or reclass via GL025."
+    source: "SKILL_ADO_QDO_DivisionOrder_Transfers.md §4 A1"
+    ado_refs: ["1609157"]
+
+  - id: QDO-QDO-002
+    gate: G1
+    priority: 20
+    match:
+      all: []
+      any: ["No Suspense Release data"]
+      none: []
+    verdict: "OFR was run from QP043 before the DO130 release transactions were approved — approve the DO130 transactions, then rerun OFR (customer error, not a defect)."
+    source: "SKILL_QDO_Transfers_SuspendRelease.md §5/§16"
+
+  - id: QDO-QDO-003
+    gate: G1
+    priority: 20
+    match:
+      all: ["Invalid NRI to be transferred"]
+      any: []
+      none: []
+    verdict: "The NRI entered exceeds the configured decimal-places limit (e.g. 12 places entered vs 10 configured) — working as designed; align the allocation to the configured precision."
+    source: "SKILL_QDO_Transfers_SuspendRelease.md §11/§16"
+
+  - id: QDO-QDO-004
+    gate: G1
+    priority: 30
+    match:
+      all: ["GWI"]
+      any: ["Bearer Group", "not assigned", "DOI Approval"]
+      none: []
+    verdict: "DOI Approval fails because a non-WI owner has no GWI Bearer Group number assigned or the GWI Calc does not total 1.0 — customer setup; assign the GWI Bearer Group and re-approve."
+    source: "SKILL_QDO_Division_Orders.md §12/§16"
+
+  - id: QDO-QDO-005
+    gate: G1
+    priority: 40
+    match:
+      all: ["combine"]
+      any: ["did not combine", "didn't combine", "not combining", "won't combine", "not combined", "split into"]
+      none: []
+    verdict: "Combine merges the to-lines only when suspense reason, settlement code, interest type, lease tie and MEG match exactly — a blocked combine on differing lines is by design, not a defect."
+    source: "SKILL_QDO_Division_Orders.md §4/§16"
+
+  # ---------------------------------------------------------------- G2 — Configuration
+  - id: QDO-QDO-006
+    gate: G2
+    priority: 10
+    match:
+      all: []
+      any: ["FOOTING_TOLERANCE", "Plugged TRANS_AMT exceeds tolerance"]
+      none: []
+    batch: NORMAL
+    recipe: qdo_footing_tolerance
+    verdict: "OFR rejects staging rows with 'Plugged TRANS_AMT exceeds tolerance' — create an env-specific FOOTING_TOLERANCE Global Config record (set to 1) and reprocess CWOWFNDRLS with Process Rejected Records = Y."
+    source: "SKILL_QDO_Transfers_SuspendRelease.md §5"
+
+  - id: QDO-QDO-007
+    gate: G2
+    priority: 10
+    match:
+      all: []
+      any: ["INCORPORATION_STATE_CODE", "state of incorporation"]
+      none: []
+    batch: NORMAL
+    verdict: "QP Escheat/NAUPA fails because the INCORPORATION_STATE_CODE global config is missing for {client} — set it (e.g. '42' = Texas) and rerun the process."
+    source: "SKILL_QDO_Transfers_SuspendRelease.md §5"
+
+  - id: QDO-QDO-008
+    gate: G2
+    priority: 10
+    match:
+      all: ["QApplicationController"]
+      any: []
+      none: []
+    verdict: "'SecurityId is not registered with QApplicationController' — a Global Configurations record is missing; add the record to ESUITE_QFC.QARCH_CNFG_CTRL via the standard script."
+    source: "SKILL_QDO_Platform_Integration.md §7"
+
+  - id: QDO-QDO-009
+    gate: G2
+    priority: 10
+    match:
+      all: []
+      any: ["SYNCHRONIZE_WITH_API", "/QBSOL/QPIQUEUE"]
+      none: []
+    verdict: "SAP vendor-to-BA sync failing (HTTP 500) after a patch — QRA API web-config drift; set the OPENID parameter to False in the QRA API web config, then clear the SAP-side queue."
+    source: "SKILL_QDO_Platform_Integration.md §8"
+
+  - id: QDO-QDO-010
+    gate: G2
+    priority: 20
+    match:
+      all: []
+      any: ["Not authorized to access security object", "QFRMDIVISIONORDERHEADERQUERY", "QVpDashboardQDO", "QRAWidgetAccess", "QUCDashboardEditor"]
+      none: []
+    recipe: qdo_security_object_grant
+    verdict: "Missing security-object grant after upgrade — add the named security object to the user's security group (e.g. QFRMDIVISIONORDERHEADERQUERY to group 48100)."
+    source: "SKILL_QDO_Division_Orders.md §11"
+
+  - id: QDO-QDO-011
+    gate: G2
+    priority: 30
+    match:
+      all: ["QCFS"]
+      any: ["MT100", "SEXTN", "QCFSIMPCYC", "out of balance", "JE Code Type"]
+      none: []
+    batch: NORMAL
+    recipe: qdo_mt100_restage
+    verdict: "QP043 export ran but records never reached QCFS GL — MT100 Journal/Trans config was cleared (V16 screen bug) leaving rows orphaned in SEXTN staging; reload MT100, restage via QCFSIMPCYC, and verify the COA JE Code Type."
+    source: "SKILL_QDO_Division_Orders.md §10"
+
+  - id: QDO-QDO-012
+    gate: G2
+    priority: 30
+    match:
+      all: ["PUBBA"]
+      any: []
+      none: []
+    verdict: "PUBBA (eSuite-to-QLS BA sync) not firing or stuck — verify PUBBA is configured and visible in Web, clear stuck QUE/WTL queue records, and check for duplicate routing numbers on bulk-converted BAs."
+    source: "SKILL_QDO_Platform_Integration.md §8"
+    ado_refs: ["1779057", "1781706", "1777307"]
+
+  - id: QDO-QDO-013
+    gate: G2
+    priority: 30
+    match:
+      all: ["DOI Sync"]
+      any: ["stuck", "Approved", "SMICM", "duplicate"]
+      none: []
+    verdict: "DOI Sync Status stuck at 'Approved' (DOI updated in QDO and SAP but the sync never flips to Completed) — the SAP-PRA callback times out; increase the SMICM timeout on the SAP side."
+    source: "SKILL_QDO_Division_Orders.md §10"
+
+  - id: QDO-QDO-014
+    gate: G2
+    priority: 30
+    match:
+      all: []
+      any: ["302 Impairment", "311 Impairment", "remaining amount is not zero", "remaining Total Tax Decimal"]
+      none: []
+    recipe: qdo_impairment_302_311
+    verdict: "302/311 impairment on LD17/LD18 PPN processing — the remaining distribution/tax decimal is non-zero, usually incorrect Market Group / Bearer Group setup; verify setup first, workaround is RUN_RDCALCNEW = disabled."
+    source: "SKILL_QDO_Division_Orders.md §5 B2"
+
+  - id: QDO-QDO-015
+    gate: G2
+    priority: 40
+    match:
+      all: ["Bearer Group"]
+      any: ["AUTO_CREATE_BEARER_GROUP", "User Maintained", "revert to 1", "auto-create", "auto create", "did not create"]
+      none: []
+    verdict: "Bearer Group creation/numbering is config-driven — enable AUTO_CREATE_BEARER_GROUP to auto-create BGs and check the 'User Maintained Bearer Group' box to keep user-entered BG numbers."
+    source: "SKILL_QDO_Division_Orders.md §12"
+
+  - id: QDO-QDO-016
+    gate: G2
+    priority: 40
+    match:
+      all: []
+      any: ["QRA Middle Tier", "Creating Group"]
+      none: []
+    batch: SEGREGATED
+    recipe: qdo_qra_mt_restart
+    verdict: "MG saves stall with 'QRA Middle Tier error' or stuck in 'Creating Group' — RabbitMQ / QRA MT QPEC messaging stall under load; restart the RabbitMQ services and the QRA MT QPEC."
+    source: "SKILL_QDO_Division_Orders.md §7/§10"
+    ado_refs: ["1784413"]
+
+  # ---------------------------------------------------------------- G3 — Version (already fixed)
+  - id: QDO-QDO-017
+    gate: G3
+    priority: 10
+    match:
+      all: []
+      any: ["AK_DSTG_DO_GWI", "DSTG_DO_GWI"]
+      none: []
+    batch: NORMAL
+    verdict: "DSTG_DO_GWI unique-key violation (AK_DSTG_DO_GWI) on DOIINTXWRK — the client is missing Patch 7; apply Patch 7."
+    source: "SKILL_QDO_Transfers_SuspendRelease.md §6"
+
+  - id: QDO-QDO-018
+    gate: G3
+    priority: 10
+    match:
+      all: ["not an effective JIB DOI"]
+      any: []
+      none: []
+    verdict: "JB020 rejects a valid save because QBusinessRulePropEffDOI.cs parsed DOI dates as strings under non-US machine date formats — fixed in the 2021.10 line (iteration 21.18, PRs 57864/57865); verify in Quorum.Upstream.QCA ReleaseNotes."
+    source: "SKILL_ADO_QDO_DivisionOrder_Transfers.md §5 B2"
+    ado_refs: ["1382019"]
+
+  - id: QDO-QDO-019
+    gate: G3
+    priority: 10
+    match:
+      all: ["DOINTXWRK"]
+      any: ["IQMetadataService", "ServiceContainerInitializationException", "No available/responsive endpoints"]
+      none: []
+    batch: NORMAL
+    verdict: "DOINTXWRK Preview fails with ServiceContainerInitializationException ('No available/responsive endpoints for IQMetadataService.DO') — missing service-container registration, fixed in the 2025.11 line (iteration 25.11, PRs 112477/112478); not in 2026.04 Upstream at fix time — verify in Quorum.Upstream.QDO.ReleaseNotes."
+    source: "SKILL_ADO_QDO_DivisionOrder_Transfers.md §7 D1"
+    ado_refs: ["1732619"]
+
+  - id: QDO-QDO-020
+    gate: G3
+    priority: 20
+    match:
+      all: ["picklist", "DOI"]
+      any: ["duplicate", "duplicates"]
+      none: []
+    verdict: "DOI picklist shows duplicate property rows on AFE committed costs — fixed in the 2024.10 line (iteration 24.21); note the picklist needs both Business Unit AND AFE No. to return distinct rows (BU-only duplicates are by design)."
+    source: "SKILL_ADO_QDO_DivisionOrder_Transfers.md §9 F1"
+    ado_refs: ["1687634"]
+
+  - id: QDO-QDO-021
+    gate: G3
+    priority: 30
+    match:
+      all: []
+      any: ["partially deleted", "empty MG", "empty Maintenance Group"]
+      none: []
+    verdict: "MG delete left an orphaned DONL_DVD_GRP header ('partially deleted' / empty MG that cannot be removed) — behavior fixed in the Oct-2025 hotfix; interim fix is the cleanup script that removes the empty MG header."
+    source: "SKILL_QDO_Division_Orders.md §7"
+
+  # ---------------------------------------------------------------- G4 — Bad data
+  - id: QDO-QDO-022
+    gate: G4
+    priority: 10
+    match:
+      all: ["DO129"]
+      any: ["3 - Approved", "3-Approved", "stuck", "XFER_STAT_CD"]
+      none: []
+    sql_pack: qdo_do129_stuck
+    recipe: qdo_do129_status_flip
+    verdict: "Funds release was approved twice within seconds — the duplicate run is cancelled and leaves DONL_INT_FUNDS_XFER_HDR.XFER_STAT_CD stuck at '3' (Approved); funds moved only once — flip status 3 to 6 for the stuck TRANS_SEQ_NO."
+    source: "SKILL_QDO_Transfers_SuspendRelease.md §4"
+    ado_refs: ["1668846", "1655987", "1661187", "1715947"]
+
+  - id: QDO-QDO-023
+    gate: G4
+    priority: 10
+    match:
+      all: []
+      any: ["pending Suspense Release Transactions", "RSTG_OWNR_FUND_RLS"]
+      none: []
+    batch: NORMAL
+    sql_pack: qdo_rstg_unprocessed
+    recipe: qdo_rstg_procfl_skip
+    verdict: "OFR/EFR blocked by leftover unprocessed rows in RSTG_OWNR_FUND_RLS (PROC_FL = 'N', frequently a trailing space in the Owner/BA number) — rerun with Process Rejected Records, or script PROC_FL = 'Y' for the bad TRANS_SEQ_NO."
+    source: "SKILL_QDO_Transfers_SuspendRelease.md §5"
+
+  - id: QDO-QDO-024
+    gate: G4
+    priority: 20
+    match:
+      all: ["TRANS_GRP_SEQ_NO"]
+      any: ["sequence", "cutover", "sys.sequences", "missing"]
+      none: []
+    sql_pack: qdo_seq_missing
+    verdict: "The TRANS_GRP_SEQ_NO database sequence was dropped during cutover — pay-code changes and transfers error until the sequence is re-created (Qcloud re-created it; Products tracking so it is not dropped again)."
+    source: "SKILL_QDO_Division_Orders.md §4"
+
+  - id: QDO-QDO-025
+    gate: G4
+    priority: 20
+    match:
+      all: []
+      any: ["FK_DONL_DVD_MKT_EXMPT", "FK_DONL_MKT_EXMPLT_DONL_DETAIL", "DONL_DVD_MKT_EXMPT"]
+      none: []
+    verdict: "FK violation on the DVD market-exemption tables — post-MEG-remediation QDO no longer uses DONL_DVD_MKT_EXMPT; truncate the two unused DVD market-exemption tables / clear the orphaned exemption child rows."
+    source: "SKILL_QDO_Transfers_SuspendRelease.md §6"
+
+  - id: QDO-QDO-026
+    gate: G4
+    priority: 20
+    match:
+      all: ["NRI decimal sum"]
+      any: []
+      none: []
+    batch: NORMAL
+    recipe: qdo_nri_sum_fix
+    verdict: "DOGWICALC fails with an NRI decimal sum above the expected total because a stray owner line with a typo future effective date double-counts the window — clear the DO006 inquiry date, delete the bad future-dated line, recalculate (setup data, not a code bug)."
+    source: "SKILL_ADO_QDO_DivisionOrder_Transfers.md §6 C1"
+    ado_refs: ["364709"]
+
+  - id: QDO-QDO-027
+    gate: G4
+    priority: 20
+    match:
+      all: ["AFE_DOI_DEC"]
+      any: []
+      none: []
+    sql_pack: qdo_afe_doi_null
+    recipe: qdo_afe_doi_dec_fix
+    verdict: "Conversion left QCTRL_AFE_HDR.AFE_DOI_DEC NULL and converted Open AFEs with NULL workflow status (Submit button wrongly available) — run the data UPDATE scripts to recompute the header decimal and stamp the workflow status."
+    source: "SKILL_ADO_QDO_DivisionOrder_Transfers.md §8 E1"
+    ado_refs: ["74170", "74171"]
+
+  - id: QDO-QDO-028
+    gate: G4
+    priority: 30
+    match:
+      all: []
+      any: ["QARCH_TRAN_SEQ"]
+      none: []
+    recipe: qdo_tran_seq_reset
+    verdict: "After an environment refresh QARCH_TRAN_SEQ.LAST_NO for TRANS_GRP_SEQ_NO was not reset to the max across the transfer/maintenance/history tables — MEG/transfer saves fail on primary key; run the sequence-reset script."
+    source: "SKILL_QDO_Transfers_SuspendRelease.md §6/§15"
+
+  - id: QDO-QDO-029
+    gate: G4
+    priority: 40
+    match:
+      all: ["MEG"]
+      any: ["DO007", "DO006", "exemptions", "deducts", "DONL_MKT_EXMPT"]
+      none: []
+    verdict: "Owner has a MEG assigned but the individual exemptions were never written to DONL_MKT_EXMPT (MEG-remediation lineage) — DO007 shows blank and the owner is wrongly charged deducts; backfill DONL_MKT_EXMPT or run the MEG cleanup, and confirm the MEG-remediation build."
+    source: "SKILL_QDO_Transfers_SuspendRelease.md §7"
+    ado_refs: ["1409730", "630572", "1406357", "1592105", "1594122"]
+
+  - id: QDO-QDO-030
+    gate: G4
+    priority: 40
+    match:
+      all: ["zip"]
+      any: ['/\bBA\b/', "Business Associate", "4-digit", "4 digit", "suffix", "mask"]
+      none: []
+    verdict: "BA save fails on zip-code format — converted zip data with a bad +4 suffix collides with zip-code masking; run the zip-code cleanup script and add/adjust the zip mask (zip is not mandatory yet still validates — known product gap)."
+    source: "SKILL_QDO_Platform_Integration.md §4"
+    ado_refs: ["1531903", "1534156", "1549818", "1731741"]
+
+  - id: QDO-QDO-031
+    gate: G4
+    priority: 40
+    match:
+      all: ["SAP"]
+      any: ["stopped in Pending", "stuck in Pending", "COPY_DVDS2"]
+      none: []
+    recipe: qdo_mg_pending_recovery
+    verdict: "MG partially interfaced to SAP and stopped in Pending (only some tiers processed) — run COPY_DVDS2 for the partially-completed groups, revert the MG to Submitted, and re-approve."
+    source: "SKILL_QDO_Division_Orders.md §7/§10"
+
+  # ---------------------------------------------------------------- G5 — Code change
+  - id: QDO-QDO-032
+    gate: G5
+    priority: 10
+    match:
+      all: []
+      any: ["SL_DETAIL_NO", "RSTG_DVD_OWNR_FUND_RLS"]
+      none: []
+    sql_pack: qdo_sl_detail_zero
+    verdict: "Pay-code change stages RSTG_DVD_OWNR_FUND_RLS rows with SL_DETAIL_NO = 0 (int32 overflow of the subledger detail id) — funds release comes out partial/blank; fixed by widening SL_DETAIL_NO to int64, confirm the client build."
+    source: "SKILL_QDO_Transfers_SuspendRelease.md §8"
+    ado_refs: ["1713151"]
+
+  - id: QDO-QDO-033
+    gate: G5
+    priority: 10
+    match:
+      all: ["COPY_DVD"]
+      any: ["DONL_BEARER_GRP_HDR", "FK_DONL_INT_FUNDS_XFER_DTL"]
+      none: []
+    batch: NORMAL
+    verdict: "COPY_DVD_W approval fails on FK to DONL_BEARER_GRP_HDR — a bearer group created inside the workspace is not yet in the live tables when the funds-xfer detail inserts (copy-order defect); data unblock is to align/insert the BG or correct the from-owner interest seq in DONL_DVD_INT_FUNDS_XFER_DTL."
+    source: "SKILL_QDO_Transfers_SuspendRelease.md §6"
+    ado_refs: ["1387066"]
+
+  - id: QDO-QDO-034
+    gate: G5
+    priority: 10
+    match:
+      all: []
+      any: ["bearer percent sum", "QGMICalc", "RADOGMIE16"]
+      none: []
+    batch: NORMAL
+    verdict: "Workspace transfer errors 'bearer group bearer percent sum is not equal to 1' (QGMICalc / RADOGMIE16) on partial NWI redistribution — GMI calc defect; verify bearer percents genuinely sum to 1 first, then escalate with {pqid} and the exact QGMICalc error."
+    source: "SKILL_QDO_Transfers_SuspendRelease.md §9"
+    ado_refs: ["1554580"]
+
+  - id: QDO-QDO-035
+    gate: G5
+    priority: 10
+    match:
+      all: ["UPSLSINTFC"]
+      any: []
+      none: []
+    batch: NORMAL
+    verdict: "UPSLSINTFC (QLS Lease Interface) failing — known defect family: 'Specified cast is not valid' at the CDTBLSYNC step, Out of Memory on large lease sets, and ORA-00001 PK_QCODE_QRA_PROP duplicates; confirm the CORE metadata fixes are deployed and clean duplicate QRA property data."
+    source: "SKILL_QDO_Platform_Integration.md §9"
+    ado_refs: ["1745693", "1709805", "1710611"]
+
+  - id: QDO-QDO-036
+    gate: G5
+    priority: 20
+    match:
+      all: ["combine"]
+      any: ["lease cross-reference", "lease cross reference", "MEG", "settlement code", "NMA"]
+      none: []
+    verdict: "Combine on transfer dropped or miscomputed attributes (lease cross-reference, MEG, settlement code, NMA) on lines that genuinely match — known fixed defect family; confirm the client build/hotfix carries the combine fixes."
+    source: "SKILL_QDO_Division_Orders.md §4"
+    ado_refs: ["1329807", "1358439", "1358440", "1625458", "1644404", "1368887"]
+
+  - id: QDO-QDO-037
+    gate: G5
+    priority: 20
+    match:
+      all: ["DOI Worksheet"]
+      any: ["PRECISION", "decimal", "decimals", "rounding", "loader"]
+      none: []
+    verdict: "DOI Worksheet did not round NRI to the global PRECISION config on Excel import/bulk-edit, saving more than 8 decimals and breaking GWI/Bearer-Group approval — code fixed to round to PRECISION on import and bulk-edit; confirm the build."
+    source: "SKILL_QDO_Division_Orders.md §8"
+    ado_refs: ["1727280", "1625151", "1760270"]
+
+  - id: QDO-QDO-038
+    gate: G5
+    priority: 30
+    match:
+      all: ["PPN"]
+      any: ["PD41", "LD43", "unexpected", "unintentionally", "no exemption"]
+      none: []
+    recipe: qdo_ppn_pn025_exclude
+    verdict: "PPNs generated with no corresponding change (PD41 / exemption / bearer-group reason) — PPN-staging defect family (queries created PD41 instead of LD43); workaround: exclude the bad PPNs on PN025 (drops them from VL100/CA020) and delete incorrect market groups from RD010."
+    source: "SKILL_QDO_Division_Orders.md §5 B1"
+    ado_refs: ["1742419", "1729989", "1764539", "1754316"]
+
+  - id: QDO-QDO-039
+    gate: G5
+    priority: 30
+    match:
+      all: ["PPN"]
+      any: ["bearer group", "BG change", "msc_sDO_PPN_RSN_CD_BG_CHG", "not created", "not generated"]
+      none: []
+    verdict: "PPN not created for a bearer-group change — COPY_DVD check-in compared live-against-live instead of workspace-vs-live so msc_sDO_PPN_RSN_CD_BG_CHG PPNs were skipped; code-fix family, confirm the PPN/RRV rewrite is in the client build."
+    source: "SKILL_QDO_Transfers_SuspendRelease.md §9"
+    ado_refs: ["1647374", "1596364", "1601966"]
+
+  - id: QDO-QDO-040
+    gate: G5
+    priority: 40
+    match:
+      all: ["duplicat"]
+      any: ["DOR003", "QP088", "DOR009", "Transfer Order form", "DO form"]
+      none: []
+    verdict: "The DO/Transfer Order mailing form (QP088 / DOR003 family) duplicates the owner's interest line so the owner appears to own twice the interest — known report defect; confirm the client's report build or replace the report template."
+    source: "SKILL_QDO_Division_Orders.md §9"

@@ -1,0 +1,395 @@
+# Auto-Bot Lite rules — TIPS batch / settlement / allocations
+# Compiled 2026-09-01 from:
+#   SKILL_TIPS_Batch_Processing.md, SKILL_TIPS_Settlement_Revenue_Journal.md,
+#   SKILL_TIPS_Allocations_PPA_Imbalance.md, SKILL_ADO_TIPS_Batch_Processing_SystemConfig_Env.md,
+#   SKILL_ADO_TIPS_Settlement_Revenue_Statements_Reporting.md, SKILL_ADO_TIPS_Allocations_PPA_Imbalance_FBJS.md
+# Conforms to rules/SCHEMA.md. Fixed-in builds inferred from skills are quoted as the skills state them.
+product: TIPS
+area: batch-settlement-allocations
+rules:
+
+  # ---------------- G1 — Expected behavior ----------------
+
+  - id: TIPS-BAT-001
+    gate: G1
+    match:
+      all: ["ROLLACCTDT"]
+    batch: NORMAL
+    verdict: "Expected behavior — POST fails at ROLLACCTDT when production dates are not linked to future open accounting dates (manually opening accounting dates during testing breaks the automatic roll); link the dates or close-and-roll manually on the Accounting Date Maintenance screen."
+    source: "SKILL_TIPS_Batch_Processing.md §16-2 (26-01084537, 25-01043024)"
+
+  - id: TIPS-BAT-002
+    gate: G1
+    match:
+      all: ["From point volumes missing"]
+    batch: NORMAL
+    verdict: "Expected/setup — 'From point volumes missing' means the meter has no active time slice for the period; add a new timeslice and rerun ALLOCATE."
+    source: "SKILL_TIPS_Allocations_PPA_Imbalance.md §14 (26-01093548)"
+
+  # ---------------- G2 — Configuration / operational ----------------
+
+  - id: TIPS-BAT-003
+    gate: G2
+    priority: 10
+    match:
+      any: ["duplicate process error", "Internal program error occurred", "/stuck\\s+(job|process|in progress|in queue)/", "/job[s]?\\s+stuck/"]
+    batch: SEGREGATED
+    recipe: bat_qpec_stuck_ux
+    verdict: "Orphaned/hung QPEC process is holding the job lock — restart the QPEC/QTIPS services and script the stuck statuses to 'UX' before re-running (Cloud Ops standard first move; if it recurs, gather DB statistics)."
+    source: "SKILL_TIPS_Batch_Processing.md §4 (24-00974530, 23-00890868, 24-00975612)"
+
+  - id: TIPS-BAT-004
+    gate: G2
+    match:
+      any: ["last completed process ID", "QCODE_BATCH_JOB"]
+    batch: NORMAL
+    recipe: bat_qcode_batch_job_order
+    verdict: "Batch-job sequence config in QCODE_BATCH_JOB is wrong — the hidden ROW_ID must order SETTLEAGH (Monthly) before SETTLEDAY (Daily) and fully duplicated rows must be deleted."
+    source: "SKILL_TIPS_Batch_Processing.md §6 (25-00996637, 24-00942212, 24-00941908)"
+
+  - id: TIPS-BAT-005
+    gate: G2
+    priority: 20
+    match:
+      any: ["CAWDATA", "TIPSDSService"]
+    batch: NORMAL
+    verdict: "Connection Management / post-refresh config — the .NET Connection Type (TIPSDSService) is carrying SQL-connection settings, or the refreshed environment still points at PRD; fix the connection entry, repoint per the post-refresh checklist, and restart services."
+    source: "SKILL_TIPS_Batch_Processing.md §10, §13 (25-01016313, 26-01065785, 26-01086760, 25-01041546)"
+
+  - id: TIPS-BAT-006
+    gate: G2
+    priority: 30
+    match:
+      any: ["SFTP", "Import/Export Definition", "Import-Export Definition"]
+    batch: NORMAL
+    recipe: bat_import_sftp
+    verdict: "Import/connection configuration — check the Import/Export Definition file path and Backup Options, the host definition / FTP folder structure vs PRD, that the QPEC user is active, and the Connection Management .NET entries, in that order."
+    source: "SKILL_TIPS_Batch_Processing.md §10 (24-00973935, 24-00964377, 24-00963134, 22-00875127, 25-01043424)"
+
+  - id: TIPS-BAT-007
+    gate: G2
+    match:
+      any: ["QARCHIVE", "TIPARCHIVE"]
+    batch: NORMAL
+    verdict: "Archive failure is usually archive-group connection/setup (especially post-refresh) — script-correct the archive connection details (long-term fix in 2024.10+); deeper PK errors match the ADO QArchive family (missing TSP joins in the ARC_90_DAY parent-table-join clause)."
+    source: "SKILL_TIPS_Batch_Processing.md §11 (25-01058403, 23-00895638, 22-00824980)"
+    ado_refs: ["1689869", "1650552", "1460618"]
+
+  - id: TIPS-BAT-008
+    gate: G2
+    match:
+      any: ["SendMessageAndWaitForResponse", "ShortWaitForMessageDelay", "Internal Program (Bootstrap) Error"]
+    batch: SEGREGATED
+    verdict: "Segregated-process timeout too low for {process} — raise the timeout via app.config (ShortWaitForMessageDelay) rather than debugging the step; recurring cases got a longer-term QFC fix."
+    source: "SKILL_TIPS_Allocations_PPA_Imbalance.md §11 (22-00598140, 22-00603621)"
+
+  - id: TIPS-BAT-009
+    gate: G2
+    match:
+      all: ["journal"]
+      any: ["not generating", "not generated", "not created", "entries missing"]
+    recipe: bat_journal_entry_control
+    verdict: "Journal not generating for the contract/meter is Journal Entry Control configuration — check for a missing or unintended double condition, use Journal Conditions for cost-center splits, and check the QQM query field list for an invalid field."
+    source: "SKILL_TIPS_Settlement_Revenue_Journal.md §6 (25-01013216, 25-01011403, 25-01028136)"
+
+  - id: TIPS-BAT-010
+    gate: G2
+    match:
+      any: ["CTRSHK", "UOM Class Code", "/fee[s]?\\s+not\\s+populat/"]
+    recipe: bat_fixed_fuels_uom
+    verdict: "Missing fee/fuel/residue on statements is a Fixed Fuels UOM mapping problem — a UOM on the CCT Fixed Fuels tab (e.g. CTRSHK) maps to an invalid UOM Class Code, or a UDEF needs remapping (e.g. MONMDQ to CTRMDQ)."
+    source: "SKILL_TIPS_Settlement_Revenue_Journal.md §10 (23-00876904, 23-00876962, 23-00878026)"
+
+  - id: TIPS-BAT-011
+    gate: G2
+    match:
+      all: ["/(Revenue Override|Override Revenue)/"]
+      any: ["ORA-01013", "timeout", "hang", "error", "restart"]
+    recipe: bat_override_revenue_restart
+    verdict: "Override Revenue Flag screen errors/timeouts are an app-tier/stale-stats issue, not code — restart services, bump the ClassicGUI query timeout 30s to 60s, capture ClassicGUI/QTRACE logs while failing, and recalc stats on the emptied QTRAN tables."
+    source: "SKILL_TIPS_Settlement_Revenue_Journal.md §11 (24-00951708, 24-00952270, 22-00627530)"
+    ado_refs: ["1658025", "1665332"]
+
+  - id: TIPS-BAT-012
+    gate: G2
+    match:
+      any: ["PROGRESSIVE_ROUNDER_NO_BOUND_CHECK", "settle fees not generating", "Settle Fees not generating"]
+    verdict: "Allocation rounding bound check — set global config PROGRESSIVE_ROUNDER_NO_BOUND_CHECK = 1 (system-wide rounding impact, verify expected results) for gas days flipping to 0 imbalance or settle fees skipping days with a 0-volume disposition."
+    source: "SKILL_TIPS_Allocations_PPA_Imbalance.md §9 (24-00985175, 25-00996960)"
+    ado_refs: ["1708209"]
+
+  - id: TIPS-BAT-013
+    gate: G2
+    match:
+      all: ["Customer Account Balance"]
+      any: ["missing", "imbalance"]
+    batch: NORMAL
+    verdict: "POSTRESULT ran prematurely because of a missing batch dependency — fix the process dependency, then reprocess the production month as a PPA to restore/post the imbalances into Customer Account Balance."
+    source: "SKILL_TIPS_Allocations_PPA_Imbalance.md §9 (25-01021133)"
+
+  - id: TIPS-BAT-014
+    gate: G2
+    match:
+      any: ["JOURNALIMB", "CALC_STATS", "QCODE_TABLE_CALC_STATS"]
+    batch: NORMAL
+    recipe: bat_calc_stats
+    verdict: "Stale optimizer statistics — posting left the QTRAN tables empty when nightly stats ran, so the first rerun's plan is wildly off; run stats manually, then add the CALC_STATS process step (and the hot tables to QCODE_TABLE_CALC_STATS) for the affected job."
+    source: "SKILL_TIPS_Batch_Processing.md §9a (23-00892948, 23-00932008, 24-00975612)"
+    ado_refs: ["1598509", "1633473", "1644834", "1706988"]
+
+  # ---------------- G3 — Version issue (already fixed) ----------------
+
+  - id: TIPS-BAT-015
+    gate: G3
+    priority: 20
+    match:
+      all: ["CTRMTR"]
+      any: ["GETOPENINV", "duplicate", "PK_QTRAN_PAYSTATION", "reversal"]
+    batch: NORMAL
+    sql_pack: bat_paystation_dup
+    verdict: "Known defect — CTRMTR/GETOPENINV create duplicate TRNX_IDs for meters that have reversals and are end-dated; fixed in TIPS 2025.04.1.13, so check the {client} version and script-clean the existing duplicates."
+    source: "SKILL_TIPS_Batch_Processing.md §7a (26-01083551, 23-00927502)"
+    ado_refs: ["1718964", "1752343"]
+
+  - id: TIPS-BAT-016
+    gate: G3
+    match:
+      all: ["TRNX_ID"]
+      any: ["2147483647", "2,147,483,647", "large TRNX_ID", "overflow", "exhaust"]
+    batch: NORMAL
+    sql_pack: bat_trnxid_exhaustion
+    verdict: "TRNX_ID exhaustion — the C++ batch stored the DB sequence as int (max 2,147,483,647); fixed by widening to long long (2024.04/2024.07 back-merged) plus RECPURGE TRNX_ID recycling (2020.03/2022.10)."
+    source: "SKILL_ADO_TIPS_Batch_Processing_SystemConfig_Env.md Cluster E (23-00916530, 23-00923599)"
+    ado_refs: ["1617830", "1652993", "1619944"]
+
+  - id: TIPS-BAT-017
+    gate: G3
+    match:
+      any: ["QTRAN_IMBAL_ACCT_BAL", "QPOST_IMBAL_ACCT_BAL", "CUSTACCTBAL"]
+    batch: NORMAL
+    sql_pack: bat_imbal_bal_dup
+    recipe: bat_imbal_dedupe
+    verdict: "Duplicate rows in QTRAN_IMBAL_ACCT_BAL/QPOST_IMBAL_ACCT_BAL break CUSTACCTBAL and the accounting-period posting roll — code fix shipped in 2025.04 patch #3; dups created before the patch still need the delete-duplicates script (a post-patch recurrence was seen for a single-OBA-contract client)."
+    source: "SKILL_TIPS_Allocations_PPA_Imbalance.md §4b (25-01061774, 26-01065143, 26-01068169, 26-01097671)"
+    ado_refs: ["1772117", "1776936", "1778789", "1805171"]
+
+  - id: TIPS-BAT-018
+    gate: G3
+    match:
+      any: ["m_DEL_MTR_TRNX_PPA", "/partially[ -]approved PPA/", "/orphan\\w*\\s.{0,30}TRNX_ID/"]
+    batch: NORMAL
+    verdict: "Known-fixed PPA purge defects — unapproving one month or rerunning the same production month as its PPA left orphan CO/R rows in QTRAN_TRNX_ID (m_DEL_MTR_TRNX_PPA missing the Prod_Dt / first-of-month filters); fixed on the 2020.03/2022.10/2024.04 lines, and both the rerun month and the current month must be run to purge."
+    source: "SKILL_ADO_TIPS_Batch_Processing_SystemConfig_Env.md Cluster E (23-00935744, 24-00942120)"
+    ado_refs: ["1639010", "1647498", "1656405"]
+
+  - id: TIPS-BAT-019
+    gate: G3
+    match:
+      any: ["Select_ReallocDependTrnxIdProcessInd_Monthly", "TIPSLOCK"]
+    batch: NORMAL
+    verdict: "TIPSLOCK / Master-TIPS-lock timeout is the registered SQL Select_ReallocDependTrnxIdProcessInd_Monthly (a UNION forcing DISTINCT before the TRNX join) — query fixed in 2024.04 plus a hotfix-line deep-tune; raising the QPEC timeout only defers the failure."
+    source: "SKILL_ADO_TIPS_Batch_Processing_SystemConfig_Env.md Cluster B"
+    ado_refs: ["1679048", "1683233", "1725292"]
+
+  - id: TIPS-BAT-020
+    gate: G3
+    priority: 10
+    match:
+      any: ["SQLID_INS_GATH_DEL_PAYSTATION", "INS_GATH_REC_PAYSTATION"]
+    batch: NORMAL
+    verdict: "CTRMTR stuck/timeout on SQLID_INS_GATH_DEL_PAYSTATION / SQLID_INS_GATH_REC_PAYSTATION is an MSSQL query-plan regression — FORCE-ORDER fix in 2024.10 and hotfixes 17.21.33/34, 17.27.6/7, 17.28.3."
+    source: "SKILL_ADO_TIPS_Batch_Processing_SystemConfig_Env.md Cluster C"
+    ado_refs: ["1745358", "1746523"]
+
+  - id: TIPS-BAT-021
+    gate: G3
+    match:
+      any: ["SQLID_ANL_STD_METERS", "MEASANALYS"]
+    batch: NORMAL
+    verdict: "MEASANALYS hang on SQLID_ANL_STD_METERS is MSSQL plan instability — OPTION (FORCE ORDER) fix in 2024.10/2025.04 (hotfix 17.27.5, 17.28.1)."
+    source: "SKILL_ADO_TIPS_Batch_Processing_SystemConfig_Env.md Cluster C"
+    ado_refs: ["1726948"]
+
+  - id: TIPS-BAT-022
+    gate: G3
+    match:
+      all: ["INACCTACCM"]
+      any: ["timeout", "Query Timeout", "SQLID_SSEL_QTRAN_FIXED_FUEL", "SPLIT_COUNT"]
+    batch: NORMAL
+    verdict: "Company Imbalance INACCTACCM query timeout — the splitting logic adds huge overhead when no splits are configured; bypass fix delivered 2022.10+ (Patch 11), with raising SPLIT_COUNT_INACCTACCM (e.g. 6) as the parallelizing workaround."
+    source: "SKILL_ADO_TIPS_Batch_Processing_SystemConfig_Env.md Cluster C (23-00934008, 23-00934500)"
+    ado_refs: ["1636859"]
+
+  - id: TIPS-BAT-023
+    gate: G3
+    match:
+      any: ["number precision too large", "ACCT_ACTIVITY_DTL_ID", "QTRAN_IMBAL_ACCT_ACTIVITY_D_SQ"]
+    batch: NORMAL
+    sql_pack: bat_imbal_seq_precision
+    verdict: "INACCTACCM fails with 'number precision too large' because the imbalance activity sequence outgrew ACCT_ACTIVITY_DTL_ID NUMBER(10) — precision widened to 19 on the 2020.03/2024.04/2024.10 lines."
+    source: "SKILL_ADO_TIPS_Allocations_PPA_Imbalance_FBJS.md §5 (25-01014345)"
+    ado_refs: ["1723573", "1724474"]
+
+  - id: TIPS-BAT-024
+    gate: G3
+    match:
+      any: ["PK_QARCH_TRAN_SEQ", "Ins_QARCH_TRAN_SEQ", "SETSPLIT"]
+    batch: NORMAL
+    verdict: "ORA-00001 on PK_QARCH_TRAN_SEQ (Ins_QARCH_TRAN_SEQ, typically at SETSPLIT) is a fixed Oracle retry/timing defect that re-inserted an existing sequence id — corrected in 2024.04/2024.10/2025.04; reruns succeed in the meantime."
+    source: "SKILL_ADO_TIPS_Allocations_PPA_Imbalance_FBJS.md §5 (24-00945427, 23-00930659)"
+    ado_refs: ["1746230", "1639351"]
+
+  - id: TIPS-BAT-025
+    gate: G3
+    match:
+      any: ["EFF_PCT_CONTR", "EFF_PCT_CTR", "negative percent contributed"]
+    batch: NORMAL
+    recipe: bat_eff_pct_overflow
+    verdict: "ALLOCATE MONVOL fails when a displacement PDA explodes the contract split percent past NUMBER(14,10) — column widened to NUMBER(16,10) in 2023.04+ (not back-patchable); the data workaround adjusts measured/scheduled volumes so the displacement quantity shrinks."
+    source: "SKILL_TIPS_Allocations_PPA_Imbalance.md §5 (23-00923877, 24-00952247, 26-01100384)"
+    ado_refs: ["1580084"]
+
+  - id: TIPS-BAT-026
+    gate: G3
+    match:
+      any: ["ASSCGLM", "ASCGLM", "ASSOCIATED GAS LIFT METER VOL"]
+    batch: NORMAL
+    verdict: "ASSCGLM duplicates QTRAN_ALLOC_VOL rows when run for dailies with the plant in reallocation mode — DELETE-before-insert fix in 2025.04 (hotfix 17.26.20, 17.27.6, 17.28.3)."
+    source: "SKILL_TIPS_Allocations_PPA_Imbalance.md §4a (25-01023169)"
+    ado_refs: ["1731166"]
+
+  - id: TIPS-BAT-027
+    gate: G3
+    match:
+      any: ["STPER", "Stopped with Error", "stopped unexpectedly"]
+    batch: SEGREGATED
+    verdict: "System Manager falsely flags a memory-restarted QPEC as Stopped-with-Error (STPER) — QFC/platform fix on the 2025.10/2026.04 line (inferred, dependent on platform #1780230); a service restart clears the immediate state, and refresh-storm/CPU-exhaustion variants are infra, not code."
+    source: "SKILL_ADO_TIPS_Batch_Processing_SystemConfig_Env.md Cluster A (25-01058663, 26-01065396)"
+    ado_refs: ["1774745", "1780230", "1788585"]
+
+  - id: TIPS-BAT-028
+    gate: G3
+    match:
+      all: ["No batch job sequence defined"]
+    batch: NORMAL
+    verdict: "'No batch job sequence defined' — Web FBJS did not pick up jobs run via the scheduler (TPSCHEDPRC) or mishandled post-state; fixed 2022.10/2023.04 (post-state changed to an info message in 2024.10)."
+    source: "SKILL_ADO_TIPS_Batch_Processing_SystemConfig_Env.md Cluster D (23-00893815)"
+    ado_refs: ["1608023", "1649924"]
+
+  - id: TIPS-BAT-029
+    gate: G3
+    match:
+      all: ["Sel_MonthlyRunID"]
+      none: ["BOF or EOF"]
+    batch: NORMAL
+    verdict: "DAILY SETTLE (SETTLEMKD) fails on Sel_MonthlyRunID because the registered SQL filters UNIT_TM_CD='M' and daily runs have no monthly run id — fixed 2025.04/2025.10 (hotfix 17.28.x, 17.29.1)."
+    source: "SKILL_ADO_TIPS_Batch_Processing_SystemConfig_Env.md Cluster F (25-01056036)"
+    ado_refs: ["1767897"]
+
+  # ---------------- G4 — Bad data ----------------
+
+  - id: TIPS-BAT-030
+    gate: G4
+    match:
+      all: ["PK_QTRAN_PAYSTATION"]
+    batch: NORMAL
+    sql_pack: bat_paystation_dup
+    verdict: "Duplicate TRNX_IDs in QTRAN_PAYSTATION fed by overlapping meter effective dates (SCTRL_MTR_FACILITY / SCTRL_MTR_HEADER / SEXTN_MTR_HEADER_QRMTIPS out of sync) — correct the timeslices and then delete the duplicates, or they return."
+    source: "SKILL_TIPS_Batch_Processing.md §7a, §18-A (23-00927502, 24-00946936)"
+
+  - id: TIPS-BAT-031
+    gate: G4
+    match:
+      all: ["UNIQUE_ETRAN_GAS_PRICE_DAILY"]
+    batch: NORMAL
+    sql_pack: bat_gas_price_daily_dup
+    recipe: bat_gas_price_daily
+    verdict: "Duplicate daily gas-price rows in ETRAN_GAS_PRICE_DAILY collide on the unique key at the SETTLEDAY step of Measurement-to-GEN-PTR — dedupe for {prod_mth}, ensure the table is in the Settle-Day rec-purge list, and confirm the ENT_DAILY_VOL_LOGIC_CHANGE_DT cutoff patch is deployed."
+    source: "SKILL_TIPS_Settlement_Revenue_Journal.md §4 (24-00942763, 24-00940256, 24-00940258)"
+
+  - id: TIPS-BAT-032
+    gate: G4
+    match:
+      any: ["Found Orphaned Location attribute", "CANOMCLTG", "PACTRL_LOC_ATTR"]
+    batch: NORMAL
+    sql_pack: bat_orphan_loc_attr
+    recipe: bat_orphan_loc_attr
+    verdict: "CANOMCLTG orphaned-location-attribute error — rows exist in PACTRL_LOC_ATTR / PACTRL_LOC_ATTR_FLAT whose LOC_ID is not in PACTRL_LOC; delete the orphan data per the case resolution."
+    source: "SKILL_TIPS_Batch_Processing.md §14, §18-C (24-00994166)"
+
+  - id: TIPS-BAT-033
+    gate: G4
+    match:
+      all: ["QTRAN_ALLOC_POINT"]
+    batch: NORMAL
+    sql_pack: bat_orphan_alloc_point
+    recipe: bat_orphan_alloc_point
+    verdict: "ALLOCATE fails because QTRAN_ALLOC_POINT rows are tied to nonexistent TRNX_IDs — delete the orphan rows via a Cloud Ops script and rerun ALLOCATE."
+    source: "SKILL_TIPS_Allocations_PPA_Imbalance.md §4a, §16-A (22-00527472, 22-00527476)"
+
+  - id: TIPS-BAT-034
+    gate: G4
+    match:
+      any: ["PK_QTRAN_CTR_TRNX_ID", "QTRAN_CTR_TRNX_ID_SQ", "TRANSCONTR"]
+    batch: NORMAL
+    sql_pack: bat_ctr_trnx_seq
+    verdict: "IMBALANCE fails on TRANSCONTR with PK_QTRAN_CTR_TRNX_ID violated because the sequence QTRAN_CTR_TRNX_ID_SQ fell behind MAX(CTR_TRNX_ID) — resync the sequence above the table MAX to unblock (operational)."
+    source: "SKILL_ADO_TIPS_Allocations_PPA_Imbalance_FBJS.md §5, §10-A (DCP issue-resolution)"
+    ado_refs: ["164770"]
+
+  - id: TIPS-BAT-035
+    gate: G4
+    match:
+      any: ["PAYSTATION_QDOD", "SEXTN_CTR_HEADER_QRMTIPS", "inserting into pay station"]
+    batch: NORMAL
+    verdict: "PPA/ALLOCATE duplicate pay-station insert traces to an overlapping contract-header time slice in SEXTN_CTR_HEADER_QRMTIPS (e.g. EFF_DT_TO stored wrong) — script-correct the overlapping slice for {contract} before rerunning."
+    source: "SKILL_TIPS_Allocations_PPA_Imbalance.md §4a, §16-B (25-01002372)"
+    ado_refs: ["1697870"]
+
+  - id: TIPS-BAT-036
+    gate: G4
+    match:
+      any: ["QSTAG_JOURNAL_FM", "JRNTRSPEN1"]
+    batch: NORMAL
+    verdict: "JOURNAL insert into QSTAG_JOURNAL_FM fails because an alphanumeric BA/vendor (e.g. 10122A) is mapped into the numeric client_id column when invoice_transaction_code_ind=1 — quickest unblock is correcting the vendor to all-numeric; the proc's numeric-BA assumption is the underlying defect."
+    source: "SKILL_TIPS_Settlement_Revenue_Journal.md §8, §15-G (25-01005434)"
+
+  - id: TIPS-BAT-037
+    gate: G4
+    match:
+      all: ["CTRFEE"]
+    batch: NORMAL
+    sql_pack: bat_adj_pct_overflow
+    verdict: "IMBALANCE fails at CTRFEE because an escalation index/inflation value above 999% overflows QTRAN_RATE_RES_DETAIL.ADJ_PCT — correct the bad index value (field-size limit, not patched; the CTRFEE warnings themselves are a red herring)."
+    source: "SKILL_ADO_TIPS_Allocations_PPA_Imbalance_FBJS.md §7 (22-00272399)"
+    ado_refs: ["1534316"]
+
+  - id: TIPS-BAT-038
+    gate: G4
+    match:
+      all: ["BOF or EOF"]
+    batch: NORMAL
+    verdict: "FIXEDFUELS fails on Sel_MonthlyRunID with 'Either BOF or EOF is True' — bad data when a new accounting month starts with a rerun month; resolved by a data script plus a client stored-proc change (no core code fix)."
+    source: "SKILL_ADO_TIPS_Batch_Processing_SystemConfig_Env.md Cluster I"
+    ado_refs: ["1736468"]
+
+  # ---------------- G5 — Code change ----------------
+
+  - id: TIPS-BAT-039
+    gate: G5
+    match:
+      all: ["WHMEASIMP"]
+    batch: NORMAL
+    verdict: "WHMEASIMP defect — certain PPA configurations can delete measured volumes for paper/wellhead-fed meters right after a close; a Development patch exists, so confirm it is applied to {client} before any rerun (P1-severity data loss)."
+    source: "SKILL_TIPS_Batch_Processing.md §12 (25-01032433, 25-01031716)"
+    ado_refs: ["1713703", "1713704", "1713707"]
+
+  - id: TIPS-BAT-040
+    gate: G5
+    match:
+      all: ["PRICETOSCH"]
+      any: ["slow", "hours", "hang", "timeout", "performance"]
+    batch: NORMAL
+    verdict: "PRICETOSCH processed every daily rate schedule instead of only those touched by incoming esuite prices — fixed defect (early exit when no esuite prices + filter daily rate schedules by distinct esuite production dates); confirm the client build includes ADO #1625566 before re-debugging."
+    source: "SKILL_TIPS_Settlement_Revenue_Journal.md §13 (23-00923516)"
+    ado_refs: ["1625566", "1624635", "1531452", "1319767"]

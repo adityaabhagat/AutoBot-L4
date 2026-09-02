@@ -1,0 +1,462 @@
+# Auto-Bot Lite deterministic rules — QPTM Billing / Allocations / Customer Accounts
+# Compiled 2026-09-01 from:
+#   SKILL_Billing.md, SKILL_Allocations.md, SKILL_Customer_Accounts_Inventory.md,
+#   SKILL_ADO_QPTM_Billing_Invoice_Rates.md, SKILL_ADO_QPTM_Allocations_PPA_Imbalance.md
+# Conforms to rules/SCHEMA.md. Part of Auto-Bot by Aditya Bhagat.
+product: QPTM
+area: billing-allocations-accounts
+rules:
+
+  # ================= G1 — Expected Behavior / no-defect exits =================
+
+  - id: QPTM-BILL-001
+    gate: G1
+    match:
+      all: ["BLINVCLNUP"]
+      any: []
+      none: []
+    batch: NORMAL
+    verdict: "BLINVGEN hung for hours on the BLINVCLNUP INSERT-SELECT is a known Oracle bad-plan condition, not a product defect — DBA gathers stats / applies the NO_QUERY_TRANSFORMATION hint (a 12-hour run drops to minutes) and it recurs every 4-6 months."
+    source: "SKILL_ADO_QPTM_Billing_Invoice_Rates.md §4 Cluster A (A4)"
+    ado_refs: ["1641239", "1610212"]
+
+  - id: QPTM-BILL-002
+    gate: G1
+    match:
+      all: []
+      any: ["database connection was lost", "NOTICE_QUEUE_ID"]
+      none: []
+    batch: NORMAL
+    verdict: "Intermittent ALALLOCATE failure with a lost database connection / NOTICE_QUEUE_ID sequence error that succeeds on rerun is a transient QPEC-to-DB drop (QCloud/Azure infra), not an allocation code defect — do a graceful QPEC restart and rerun."
+    source: "SKILL_ADO_QPTM_Allocations_PPA_Imbalance.md §4B"
+    ado_refs: ["150654", "210845", "234047"]
+
+  - id: QPTM-BILL-003
+    gate: G1
+    match:
+      all: ["WGT"]
+      any: ["approv", "realloc"]
+      none: []
+    batch: NORMAL
+    sql_pack: bill_wgt_lock_config
+    verdict: "Once shared Wellhead Allocation is approved for the production month, WGT receipt meters are locked from reallocation by design when TIPS_PROCESS_CONTROLS_PRM=1 — unapprove the wellhead allocation for {prod_mth} or accept the lock (completes-with-warning instead of hard error is a separate tracked defect)."
+    source: "SKILL_Allocations.md §6"
+
+  - id: QPTM-BILL-004
+    gate: G1
+    match:
+      all: ["PPA", "delete"]
+      any: ["rate", "Rate Maintenance"]
+      none: []
+    verdict: "Deleting a rate in Web does not generate PPAs (the PPA trigger fires only on Add/Modify) and no code fix shipped — end-date or zero out the rate instead, which does trigger PPA generation."
+    source: "SKILL_ADO_QPTM_Billing_Invoice_Rates.md §6"
+    ado_refs: ["1745668"]
+
+  - id: QPTM-BILL-005
+    gate: G1
+    match:
+      all: ["PPA"]
+      any: ["without restating", "auto-reversed", "auto reversed", "reverse all charges"]
+      none: []
+    verdict: "PPAs that reverse charges without restating (typically after an Azure migration, recurring monthly) are an unreproduced middle-tier cache state — reset the MT cache and reprocess the PPAs / rerun BLINVGEN."
+    source: "SKILL_Billing.md §8"
+    ado_refs: ["1685500", "1725310"]
+
+  # ================= G2 — Configuration =================
+
+  - id: QPTM-BILL-006
+    gate: G2
+    priority: 10
+    match:
+      all: ["Multiple Rate IDs"]
+      any: []
+      none: []
+    verdict: "A Multiple Rate IDs warning on the Rate Resolution report means the nominated path's locations belong to two overlapping location groups so more than one rate detail resolves — fix the Rate ID / location-group membership; this is configuration, not a defect."
+    source: "SKILL_ADO_QPTM_Billing_Invoice_Rates.md §6"
+    ado_refs: ["1631007"]
+
+  - id: QPTM-BILL-007
+    gate: G2
+    match:
+      all: []
+      any: ["Rate error code is NR", "unable to resolve the rate"]
+      none: []
+    batch: NORMAL
+    verdict: "ALALLOCATE rate error NR on a one-sided path (receipt location, blank delivery) comes from a lingering PDA with no matching fuel rate — add a one-sided fuel rate (ALL_LOC receipt, no delivery, 0%) or end-date the PDA at the meter's last active day."
+    source: "SKILL_ADO_QPTM_Allocations_PPA_Imbalance.md §4C"
+    ado_refs: ["1620789", "1434265"]
+
+  - id: QPTM-BILL-008
+    gate: G2
+    match:
+      all: ["QPDLLPIPELINEMGRAL"]
+      any: []
+      none: []
+    batch: NORMAL
+    verdict: "Dll Not Found QPDLLPIPELINEMGRAL_* means the allocation C++ batch DLL is not deployed/registered in this environment (client release provisioned against core instead of the <CLIENT>.QPTM.* repo) — DevOps re-provision, not an allocation code defect."
+    source: "SKILL_ADO_QPTM_Allocations_PPA_Imbalance.md §4B"
+    ado_refs: ["1705988", "1704047"]
+
+  - id: QPTM-BILL-009
+    gate: G2
+    match:
+      all: ["deadlock"]
+      any: ["ALSTAG_NOM_HDR", "ALSEL_N", "ALNEWPREPR", "ALSPLITNEW"]
+      none: []
+    batch: NORMAL
+    verdict: "Nightly ALALLOCATE deadlock 1205 / SEQ_NO timeout on a multi-split LDC is splits colliding on ALSTAG_NOM_HDR and QTRAN_SEQ — add the ALNEWPREPR step lock, the ALTRAN_ALLOC_SEL indexes, bump QARCH_CTRL_ERR_RETRY retries, and tune the large-loc split-sizing configs."
+    source: "SKILL_ADO_QPTM_Allocations_PPA_Imbalance.md §4A"
+    ado_refs: ["1320322", "228999"]
+
+  - id: QPTM-BILL-010
+    gate: G2
+    match:
+      all: ["INACCTACCM"]
+      any: ["fuel", "Activity tab"]
+      none: []
+    batch: NORMAL
+    recipe: bill_inacctaccm_upstream_fuel
+    verdict: "An Upstream Fuel calculation step added to the INACCTACCM job (QPSUpstreamFuelCalc) is accumulating upstream fuel the customer account should not carry, inflating Authorization-to-Post Activity-tab totals — remove the step from the job definition (metadata config) and re-run INACCTACCM."
+    source: "SKILL_Customer_Accounts_Inventory.md §4b"
+    ado_refs: ["1729655"]
+
+  - id: QPTM-BILL-011
+    gate: G2
+    match:
+      all: ["PDA Submission"]
+      any: ["ORA-01013", "timeout", "slow", "performance", "USE_PDA_DUR_FOR_SCHED_QTY"]
+      none: []
+    verdict: "PDA Submission retrieve timeouts come from ALCTRL_PDA_CONF_SCHD_VW scanning years of CFCTRL_CONF when USE_PDA_DUR_FOR_SCHED_QTY is on — set the scheduled-qty back-cap config (e.g. 3 months) or turn USE_PDA_DUR_FOR_SCHED_QTY off for {client}."
+    source: "SKILL_ADO_QPTM_Allocations_PPA_Imbalance.md §7"
+    ado_refs: ["1742027", "1691916"]
+
+  - id: QPTM-BILL-012
+    gate: G2
+    match:
+      all: ["Invalid Account Type Combination"]
+      any: []
+      none: []
+    verdict: "The in-kind imbalance-trade account-type check on the detail grid flags valid combinations — remove the invalid account-type check from the trade detail grid rules (config) so the trade can confirm."
+    source: "SKILL_Customer_Accounts_Inventory.md §6"
+
+  - id: QPTM-BILL-013
+    gate: G2
+    match:
+      all: ["invoice"]
+      any: ["SHOW_QTY_INVOICE_IND", "RECF"]
+      none: []
+    sql_pack: bill_show_qty_invoice_ind
+    recipe: bill_show_qty_fix
+    verdict: "Receipt allocation written as two invoice-input rows (REC transport + RECF receipt fuel) merges into one doubled quantity line because BLXREF_TOS_CHARGE_BASIS.SHOW_QTY_INVOICE_IND=1 for TOS ITS — set it to 0 and re-run BLINVGEN; the ALCTRL_ALLOC output itself is correct."
+    source: "SKILL_ADO_QPTM_Allocations_PPA_Imbalance.md §10"
+    ado_refs: ["1813295"]
+
+  - id: QPTM-BILL-014
+    gate: G2
+    priority: 50
+    match:
+      all: ["Rate Resolution"]
+      any: ["BLINVGEN", "PANIGHTLY", "error"]
+      none: ["Multiple Rate IDs"]
+    batch: NORMAL
+    verdict: "BLINVGEN Rate Resolution errors are a missing/broken Rate-to-TOC association for the contract (often after a TSP copy or segmentation) — repair the Rate ID / TOC / TOS chain in Rate Maintenance for {contract}."
+    source: "SKILL_Billing.md §4.2"
+
+  - id: QPTM-BILL-015
+    gate: G2
+    match:
+      all: ["realloc"]
+      any: ["pop-up", "popup", "not trigger", "did not trigger", "doesn't trigger", "not firing"]
+      none: []
+    sql_pack: bill_realloc_ppa_xref
+    verdict: "A missing Reallocation/PPA pop-up is usually setup — verify code table 27310 (BLXREF_REALLOC_PPA) flags the changed screen/table/column (reallocate-ind checked, PPA-ind unchecked), that allocations already ran for the gas day, and that the accounting month is closed, before suspecting the web event-detector defects."
+    source: "SKILL_ADO_QPTM_Allocations_PPA_Imbalance.md §8"
+    ado_refs: ["1761005", "228510", "1773033"]
+
+  # ================= G3 — Version issue (already fixed, build known) =================
+
+  - id: QPTM-BILL-016
+    gate: G3
+    match:
+      all: ["invoice"]
+      any: ["out by one cent", "penny", "$0.01", "TAX_TRANS_AMT_UNROUNDED"]
+      none: []
+    verdict: "Invoice Header/Detail/Billing-Voucher/SOA penny differences come from bankers-vs-half-up rounding in QPipelineRoundingMgr on tax/amount columns — fixed by the core rounding hotfix, iteration 24.21 ~ QPTM 2024.10 (inferred — confirm in release notes); re-running invoice generation alone does not fix it."
+    source: "SKILL_ADO_QPTM_Billing_Invoice_Rates.md §8"
+    ado_refs: ["1674944", "1652371", "1559943"]
+
+  - id: QPTM-BILL-017
+    gate: G3
+    match:
+      all: ["tripled"]
+      any: ["rate", "flex", "reservation", "invoice"]
+      none: []
+    sql_pack: bill_dup_sub_dtl
+    verdict: "Tripled flex/reservation charges are duplicate BLTRAN_INVOICE_SUB_DTL detail rows from the core+client billing-detail defect — fixed in 2022.10 / 2023.04 (client must consume Quorum.QPTM.ClassicBatch 17.27.19-beta.1); re-run BLINVGEN after the fix is consumed."
+    source: "SKILL_ADO_QPTM_Billing_Invoice_Rates.md §8"
+    ado_refs: ["1632428"]
+
+  - id: QPTM-BILL-018
+    gate: G3
+    match:
+      all: ["/lump[- ]?sum/"]
+      any: ["prebill", "pre-bill", "future production", "BLSTAG_INVOICE_CTR_DT"]
+      none: []
+    sql_pack: bill_lumpsum_prebill
+    verdict: "Open-ended lump-sum rates billed for future production months come from pre-paid BLSTAG_INVOICE_CTR_DT staging rows — fixed by the lump-sum SQL change (prod_mth <= acctg_mth) ~2024.10 (inferred — confirm in release notes)."
+    source: "SKILL_ADO_QPTM_Billing_Invoice_Rates.md §8"
+    ado_refs: ["1670549"]
+
+  - id: QPTM-BILL-019
+    gate: G3
+    match:
+      all: ["overrun"]
+      any: ["credit", "OVRRF", "OFNRD"]
+      none: []
+    verdict: "An Overrun TOC writing a credit when allocated qty is below contract MDQ is the negative-EngQty overrun defect — fixed in 2025.04 / 2025.10 / develop; interim workaround is the formula-aggregate charge basis IIF(OVRRF < 0, 0, OVRRF)."
+    source: "SKILL_ADO_QPTM_Billing_Invoice_Rates.md §8"
+    ado_refs: ["1770399"]
+
+  - id: QPTM-BILL-020
+    gate: G3
+    match:
+      all: ["Rate Maintenance", "duplicate"]
+      any: ["/end[- ]?dat/", "/time[- ]?slic/", "QPTMValidationRateMaintenance012"]
+      none: []
+    verdict: "Rate Maintenance duplicate error when end-dating/splitting an open-ended time slice is the QPTMValidationRateMaintenance012_GenChkDuplicateError validator defect — fixed in the 2023.04 hotfix (inferred — confirm in release notes)."
+    source: "SKILL_ADO_QPTM_Billing_Invoice_Rates.md §6"
+    ado_refs: ["1651264"]
+
+  - id: QPTM-BILL-021
+    gate: G3
+    match:
+      all: ["PPA"]
+      any: ["/time[- ]?slic/", "/end[- ]?dat/"]
+      none: []
+    verdict: "Spurious PPA events from an immaterial closed-month rate end-date/time-slice were fixed in 2020.03 (PPA now fires only on a true value/date change) — until the client is on that build, leave the PPAs unapproved and they drop at month close."
+    source: "SKILL_ADO_QPTM_Billing_Invoice_Rates.md §9"
+    ado_refs: ["205930"]
+
+  - id: QPTM-BILL-022
+    gate: G3
+    match:
+      all: ["ALALLOCATE", "index"]
+      any: ["/time[- ]?slic/", "RTCTRL_INDEX", "Index Maintenance"]
+      none: []
+    batch: NORMAL
+    verdict: "Web Index Maintenance time-slice over-clones RTCTRL_INDEX_DTL, leaving header/detail mismatched and failing ALALLOCATE — fixed (CloneAsNew detail filtering) in 2025.04 / 2025.10 / 2026.04 / develop (inferred — confirm in release notes)."
+    source: "SKILL_ADO_QPTM_Allocations_PPA_Imbalance.md §4F"
+    ado_refs: ["1796121"]
+
+  - id: QPTM-BILL-023
+    gate: G3
+    match:
+      all: ["PDA"]
+      any: ["/meter[- ]?split/", "/contract[- ]?agent/", "QPDAValidator", "PDASubmission0021"]
+      none: []
+    verdict: "PDA Submission/Import meter-split or contract-agent gap validation firing for dates unrelated to the PDA is the over-broad validator family — fixed in 2022.10 (PR 99814) and 2024.04 (PR 97924) (inferred — confirm); on unpatched 2021-era builds edit/import the PDA in Classic."
+    source: "SKILL_ADO_QPTM_Allocations_PPA_Imbalance.md §6"
+    ado_refs: ["1659856", "1676753", "1641972", "1768194"]
+
+  # ================= G4 — Bad data signatures =================
+
+  - id: QPTM-BILL-024
+    gate: G4
+    priority: 10
+    match:
+      all: ["ERROR SETTING VALUE FOR COLUMN", "BLTRAN_INVOICE_INPUT"]
+      any: []
+      none: []
+    batch: NORMAL
+    sql_pack: bill_seq_exhaustion
+    recipe: bill_seq_reseed_purge
+    verdict: "The identity/sequence feeding BLTRAN_INVOICE_INPUT (INVOICE_INPUT_ID family in QTRAN_SEQ) is maxed out — purge/archive the staging table, reseed the sequence, then re-run BLINVGEN for {prod_mth} and add sequence monitoring."
+    source: "SKILL_Billing.md §4.1"
+    ado_refs: ["1665295", "1607556"]
+
+  - id: QPTM-BILL-025
+    gate: G4
+    priority: 15
+    match:
+      all: ["too large or too small for an Int32"]
+      any: ["BLINVGEN", "PANIGHTLY", "Generate Documents", "invoice"]
+      none: []
+    batch: NORMAL
+    sql_pack: bill_seq_exhaustion
+    recipe: bill_seq_reseed_purge
+    verdict: "A QTRAN_SEQ counter or report-staging identity hit the Int32 ceiling (2,147,483,647) — add the table to the short-cycle archive definition, purge, reset LAST_NO / DBCC CHECKIDENT, then re-run; recurs on builds missing the #1384511/#1572396/#1600044 prevention fixes."
+    source: "SKILL_ADO_QPTM_Billing_Invoice_Rates.md §5"
+    ado_refs: ["1728741", "1639324", "1665295"]
+
+  - id: QPTM-BILL-026
+    gate: G4
+    match:
+      all: ["PK_BLSTAG_INVOICE_CTR_DT"]
+      any: []
+      none: []
+    batch: NORMAL
+    recipe: bill_ctr_dt_timeslice
+    verdict: "BLINVGEN PK violation on BLSTAG_INVOICE_CTR_DT comes from a redundant single-day contract time-slice added after a longer identical slice — delete the one-day slice in Classic, extend the adjacent slice to cover the day, then re-run allocation, inventory, and billing; deleting staging rows does not fix it."
+    source: "SKILL_ADO_QPTM_Billing_Invoice_Rates.md §4 Cluster A (A2)"
+    ado_refs: ["1773883"]
+
+  - id: QPTM-BILL-027
+    gate: G4
+    match:
+      all: ["BLQTYGATH"]
+      any: ["formula", "&gt;"]
+      none: []
+    batch: NORMAL
+    verdict: "A formula created in Web stored the HTML escape &gt; instead of the > operator and Classic BLINVGEN cannot parse it at the BLQTYGATH step — correct the formula operator in Classic (the web escape-handling fix is in 2023.04+)."
+    source: "SKILL_ADO_QPTM_Billing_Invoice_Rates.md §4 Cluster A (A3)"
+    ado_refs: ["1633605"]
+
+  - id: QPTM-BILL-028
+    gate: G4
+    match:
+      all: []
+      any: ["CANOMCLTG", "orphan rate", "RTCTRL_RATE_DTL"]
+      none: []
+    batch: NORMAL
+    sql_pack: bill_orphan_rate_dtl
+    recipe: bill_orphan_rate_cleanup
+    verdict: "Orphaned RTCTRL_RATE_DTL rows with no matching RTCTRL_RATE_HDR parent (left behind by a rate time-slice/delete or TSP copy) break billing/CAS across all pipes with random errors and slowness — end-date or delete the orphan detail rows and re-run."
+    source: "SKILL_Billing.md §5.1"
+    ado_refs: ["1756911"]
+
+  - id: QPTM-BILL-029
+    gate: G4
+    match:
+      all: ["AK_ALCTRL_ALLOC2"]
+      any: []
+      none: []
+    batch: NORMAL
+    sql_pack: bill_dup_alloc_rows
+    recipe: bill_alloc_dup_cleanup
+    verdict: "ALALLOCATE/PANIGHTLY tried to re-insert allocation rows that already exist in ALCTRL_ALLOC (stale rows from a prior run, or bad nom data such as duplicate Account Managers on a BP) — clean the duplicate/bad data and re-run scoped to the month."
+    source: "SKILL_Allocations.md §4"
+
+  - id: QPTM-BILL-030
+    gate: G4
+    match:
+      all: ["FlipNegativeNodes"]
+      any: []
+      none: []
+    batch: NORMAL
+    verdict: "QPSAlloc::FlipNegativeNodes() failure with the NNCTRL_NOM_HDR column error is bad/mismatched nomination header-detail data — fix the nom data first (code hardening tracked in ADO #1652157)."
+    source: "SKILL_Allocations.md §4"
+    ado_refs: ["1652157"]
+
+  - id: QPTM-BILL-031
+    gate: G4
+    match:
+      all: ["in Registered SQL"]
+      any: ["ALALLOCATE", "ALMAIN"]
+      none: []
+    batch: NORMAL
+    verdict: "ALALLOCATE registered-SQL errors are usually bad PACTRL_TSP_CNFG_CTRL config data found by the query, not the SQL itself — delete and reconvert the TSP's config row before escalating to engineering."
+    source: "SKILL_ADO_QPTM_Allocations_PPA_Imbalance.md §4E"
+    ado_refs: ["1706632"]
+
+  - id: QPTM-BILL-032
+    gate: G4
+    match:
+      all: []
+      any: ["phantom record", "phantom inventory", "phantom balance", "INTRAN_ACCT_ACTIVITY"]
+      none: []
+    recipe: bill_phantom_inventory_delete
+    verdict: "A stuck/phantom inventory balance that survives re-accumulation is an orphaned INTRAN_ACCT_ACTIVITY row (classically after an OBA-to-allocatable point switch) that INTRAN_ACCT_BAL keeps re-summing forward — delete the activity row and affected balance rows, then re-run INACCTACCM."
+    source: "SKILL_Customer_Accounts_Inventory.md §4a"
+    ado_refs: ["1632413"]
+
+  - id: QPTM-BILL-033
+    gate: G4
+    match:
+      all: ["CUSTACCTACCUM"]
+      any: ["forever", "never complete", "stuck", "timeout", "hang"]
+      none: []
+    batch: NORMAL
+    sql_pack: bill_loc_enddate_noms
+    verdict: "CUSTACCTACCUM running forever is usually a location end-dated while nominations still exist past its EFF_DT_TO (plus a low qpec.ini job timeout) — fix the location end date, raise the timeout, and re-run the job."
+    source: "SKILL_Allocations.md §9"
+
+  - id: QPTM-BILL-034
+    gate: G4
+    match:
+      all: ["not tied to an allocation plan"]
+      any: []
+      none: []
+    verdict: "The location-not-tied-to-an-allocation-plan warning during swing/PDA setup means allocation-plan location-group ref data is missing (PATRAN_LOC_GRP_LOC_GRP_RANGE / PACTRL_LOC_GRP_OTHER / PAHIST_SYS_LOC_GRP_LOC) — insert the missing rows via data script."
+    source: "SKILL_Allocations.md §5b"
+
+  # ================= G5 — Code change =================
+
+  - id: QPTM-BILL-035
+    gate: G5
+    match:
+      all: ["BLSOAIMP"]
+      any: []
+      none: []
+    batch: NORMAL
+    verdict: "BLSOAIMP payment import applying only the first row / first Business Associate of a multi-row CSV is the known import defect — reproduce with the client's exact file; a code change is required (multi-row import support)."
+    source: "SKILL_Billing.md §9"
+    ado_refs: ["1696922"]
+
+  - id: QPTM-BILL-036
+    gate: G5
+    match:
+      all: ["Recalc Fuel"]
+      any: []
+      none: []
+    batch: NORMAL
+    verdict: "Running the Allocation Process with Recalc Fuel checked and no location specified deletes the whole month's allocate-as-scheduled/percent-PDA allocations (missing parameter guard, code defect) — recover by re-running allocation for the affected locations and never run Recalc Fuel unscoped."
+    source: "SKILL_Allocations.md §4"
+
+  - id: QPTM-BILL-037
+    gate: G5
+    match:
+      all: ["Imbalance Trading"]
+      any: ["picklist", "not selectable", "not listed", "dropdown", "drop-down"]
+      none: []
+    recipe: bill_trade_extend_ctr_effdt
+    verdict: "The Imbalance Trading picklist only lists currently-active contracts instead of contracts active when the imbalance was created (code defect) — proven workaround: temporarily extend the contract EFF_DT_TO, submit the trade, then revert the date."
+    source: "SKILL_Customer_Accounts_Inventory.md §6"
+
+  - id: QPTM-BILL-038
+    gate: G5
+    match:
+      all: ["WHMEASIMP"]
+      any: ["not matching", "paper meter", "end-dated", "warning"]
+      none: []
+    batch: NORMAL
+    verdict: "WHMEASIMP not-matching warnings driven by end-dated paper meters are the import ignoring meter effective dates (code defect, fix in ADO #1700341) — verify meter EFF_DT_FROM/EFF_DT_TO against the gas day before scripting anything."
+    source: "SKILL_Customer_Accounts_Inventory.md §10"
+    ado_refs: ["1700341"]
+
+  - id: QPTM-BILL-039
+    gate: G5
+    priority: 20
+    match:
+      all: ["PPA"]
+      any: ["no billing adjustment", "LPS-F", "Park and Loan", "Park-and-Loan", "QSQLID_INS_SEL_INVOICE_DOC_PAL"]
+      none: []
+    batch: NORMAL
+    sql_pack: bill_pal_ext_missing
+    recipe: bill_deploy_blstag_pal_ext
+    verdict: "An LPS/PAL PPA that completes its whole lifecycle (PAN processed, balance updated) with invoice Adj = 0 means the PAL daily invoice-doc insert is crashing downstream on missing CORE table BLSTAG_PAL_EXT (dropped by build 3.1.00.0069) — script the object from a DEV/DTE instance and rerun the PPAs for {prod_mth}."
+    source: "SKILL_Billing.md §8 / §4.4"
+    ado_refs: ["1836277"]
+
+  - id: QPTM-BILL-041
+    gate: G5
+    priority: 10
+    match:
+      all: ["SQL 208", "BLSTAG_PAL_EXT"]
+      any: []
+      none: []
+    batch: NORMAL
+    sql_pack: bill_pal_ext_missing
+    recipe: bill_deploy_blstag_pal_ext
+    verdict: "CORE table BLSTAG_PAL_EXT was dropped by build 3.1.00.0069 while QPSGenerateDocuments still LEFT-JOINs it in QSQLID_INS_SEL_INVOICE_DOC_PAL_DAY (config gate defaults TRUE) — no PEX billing line generates for {contract}; script the object from a DEV/DTE instance, create it, and rerun the affected PPAs."
+    source: "SKILL_Billing.md §4.4"
+    ado_refs: ["1836277"]

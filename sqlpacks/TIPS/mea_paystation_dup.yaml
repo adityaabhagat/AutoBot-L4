@@ -1,0 +1,15 @@
+name: mea_paystation_dup
+product: TIPS
+# Duplicate QTRAN_PAYSTATION rows (PK = TRNX_ID + MTR_SFX).
+# Source: SKILL_ADO_TIPS_MasterData_Contracts_CCT_Meter.md §3 diagnostic SQL (#1783341 pattern)
+queries:
+  - id: q1
+    sql: "SELECT TRNX_ID, MTR_SFX, COUNT(*) AS DUP_CT FROM QTRAN_PAYSTATION WHERE PROD_DT = '{prod_mth}' GROUP BY TRNX_ID, MTR_SFX HAVING COUNT(*) > 1"
+    proves: "whether duplicate paystation rows exist for production month {prod_mth}"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "duplicate QTRAN_PAYSTATION rows present — data dup (stale CML/meter-split/contract slice) until a recurring new-TRNX_ID dup each run proves the registered SQL (#1783341 m_INS_STMT family)"
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "no duplicates for this production month — the dup may be scoped to the accounting month instead; re-check manually or keep evaluating"

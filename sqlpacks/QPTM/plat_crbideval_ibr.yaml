@@ -1,0 +1,13 @@
+name: plat_crbideval_ibr
+product: QPTM
+queries:
+  - id: q1
+    sql: "SELECT COUNT(*) AS bad_offers FROM CRCTRL_OFFER_HDR WHERE TSP_NO = {tsp} AND REL_ACCPT_BID_BASIS_CD = 'IP' AND IBR_FORMULA_CD IS NULL"
+    proves: "whether offers exist with the IBR bad-data signature that stops CRBIDEVAL (basis cd 'IP' with a NULL IBR formula)"
+    interpret:
+      - when: "rows[0].bad_offers >= 1"
+        verdict: CONFIRMED
+        meaning: "offers with REL_ACCPT_BID_BASIS_CD='IP' and NULL IBR_FORMULA_CD exist — the ADO #1639052 bad-data signature; withdraw bids then withdraw/clean the bad offers and rerun CRBIDEVAL"
+      - when: "rows[0].bad_offers == 0"
+        verdict: INFERRED
+        meaning: "no IBR bad-data offers for this TSP — check whether a bid was actually SUBMITTED (not just saved) before the eval ran; that alone yields the same CRBIDEVAL error (same §4 family)"

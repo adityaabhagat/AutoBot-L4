@@ -1,0 +1,13 @@
+name: plt_vol_daily_dup
+product: TIPS
+queries:
+  - id: q1
+    sql: "SELECT MTR_NO, PROD_DT, COUNT(*) AS dup_cnt FROM STRAN_VOL_DAILY WHERE PROD_DT >= '{prod_mth}' GROUP BY MTR_NO, PROD_DT HAVING COUNT(*) > 1"
+    proves: "whether duplicate meter/day rows landed in STRAN_VOL_DAILY (a second PI/volume import file for the same day - the PK_STRAN_VOL_DAILY violation cause)"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "duplicate meter/day rows present - two import files were loaded for the same day; keep one PI file per day on the FTP"
+      - when: "rowcount == 0"
+        verdict: REFUTED
+        meaning: "no duplicates in the window - the dup-file signature does not apply, keep evaluating"

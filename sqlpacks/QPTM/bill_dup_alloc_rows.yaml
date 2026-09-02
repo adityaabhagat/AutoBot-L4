@@ -1,0 +1,15 @@
+# Verifies the AK_ALCTRL_ALLOC2 duplicate-allocation cluster (rule QPTM-BILL-029).
+# Source SQL: SKILL_Allocations.md §16-B.
+name: bill_dup_alloc_rows
+product: QPTM
+queries:
+  - id: q1
+    sql: "SELECT TSP_NO, LOC_ID, ALLOC_GAS_DAY, ACCTG_MTH, TRANS_TYPE_ID, SR_CTR_NO, COUNT(*) AS DUP_CT FROM ALCTRL_ALLOC WHERE TSP_NO = {tsp} AND ACCTG_MTH = '{prod_mth}' GROUP BY TSP_NO, LOC_ID, ALLOC_GAS_DAY, ACCTG_MTH, TRANS_TYPE_ID, SR_CTR_NO HAVING COUNT(*) > 1"
+    proves: "whether duplicate allocation rows exist on the AK_ALCTRL_ALLOC2 unique key for the accounting month"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "duplicate allocation rows found — the unique-constraint collision source; clean them scoped to loc/gas-day (recipe bill_alloc_dup_cleanup)"
+      - when: "rowcount == 0"
+        verdict: INFERRED
+        meaning: "no duplicate alloc rows — the collision is likely from bad nom data feeding allocation (header/detail mismatch, duplicate Account Managers on a BP); clean the nom side first"

@@ -1,0 +1,381 @@
+# Auto-Bot Lite rules — TIPS Measurement / Master Data / Invoice
+# Compiled 2026-09-01 from:
+#   SKILL_TIPS_Measurement_Ticketing.md, SKILL_TIPS_Master_Data_Contracts.md,
+#   SKILL_TIPS_Invoice_Billing_Rates.md, SKILL_ADO_TIPS_Measurement_VolumeImport_FlowCal.md,
+#   SKILL_ADO_TIPS_MasterData_Contracts_CCT_Meter.md, SKILL_ADO_TIPS_Invoice_Billing_Rates.md
+# Conforms to rules/SCHEMA.md. Fixed-in builds inferred from ADO PR branches are flagged
+# "(inferred)" in the verdict — confirm in release notes before customer-facing use.
+product: TIPS
+area: measurement-masterdata-invoice
+rules:
+
+  # ---------------------------------------------------------------- G1 expected behavior
+  - id: TIPS-MEA-001
+    gate: G1
+    match:
+      all: ["FlowCal"]
+      any: ["didn't update", "did not update", "not updated", "not updating", "no new volumes"]
+      none: ["REVISION_NUMBER", "SCTRL_INT_FULLSYNC"]
+    verdict: "Volumes not updating after a FlowCal change usually means 'Load Volume from eSuite' (LoadMonthlyVolumesAndGasAnalysisFromEsuite) was never re-run — re-run it once volumes are final before treating this as a defect."
+    source: "SKILL_TIPS_Measurement_Ticketing.md §14 (24-00951525, 24-00966933)"
+
+  - id: TIPS-MEA-002
+    gate: G1
+    match:
+      all: ["Paystation"]
+      any: ["USER_ID", "UPDT_DT", "User ID not updating"]
+      none: ["SP_QTIP_ALL_VOL_IMPORT"]
+    verdict: "Paystation User_ID/Updt_Dt showing the original instead of the latest values is by design after the TRNX_ID purge-recycle change — set Facility Config IGNORE_PURGE_IND=1 to restore the old behavior."
+    source: "SKILL_TIPS_Measurement_Ticketing.md §8b (24-00972261)"
+
+  - id: TIPS-MEA-003
+    gate: G1
+    match:
+      all: ["Platts"]
+    verdict: "The TIPS price import supports the OPIS file format only — a Platts file parses wrong (e.g. price off by a factor of 100); this is a product limitation, not a rounding bug."
+    source: "SKILL_TIPS_Invoice_Billing_Rates.md §10 (26-01070189)"
+
+  - id: TIPS-MEA-004
+    gate: G1
+    match:
+      any: ["DELVOL", "CTR UOM", "duplicate UOM"]
+    verdict: "Doubled delivery volumes / wrong PPA reruns from a client-created duplicate CTR UOM (e.g. DELVOL) — end-date or delete the duplicate UOM, reload the code table, and rerun the plant."
+    source: "SKILL_TIPS_Invoice_Billing_Rates.md §13 (23-00925718, 23-00934620)"
+
+  # ---------------------------------------------------------------- G2 configuration
+  - id: TIPS-MEA-005
+    gate: G2
+    match:
+      any: ["Ethylene", "Propylene", "Hexane", "Component Product Allocation", "Plus component", "Plus-component"]
+    verdict: "Missing/wrong gas-analysis components (Ethylene, Propylene, Hexane, C6-in-C5+) are Facility Definition configuration — fix the Component Product Allocation tab and the Plus-components setting, not code."
+    source: "SKILL_TIPS_Measurement_Ticketing.md §5 (24-00992188, 25-01001253, 23-00925874)"
+
+  - id: TIPS-MEA-006
+    gate: G2
+    priority: 20
+    match:
+      any: ["SCTRL_INT_FULLSYNC", "FULL_SYNC_DT", "sync date"]
+    verdict: "FlowCal/GMAS import 'succeeds but loads nothing' when the file date is behind the full-sync control — set the SCTRL_INT_FULLSYNC / FULL_SYNC_DT entry to a timestamp before the file generation date and re-run the import."
+    source: "SKILL_TIPS_Measurement_Ticketing.md §12 (25-01025108); SKILL_ADO_TIPS_Measurement_VolumeImport_FlowCal.md Cluster C (#1655328)"
+    ado_refs: ["1655328"]
+
+  - id: TIPS-MEA-007
+    gate: G2
+    match:
+      any: ["PROGRESSIVE_ROUNDER_NO_BOUND_CHECK", "pcr_contr", "bound check"]
+    verdict: "Split decimal not calculated when allocated WHAV is slightly above physical WHDV — the progressive-rounding bound check rejects pcr_contr just over 1.0; set global config PROGRESSIVE_ROUNDER_NO_BOUND_CHECK=1 and verify expected results."
+    source: "SKILL_TIPS_Master_Data_Contracts.md §4 (26-01068082, 24-00985175)"
+
+  - id: TIPS-MEA-008
+    gate: G2
+    priority: 10
+    match:
+      any: ["PK_ALCTRL_MEAS_VOL", "USE_STRAN_LATEST_TABLES"]
+    verdict: "PK_ALCTRL_MEAS_VOL duplicate-key on the FTP/MEASIMP volume import is configuration, not code — the file must be a true .csv per the import/export definition, and USE_STRAN_LATEST_TABLES plus the ALESVOLIMP sync date must be set correctly."
+    source: "SKILL_ADO_TIPS_Measurement_VolumeImport_FlowCal.md Cluster A (#1700609, 24-00990895)"
+    ado_refs: ["1700609"]
+
+  - id: TIPS-MEA-009
+    gate: G2
+    match:
+      any: ["Escalation Preview", "ESCAL_BR", "/INDEX \\w+ not Found/"]
+    verdict: "Empty Escalation Preview or 'INDEX x not Found' settle errors are configuration — verify the Escalation Schedule setup and that index values (CPI/FERC/GDP) are loaded for every period the schedule needs, then rerun."
+    source: "SKILL_TIPS_Invoice_Billing_Rates.md §10 (25-01013611, 26-01064409, 24-00970370)"
+
+  - id: TIPS-MEA-010
+    gate: G2
+    match:
+      all: ["PLANTOWN"]
+      any: ["Rate Schedule", "Excess Charge", "Sel_H2SCO2_PCT", "Operating system error"]
+    verdict: "Facility Ownership Terms Revenue Rate Schedule resolving Rate/Excess Charge to 0 on PLANTOWN — set the rate schedule Type = Price (a Fee-type schedule does not resolve) and confirm the client's build has the cross-platform Sel_H2SCO2_PCT registered SQL."
+    source: "SKILL_ADO_TIPS_Invoice_Billing_Rates.md §6a (#1736767, 25-01024319)"
+    ado_refs: ["1736767"]
+
+  - id: TIPS-MEA-011
+    gate: G2
+    match:
+      any: ["VALIDATE_END_DT_NO_ORPHAN_MTR_SPLIT_CHILD_RECORDS", "/meter split (exists|has not been end)/"]
+    verdict: "CML delete/end-date validation wrong for meter splits — enable VALIDATE_END_DT_NO_ORPHAN_MTR_SPLIT_CHILD_RECORDS on the client layer and verify the cache-refresh trigger; a false error that clears after a service restart is the cached VTIP_QCTRL_MTR_SPLIT_DTL_VW, not bad data."
+    source: "SKILL_ADO_TIPS_MasterData_Contracts_CCT_Meter.md §7-A (#1627134, #1666247, #1707431, 24-00957962)"
+    ado_refs: ["1627134", "1666247", "1707431"]
+
+  # ---------------------------------------------------------------- G3 version (fixed-in build)
+  - id: TIPS-MEA-012
+    gate: G3
+    match:
+      all: ["WHMEASIMP"]
+      any: ["SAME KEY"]
+    batch: NORMAL
+    verdict: "WHMEASIMP 'AN ITEM WITH THE SAME KEY HAS ALREADY BEEN ADDED' is the duplicate-key wellhead-import defect (often duplicate paper-meter rows), code-fixed in patch 59 — confirm {client} is on patch 59+ and check for dup paper-meter rows."
+    source: "SKILL_TIPS_Measurement_Ticketing.md §4 (24-00990231, ETP TSP 30051)"
+
+  - id: TIPS-MEA-013
+    gate: G3
+    match:
+      all: ["SP_QTIP_ALL_VOL_IMPORT"]
+    batch: NORMAL
+    verdict: "SP_QTIP_ALL_VOL_IMPORT failures (V17 zero-volume month end-dating the meter / long USER_ID) have two shipped fix threads — the USER_ID 30-char truncation and the disposition end-dating fix (ADO #1712775, ~2024.10 hotfix, inferred) — confirm which is in {client}'s patch."
+    source: "SKILL_TIPS_Measurement_Ticketing.md §4 (24-00965985); SKILL_ADO_TIPS_Measurement_VolumeImport_FlowCal.md Cluster A"
+    ado_refs: ["1712775"]
+
+  - id: TIPS-MEA-014
+    gate: G3
+    priority: 20
+    match:
+      all: ["WGHTAVGGAS"]
+      any: ["fail", "error"]
+      none: ["rerun", "12/31/9999"]
+    batch: NORMAL
+    verdict: "WGHTAVGGAS erroring during MEASUREMENT for a plant with no Master Meter Group is fixed from 2020.07 (the step now warns and skips) — confirm {client}'s build; the pre-fix workaround was a dummy MMG."
+    source: "SKILL_TIPS_Measurement_Ticketing.md §6 (22-00598144)"
+
+  - id: TIPS-MEA-015
+    gate: G3
+    priority: 10
+    match:
+      any: ["12/31/9999", "MMG rerun"]
+    batch: NORMAL
+    recipe: mea_mmg_9999_slice
+    verdict: "A derived weighted-average analysis time-slice ending 12/31/9999 (TIPS end-of-time is 12/31/9000) is the Master Meter Group rerun date-range defect ADO #1435165/#1685847, fixed from 2020.03 forward (inferred) — delete the bad slice and rerun MEASUREMENT."
+    source: "SKILL_ADO_TIPS_Measurement_VolumeImport_FlowCal.md Cluster D; SKILL_TIPS_Measurement_Ticketing.md §6 (22-00869412)"
+    ado_refs: ["1435165", "1685847", "1328845"]
+
+  - id: TIPS-MEA-016
+    gate: G3
+    match:
+      all: ["/\\bDTH\\b/"]
+      any: ["heat value", "MMBTU", "QTRAN_ALLOC_VOL", "ALT_QTY_UOM_CD"]
+    verdict: "Heat value 0 in QTRAN_ALLOC_VOL with ALT_QTY_UOM_CD=DTH from FlowCal is the DTH-to-MMBTU UOM mapping defect ADO #1396228, fixed 2021.10 / ESuite 17.3.0 (inferred) — confirm {client}'s build."
+    source: "SKILL_ADO_TIPS_Measurement_VolumeImport_FlowCal.md Cluster C (#1396228)"
+    ado_refs: ["1396228"]
+
+  - id: TIPS-MEA-017
+    gate: G3
+    match:
+      any: ["ASSCGLM", "ASCGLM", "/gas.?lift.{0,60}(doubl|tripl|duplicat)/", "/(doubl|tripl|duplicat)\\w*.{0,60}gas.?lift/"]
+    batch: NORMAL
+    sql_pack: mea_asscglm_gaslift
+    recipe: mea_asscglm_dedupe
+    verdict: "Gas-lift volumes doubling after a reallocation-mode plant rerun is the ASSCGLM purge defect ADO #1731166, fixed in 2025.04 (ships in the 2025.04.1.3 hotfix) — patch {client}, or take the plant out of realloc mode / purge duplicate ASSCGLM rows and rerun."
+    source: "SKILL_TIPS_Master_Data_Contracts.md §6 (25-01023169); SKILL_ADO_TIPS_MasterData_Contracts_CCT_Meter.md §5"
+    ado_refs: ["1731166", "1761294"]
+
+  - id: TIPS-MEA-018
+    gate: G3
+    match:
+      any: ["QTRAN_IMBAL_ACCT_BAL", "/imbalance\\w*.{0,60}doubled/", "/customer account balance\\w*.{0,60}doubl/"]
+    batch: NORMAL
+    sql_pack: mea_imbal_bal_dup
+    recipe: mea_imbal_bal_dedupe
+    verdict: "Duplicate QTRAN_IMBAL_ACCT_BAL rows doubling imbalance/customer-account balances (recurring Hilcorp pattern) — dedupe scoped to the month, confirm {client}'s build has the code fix in the 2025.04 patch stream (>=2025.04.1.4), and ensure RUN_IMBALANCE_BY_FACILITY is checked into the client repo so a patch does not revert it."
+    source: "SKILL_TIPS_Master_Data_Contracts.md §5 (25-01061774, 26-01068169); SKILL_ADO_TIPS_MasterData_Contracts_CCT_Meter.md §4-A (#1772117)"
+    ado_refs: ["1772117", "1772687", "1778789"]
+
+  - id: TIPS-MEA-019
+    gate: G3
+    priority: 10
+    match:
+      any: ["QTRAN_IMBAL_ACCT_ACTIVITY_D_SQ", "ACCT_ACTIVITY_DTL_ID", "number precision too large", "sequence too large for column"]
+    batch: NORMAL
+    sql_pack: mea_imbal_seq_precision
+    recipe: mea_imbal_seq_widen
+    verdict: "INACCTACCM 'number precision too large' — sequence QTRAN_IMBAL_ACCT_ACTIVITY_D_SQ exceeded ACCT_ACTIVITY_DTL_ID NUMBER(10); the product fix widens the column to NUMBER(19) (ADO #1723573, 2024-era builds inferred) with an interim NUMBER(11) ALTER workaround across the QTRAN/QPOST/CAW tables."
+    source: "SKILL_TIPS_Master_Data_Contracts.md §5 (25-01014345); SKILL_ADO_TIPS_MasterData_Contracts_CCT_Meter.md §4-B"
+    ado_refs: ["1723573"]
+
+  - id: TIPS-MEA-020
+    gate: G3
+    priority: 20
+    match:
+      all: ["INACCTACCM"]
+      any: ["timeout", "timed out", "Query timeout expired", "hours", "3600"]
+      none: ["precision"]
+    batch: SEGREGATED
+    verdict: "Company Imbalance INACCTACCM running for hours / timing out on large reruns is the imbalance-splitting overhead defect ADO #1636859, fixed 2022.10/2023.04 (inferred) — interim relief: raise SPLIT_COUNT_INACCTACCM to (number of QPECs - 2) and restart the QPECs."
+    source: "SKILL_ADO_TIPS_MasterData_Contracts_CCT_Meter.md §4-C (#1636859, 23-00934008)"
+    ado_refs: ["1636859", "1596532"]
+
+  - id: TIPS-MEA-021
+    gate: G3
+    match:
+      any: ["not valid for effective date"]
+    verdict: "QCM Contract Meter List 'meter is not valid for effective date' on a correctly time-sliced meter is the plant-meter cache window defect (ValidPlantMeterCache.FirstDayToCache), ADO #1788087, fixed 2025.04 (inferred) — it is not bad data."
+    source: "SKILL_ADO_TIPS_MasterData_Contracts_CCT_Meter.md §7-B (#1788087, 26-01084783); SKILL_TIPS_Master_Data_Contracts.md §3"
+    ado_refs: ["1788087"]
+
+  - id: TIPS-MEA-022
+    gate: G3
+    match:
+      all: ["BL01A"]
+      any: ["duplicat", "external"]
+    verdict: "BL01A Invoice Documents duplicating every sub-report once per security user on the contract party when run by an external user is ADO #1538357, fixed in 2022.04 (PR 73404) — confirm {client}'s build."
+    source: "SKILL_TIPS_Invoice_Billing_Rates.md §3 (#1538357)"
+    ado_refs: ["1538357"]
+
+  - id: TIPS-MEA-023
+    gate: G3
+    match:
+      any: ["QRPTS_INVOICE_DTL_CAN", "/RPT ?200.{0,80}(x2|x3|x4|doubl|tripl|duplicat)/"]
+    verdict: "RPT 200 (CAN) product volumes x2/x3/x4 for meters under multiple facilities/meter splits is the missing plant filter in QRPTS_INVOICE_DTL_CAN, ADO #1761173, fixed via hotfix Nov-2025 — prove it against the Settle Prod query, then confirm {client}'s patch."
+    source: "SKILL_TIPS_Invoice_Billing_Rates.md §3 (#1761173, 25-01049592)"
+    ado_refs: ["1761173"]
+
+  - id: TIPS-MEA-024
+    gate: G3
+    match:
+      all: ["PPA"]
+      any: ["reversal doubled", "doubled reversal", "corrected volume", "QRPTS_INVOICE_DTL_VW"]
+    verdict: "PPA/rerun invoice showing doubled volume on both the reversal and corrected lines while the amounts stay correct is the QRPTS_INVOICE_DTL_VW OR/R defect ADO #1724455, fixed in the TIPS 2022.04 stream — check {client}'s build."
+    source: "SKILL_TIPS_Invoice_Billing_Rates.md §4 (#1724455, 25-01004724)"
+    ado_refs: ["1724455"]
+
+  - id: TIPS-MEA-025
+    gate: G3
+    match:
+      any: ["/\\bWIO\\b/", "0.0578125", "0.9421875"]
+    verdict: "One owner's allocated volume showing 0 when the meter-split WIO%/split decimal has many places (e.g. 0.0578125) is the missing-CAST progressive-rounding defect ADO #1712833, fixed 2024.10 CAN (inferred) — verify the S_DECIMAL values then confirm the patch."
+    source: "SKILL_TIPS_Master_Data_Contracts.md §4 (25-01002874); SKILL_ADO_TIPS_MasterData_Contracts_CCT_Meter.md §6"
+    ado_refs: ["1712833"]
+
+  # ---------------------------------------------------------------- G4 bad data
+  - id: TIPS-MEA-026
+    gate: G4
+    priority: 10
+    match:
+      any: ["SEXTN_CTR_HEADER", "duplicates inserting into pay station", "/contract.{0,80}(not|stopp?ed) allocating/"]
+    sql_pack: mea_ctr_slice_overlap
+    recipe: mea_ctr_slice_overlap
+    verdict: "Contract {contract} not allocating for a month, or facility-batch/PPA paystation duplicate-insert errors, trace to SEXTN_CTR_HEADER contract time-slice gaps/overlaps (QCM-managed end dates tied to MTR SFX CD) — verify the slices, correct via QCM end-date fix or Cloud Ops slice script, then rerun."
+    source: "SKILL_TIPS_Master_Data_Contracts.md §3 (25-01002372, 26-01100512)"
+
+  - id: TIPS-MEA-027
+    gate: G4
+    priority: 15
+    match:
+      any: ["QTRAN_PAYSTATION_GATH_ATTR"]
+    batch: NORMAL
+    verdict: "Facility/plant batch job PK violation on QTRAN_PAYSTATION_GATH_ATTR is an overlapping timeslice on a specific meter — find and correct the overlapping meter timeslice via script, then rerun the plant."
+    source: "SKILL_TIPS_Measurement_Ticketing.md §7 (23-00932144)"
+
+  - id: TIPS-MEA-028
+    gate: G4
+    priority: 20
+    match:
+      all: ["unique constraint"]
+      any: ["Analysis step", "analysis timeslice", "analysis time slice", "QTRAN_STD_ANALYSIS"]
+      none: ["TRNX_ID"]
+    batch: NORMAL
+    verdict: "A plant erroring with a unique constraint on the Measurement/Analysis step (not TRNX_ID) means two meters have overlapping analysis timeslices in the user's own data — fix the overlapping timeslices and rerun measurement."
+    source: "SKILL_TIPS_Measurement_Ticketing.md §7 and §14 (22-00513111)"
+
+  - id: TIPS-MEA-029
+    gate: G4
+    priority: 30
+    match:
+      all: ["QTRAN_PAYSTATION"]
+      any: ["duplicate", "primary key", "/\\bPK\\b/", "UNABLE TO INSERT PAYSTATION"]
+      none: ["GATH_ATTR"]
+    batch: NORMAL
+    sql_pack: mea_paystation_dup
+    verdict: "Duplicate QTRAN_PAYSTATION rows (PK TRNX_ID+MTR_SFX) are stale CML/meter-split/contract-slice data until the dup-key SQL proves the registered SQL is multiplying rows — data dups go to a Cloud Ops delete script; a recurring dup with a new TRNX_ID each run is the code-defect family (e.g. ADO #1783341 m_INS_STMT, fixed 2023.04 HF)."
+    source: "SKILL_ADO_TIPS_MasterData_Contracts_CCT_Meter.md §3; SKILL_TIPS_Master_Data_Contracts.md §7"
+    ado_refs: ["1783341", "1698080", "1695221"]
+
+  - id: TIPS-MEA-030
+    gate: G4
+    priority: 40
+    match:
+      any: ["split decimal", "S_DECIMAL"]
+    sql_pack: mea_split_decimal_zero
+    recipe: mea_split_decimal_zero
+    verdict: "A zero/missing Split Decimal at the Meter Split level flows S_DECIMAL=0 into QTRAN_PAYSTATION and silently zeroes settlement/gas-statement volumes for {prod_mth} — set the split decimal correctly (others = 1) and rebuild the split."
+    source: "SKILL_TIPS_Measurement_Ticketing.md §9 (26-01091612, 24-00937128)"
+
+  - id: TIPS-MEA-031
+    gate: G4
+    priority: 50
+    match:
+      any: ["QIMPVOLD", "QIMPEXP"]
+    batch: NORMAL
+    verdict: "Daily volume import (QIMPVOLD, step QIMPEXP) loading only the first ~49,000 rows means a primary-key-violating duplicate row aborted the batch insert mid-file — find and clean the dup-key row or split the file, then rerun."
+    source: "SKILL_TIPS_Measurement_Ticketing.md §4 (22-00679867)"
+
+  - id: TIPS-MEA-032
+    gate: G4
+    priority: 60
+    match:
+      all: ["REVISION_NUMBER"]
+    recipe: mea_flowcal_revision_reset
+    verdict: "Integration Platform FlowCal-to-TIPS errors with REVISION_NUMBER above 1000 come from FlowCal sending multiple events that inflate the revision number — run the reset script (back to 1 or 2) as the interim fix and route the FlowCal upgrade as the durable fix."
+    source: "SKILL_TIPS_Measurement_Ticketing.md §12 (25-01047138, 25-01050084, 25-01050137)"
+
+  - id: TIPS-MEA-033
+    gate: G4
+    priority: 70
+    match:
+      any: ["PDA has not been end dated", "PDA has not been end-dated"]
+    verdict: "Cannot end-date a meter with 'PDA has not been end dated' although it was — a second/orphan PDA submission record exists on the meter; identify and delete the orphan PDA record."
+    source: "SKILL_TIPS_Master_Data_Contracts.md §4 (24-00984071)"
+
+  # ---------------------------------------------------------------- G5 code change
+  - id: TIPS-MEA-034
+    gate: G5
+    match:
+      all: ["MEASIMPORT"]
+      any: ["doubl", "tripl", "multiple times", "warning"]
+    batch: NORMAL
+    verdict: "MEASIMPORT warnings listing a meter multiple times with volume doubled/tripled while QPTM and TIPS actually reconcile is the spurious measimport warning/aggregation defect ADO #1670170 — confirm the patch level and reassure that the warnings are spurious when QPTM/TIPS match."
+    source: "SKILL_TIPS_Measurement_Ticketing.md §4 (24-00963344)"
+    ado_refs: ["1670170", "1670217"]
+
+  - id: TIPS-MEA-035
+    gate: G5
+    priority: 10
+    match:
+      all: ["TRNX_ID"]
+      any: ["unique constraint", "QTRAN_STD_ANALYSIS_BASE", "MeasAnalysis"]
+    batch: NORMAL
+    sql_pack: mea_trnxid_collision
+    recipe: mea_trnxid_reset
+    verdict: "MeasAnalysis unique-constraint failures on QTRAN_STD_ANALYSIS_BASE.TRNX_ID across all facilities are TRNX_ID exhaustion/collision — reset TRNX_ID to 0 short-term and confirm the long-term integer-limit fix ADO #1617830 is in {client}'s patch."
+    source: "SKILL_TIPS_Measurement_Ticketing.md §8a (23-00916043, 23-00916530)"
+    ado_refs: ["1617830", "1631131", "1773003"]
+
+  - id: TIPS-MEA-036
+    gate: G5
+    match:
+      all: ["NGLPROD"]
+    batch: NORMAL
+    verdict: "Plant run failures at the NGLPROD step (including native ACCESS_VIOLATION C0000005 crashes) are a code defect family — escalate to Engineering with the failing step, plant/facility, {prod_mth} and the exact error after ruling out data causes."
+    source: "SKILL_TIPS_Measurement_Ticketing.md §4 and §7 (24-00945026)"
+
+  - id: TIPS-MEA-037
+    gate: G5
+    match:
+      all: ["EFF_PCT_CONTR"]
+    batch: NORMAL
+    verdict: "'ERROR SETTING VALUE FOR COLUMN EFF_PCT_CONTR' when the measured volume is tiny versus a huge nom is the S_DECIMAL precision overflow — the DB change widens QTRAN_PAYSTATION S_DECIMAL from NUMBER(14,10) to NUMBER(16,10)."
+    source: "SKILL_TIPS_Master_Data_Contracts.md §7 (24-00994961)"
+
+  - id: TIPS-MEA-038
+    gate: G5
+    match:
+      all: ["concatenat"]
+      any: ["PPA", "un-approve", "unapprove", "approve"]
+    verdict: "Cannot un-approve PPAs because of a concatenate error — the un-approve SQL overflows the COMMENTS varchar2(4000) column; short-term clear the comments via script (KB ka0UG0000002dDNYAY), long-term the SQL restricts comments to 4000 chars."
+    source: "SKILL_TIPS_Master_Data_Contracts.md §9 (24-00990256, 24-00991302)"
+
+  - id: TIPS-MEA-039
+    gate: G5
+    match:
+      any: ["must have at least one contact"]
+    verdict: "Web Statement Group Maintenance throwing 'You must have at least one contact...' on any valid edit while Classic works is the recurring Web validation defect ADO #1674016/#1776617 — it has regressed across build lines, so check {client}'s patch level for their build line first."
+    source: "SKILL_TIPS_Invoice_Billing_Rates.md §7 (24-00966603, 25-01062445)"
+    ado_refs: ["1674016", "1776617"]
+
+  - id: TIPS-MEA-040
+    gate: G5
+    match:
+      any: ["bare line feed", "bare linefeed", "bare LF", "bare-LF"]
+    verdict: "All external invoice emails rejected with a bare line-feed error right after a mail-platform move (e.g. to Office 365) is the invoice e-mail generation emitting bare LFs — code fix; check this before anything else when customers stop receiving invoices after an SMTP change."
+    source: "SKILL_TIPS_Invoice_Billing_Rates.md §12 (22-00617633)"

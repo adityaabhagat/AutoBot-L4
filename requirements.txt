@@ -1,0 +1,6 @@
+# Auto-Bot — by Aditya Bhagat. Python 3.11+
+scikit-learn>=1.3        # TF-IDF vector KB (engine/kb.py)
+joblib>=1.3              # KB index persistence
+PyYAML>=6.0              # rule tables / SQL packs
+requests>=2.31           # ADO REST fallback
+pyodbc>=5.0              # client DB diagnostics (Windows auth); optional at runtime

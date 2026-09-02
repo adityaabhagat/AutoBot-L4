@@ -1,0 +1,363 @@
+# Auto-Bot Lite rules — QPTM Nominations / EDI / Confirmations / Scheduling (CAS)
+# Compiled 2026-09-01 from the 7 QPTM nom/EDI/scheduling skills. Schema: rules/SCHEMA.md.
+product: QPTM
+area: noms-edi-scheduling
+rules:
+
+  # ---------------------------------------------------------------- G1 — Expected Behavior
+  - id: QPTM-NOM-001
+    gate: G1
+    priority: 10
+    match:
+      any: ["SUBDTL999", "SUBDTL998"]
+    verdict: "Nomination blocked by another nom's LI error in the same submission batch — find and fix the root LI error and the SUBDTL999/998 errors resolve themselves."
+    source: "SKILL_EDI_Troubleshooting.md §12"
+
+  - id: QPTM-NOM-002
+    gate: G1
+    priority: 20
+    match:
+      any: ["ENMQR315", "NN00009011", "LATE NOMINATION OR RETROACTIVE", "late nom"]
+    sql_pack: nom_cycle_deadline_present
+    verdict: "Shipper submitted after the cycle deadline for the targeted cycle — ENMQR315 is working as designed; verify the exact deadline in PACTRL_CYCLE_DEADLINE for {tsp} and inform the shipper of the correct deadline times."
+    source: "SKILL_EDI_Troubleshooting.md §6; SKILL_Cycle_Deadline_Reference.md (Step 1-4)"
+    ado_refs: ["1609881"]
+
+  - id: QPTM-NOM-003
+    gate: G1
+    match:
+      any: ["NN00003072"]
+    verdict: "NN00003072 sums nominated qty per pipe segment from Location Path Maintenance and correctly errors when a single segment exceeds KMDQ — working as designed; review the Location Path segment setup."
+    source: "SKILL_ADO_QPTM_Nominations_EDI.md §9 (F3)"
+    ado_refs: ["1726480"]
+
+  - id: QPTM-NOM-004
+    gate: G1
+    match:
+      all: ["EPSQ"]
+      any: ["ratchet"]
+      none: ["ratcheting error"]
+    verdict: "Intraday cuts can legitimately go below EPSQ in the ratcheted Summary view — only the unratcheted view must never go below EPSQ (ADO #1644345 concluded CAS respects EPSQ for prelim cuts)."
+    source: "SKILL_ADO_QPTM_Confirmations_Scheduling_CAS.md §10"
+    ado_refs: ["1644345"]
+
+  - id: QPTM-NOM-005
+    gate: G1
+    match:
+      all: ["interconnect"]
+      any: ["AutoConf", "CFAUTOCONF", "DRN"]
+    verdict: "CFAUTOCONF matches ALL Interconnect-attribute locations sharing a DRN across every TSP by design (GetInterconnectLocations has no TSP filter) — working as coded; end-date the offending DRN or file a TSP-scoped-autoconf enhancement."
+    source: "SKILL_ADO_QPTM_Confirmations_Scheduling_CAS.md §4"
+    ado_refs: ["1377828", "1396176", "1716241"]
+
+  - id: QPTM-NOM-006
+    gate: G1
+    match:
+      any: ["ALL_PATH_IND", "unbalanced paths"]
+    verdict: "CAS balances end-of-cycle by design — do not set ALL_PATH_IND=1 on CFPSTRESP; run balancing at the end of each cycle instead (documented recommendation, case 22-00536889)."
+    source: "SKILL_Confirmations_Scheduling.md §9"
+
+  - id: QPTM-NOM-007
+    gate: G1
+    match:
+      all: ["NOMIMPEXTS"]
+    verdict: "NOMIMPEXTS requires .xlsx (the .xls format throws the Syncfusion PropVariant overflow) and restricts each file to a single company and single service requester by design."
+    source: "SKILL_ADO_QPTM_Nominations_EDI.md §10"
+    ado_refs: ["1692624"]
+
+  # ---------------------------------------------------------------- G2 — Configuration
+  - id: QPTM-NOM-008
+    gate: G2
+    priority: 10
+    match:
+      any: ["ENMQR315", "PACTRL_CYCLE_DEADLINE", "cycle deadline", "NN00009011"]
+    sql_pack: nom_cycle_deadline_missing
+    verdict: "NOM cycle-deadline rows are missing/expired in PACTRL_CYCLE_DEADLINE for TSP {tsp}, blocking or mis-timing all nomination submission — add/correct the deadline rows (offset, time, TZ, effective dates)."
+    source: "SKILL_EDI_Troubleshooting.md §6 (root causes 2-3, 8); SKILL_Nominations.md §11 (case 25-01044634)"
+
+  - id: QPTM-NOM-009
+    gate: G2
+    match:
+      any: ["EEDM100", "EEDM101", "EEDM103", "EEDM105", "EEDM106", "EEDM107"]
+    verdict: "EEDM transport error at the InboundServer before NMST parsing — fix the trading partner's TPA ISA/GS common-code or input-format configuration in NNCTRL_TPA."
+    source: "SKILL_EDI_Troubleshooting.md §11, §18"
+
+  - id: QPTM-NOM-010
+    gate: G2
+    match:
+      any: ["ENMQR301", "ENMQR302", "ENMQR303", "ENMQR312"]
+    verdict: "The service requester contract is expired, inactive, locked, or wrong in the EDI file for the gas day — verify NNCTRL_CTR effective dates and the contract number for {contract}."
+    source: "SKILL_EDI_Troubleshooting.md §8, §18"
+
+  - id: QPTM-NOM-011
+    gate: G2
+    match:
+      any: ["ENMQR525", "ENMQR526", "ENMQR527", "ENMQR532", "ENMQR534", "ENMQR539"]
+    verdict: "Receipt/delivery location is missing, deactivated, or not on the contract path — verify NNCTRL_LOC (IS_ACTIVE, EFF_DT_TO) and NNCTRL_CTR_PATH for {contract}."
+    source: "SKILL_EDI_Troubleshooting.md §8, §18"
+
+  - id: QPTM-NOM-012
+    gate: G2
+    batch: SEGREGATED
+    match:
+      any: ["Failed to decrypt encrypted file", "GPG command has exceeded timeout", "gpg: error creating", "PROCESS_TIME_OUT"]
+    recipe: nom_gpg_timeout
+    verdict: "GPG decrypt failures come from an unreliable decrypted-file share plus the 5-second default GPG timeout — move the path off the Cohesity share, set global config EDI/PROCESS_TIME_OUT=15000, and restart QPEC (Cloud-Ops + metadata fix, not core code)."
+    source: "SKILL_ADO_QPTM_Nominations_EDI.md §4 (A4)"
+    ado_refs: ["1672049"]
+
+  - id: QPTM-NOM-013
+    gate: G2
+    match:
+      any: ["USE_INTERCONNECT_LOC", "Interconnect Loc ID", "interconnect location id"]
+    verdict: "Which location identifier goes in outbound RQCF/RRFC/SQOP is controlled by the USE_INTERCONNECT_LOC_FOR_RQCF/_RRFC/_SQOP configs (TPA must be NAESB 3.0+) — set the config per dataset instead of assuming a code defect."
+    source: "SKILL_ADO_QPTM_Confirmations_Scheduling_CAS.md §11 (H1); SKILL_ADO_QPTM_Nominations_EDI.md §5 (B1)"
+    ado_refs: ["1678265", "1694083"]
+
+  - id: QPTM-NOM-014
+    gate: G2
+    match:
+      all: ["EPSQ"]
+      any: ["ID1", "ID2", "ID3", "GAS_FLOW_START_TIME_OFFSET", "zero", "not populating"]
+    sql_pack: nom_epsq_offset
+    recipe: nom_epsq_offset
+    verdict: "EPSQ only evaluates in ID3 (or returns 0) because PACTRL_CYCLE.GAS_FLOW_START_TIME_OFFSET is NULL for the earlier cycles — set the gas-flow-start offset for ID1/ID2 on TSP {tsp}."
+    source: "SKILL_Confirmations_Scheduling.md §8 (cases 24-00982666, 26-01088719)"
+
+  - id: QPTM-NOM-015
+    gate: G2
+    batch: SEGREGATED
+    match:
+      all: ["PBBALCHAIN"]
+      any: ["not run", "did not run", "didn't run", "not launch", "not kicked"]
+    verdict: "PBBALCHAIN not launching after a Confirmation Response cut is driven by TSP config CONF_UPD_CALL_BALANCING_AFTER and param 26902 'Run PBBALCHAIN?' (the asInt-vs-asBool defect was fixed in 2020.09) — verify both before escalating."
+    source: "SKILL_ADO_QPTM_Confirmations_Scheduling_CAS.md §7"
+    ado_refs: ["222984"]
+
+  - id: QPTM-NOM-016
+    gate: G2
+    match:
+      all: ["confirm"]
+      any: ["above the nomination", "above nomination", "higher than the nom", "greater than the nom"]
+    verdict: "The confirm-above-nomination validation is toggled via the classic Object Usage screen and was likely disabled by the client — re-enable it there (ADO #1695520 was rejected as a code defect)."
+    source: "SKILL_ADO_QPTM_Confirmations_Scheduling_CAS.md §9, §14"
+    ado_refs: ["1695520"]
+
+  - id: QPTM-NOM-017
+    gate: G2
+    match:
+      all: ["NNCALCFUEL"]
+      none: ["unique constraint", "overlapping"]
+    verdict: "NNCALCFUEL not applying a changed fuel rate is a stale rate cache, not code — refresh the rate cache (QPTMRateService/ServiceCore) and clear any nomination line errors before escalating."
+    source: "SKILL_ADO_QPTM_Nominations_EDI.md §11"
+    ado_refs: ["1460001", "166087"]
+
+  # ---------------------------------------------------------------- G3 — Version (known fixed)
+  - id: QPTM-NOM-018
+    gate: G3
+    match:
+      all: ["nom"]
+      any: ["NN00003010", "effective end date"]
+    verdict: "NN00003010 checked only the begin gas day, so noms spanning past the contract Effective End Date validated on initial submit — fixed in 2025.04 (full date-range loop); also verify the rule is assigned for PNT & PT in Validation Rule Assignment."
+    source: "SKILL_ADO_QPTM_Nominations_EDI.md §9 (F1)"
+    ado_refs: ["1730358", "1755248"]
+
+  - id: QPTM-NOM-019
+    gate: G3
+    match:
+      any: ["NN00009965"]
+    verdict: "NN00009965 shared-MDQ read the wrong MDQ field and included pool-to-pool noms in the total — fixed in 2025.10/2026.04; on non-WWM clients also remove the leaked core NNXREF_VALD_RULE_GRP_EFF_RULE assignment records."
+    source: "SKILL_ADO_QPTM_Nominations_EDI.md §9 (F4/F5)"
+    ado_refs: ["1775092", "1712648"]
+
+  - id: QPTM-NOM-020
+    gate: G3
+    match:
+      any: ["NNSTAG_NOM_LOAD_ERROR", "NNSTAG_ACTV_DTL", "DN_RECORD_IN"]
+    verdict: "Nom Upload staging failure from Oracle-vs-MSSQL column-name drift (DN_RECORD_IND vs DN_RECORD_IN) in NNSTAG_NOM_LOAD_ERROR — fixed in 2021.10 / 2022.04 / 2022.10."
+    source: "SKILL_ADO_QPTM_Nominations_EDI.md §10"
+    ado_refs: ["1455439"]
+
+  - id: QPTM-NOM-021
+    gate: G3
+    match:
+      all: ["nom", "paths"]
+      any: ["disappear", "deleted", "vanish", "LI"]
+    verdict: "Adjusting a Line-Invalid nom deletes all other nom paths because the validation engine date-splits the nom and returns only one range — fixed ONLY in GA 2025.10 (not hotfixed to older versions); client must upgrade."
+    source: "SKILL_ADO_QPTM_Nominations_EDI.md §12; SKILL_Nominations.md §6 (case 24-00952492)"
+    ado_refs: ["1452323"]
+
+  - id: QPTM-NOM-022
+    gate: G3
+    match:
+      any: ["NNG001", "NNG031", "Ending Gas Day must be"]
+    verdict: "Copy can create noms with BEG_GAS_DAY > END_GAS_DAY; validations NNG001/NNG031 block it — fixed in 2024.04, plus the 2024.04 ShouldValidate recurrence fix for Copy leaving DataObjectState Unchanged."
+    source: "SKILL_ADO_QPTM_Nominations_EDI.md §12"
+    ado_refs: ["1672104", "1769494"]
+
+  - id: QPTM-NOM-023
+    gate: G3
+    match:
+      any: ["N9*48", "Recall Notification Period Indicator"]
+    verdict: "The versioned outbound dataset classes (QEdiCRANOut31/QEdiCROFOut18) never emitted the ID3 Recall Notification Period Indicator N9*48 — fixed in 2025.10 (inferred), version-gated to NAESB 3.1+; also verify the CRNS grammar config exists in TPA Maintenance."
+    source: "SKILL_ADO_QPTM_Nominations_EDI.md §6"
+    ado_refs: ["1756196", "1781005"]
+
+  - id: QPTM-NOM-024
+    gate: G3
+    match:
+      all: ["OACY"]
+      any: ["missing", "suppress", "INCLUDE_SPO_LOC_IN_GROUP_ROLLUP"]
+    verdict: "OACY location-group roll-ups dropped SPO-suppressed locations after the TEP suppress fix — resolved by new global config INCLUDE_SPO_LOC_IN_GROUP_ROLLUP, shipped in 2024.10 / 2025.04 / 2025.10 plus a 2024.04 hotfix."
+    source: "SKILL_ADO_QPTM_Nominations_EDI.md §6"
+    ado_refs: ["1759474", "1718572"]
+
+  - id: QPTM-NOM-025
+    gate: G3
+    match:
+      all: ["RRFC"]
+      any: ["SLN", "CONF_TRK_ID", "cut to 0", "cuts to 0"]
+    verdict: "Manual RRFC mints a different SLN than automated RRFC because CONF_TRK_ID is null for Path noms and the DB-built file falls back to 100000, so the trading partner cuts to 0 — fixed in 2025.04 / 2025.10 (populate CONF_TRK_ID)."
+    source: "SKILL_ADO_QPTM_Nominations_EDI.md §7 (D2)"
+    ado_refs: ["1770476"]
+
+  - id: QPTM-NOM-026
+    gate: G3
+    match:
+      all: ["model"]
+      any: ["NAESB_MODEL_CD", "unthreaded", "SQTS"]
+    verdict: "The LC Nomination Submission screen stamps the wrong NAESB_MODEL_CD ('U' instead of 'T') on NNCTRL_NOM_HDR and outbound NMST/SQTS just reflects it — fixed go-forward in TEP Patch 13 (2024.03) + develop; historical header rows need a data script."
+    source: "SKILL_ADO_QPTM_Nominations_EDI.md §5 (B3)"
+    ado_refs: ["1595439"]
+
+  - id: QPTM-NOM-027
+    gate: G3
+    match:
+      all: ["cutting"]
+      any: ["AutoConf", "CFAUTOCONF"]
+      none: ["interconnect", "DRN"]
+    verdict: "CFAUTOCONF over-reduced when cutting above a lower-ranked nom (ProRateReduction over-reduced by the buy/sell delta) — fixed in 2022.04/2022.10 (inferred); confirm the #1568149 PRs are in the client build."
+    source: "SKILL_ADO_QPTM_Confirmations_Scheduling_CAS.md §4; SKILL_Confirmations_Scheduling.md §7"
+    ado_refs: ["1568149"]
+
+  - id: QPTM-NOM-028
+    gate: G3
+    match:
+      any: ["ratcheting error"]
+    verdict: "The ratcheting error blocking prelim cuts is collateral from the #1317128 balancing rewrite (two ratchet-qty accumulation lines) — fixed by the #1601901 revert in 2022.10 and up; workaround: apply EPSQ overrides on the affected location."
+    source: "SKILL_ADO_QPTM_Confirmations_Scheduling_CAS.md §6"
+    ado_refs: ["1601901", "1317128"]
+
+  - id: QPTM-NOM-029
+    gate: G3
+    match:
+      all: ["Confirmation Response"]
+      any: ["grid empty", "Object reference not set", "blank"]
+    verdict: "Confirmation Response grid empty / object-reference on submit is the Conf-Sub-Cycle Y/N translation family (TranslateBoolToYesNoCode / IsConfSubCycleRecDelYorN) — a 2024.10 regression fixed in 2024.10."
+    source: "SKILL_ADO_QPTM_Confirmations_Scheduling_CAS.md §9"
+    ado_refs: ["1675663", "1700772"]
+
+  - id: QPTM-NOM-030
+    gate: G3
+    match:
+      all: ["Confirmation Response"]
+      any: ["slow", "hang", "minutes", "not responding", "performance", "timeout"]
+    verdict: "Confirmation Response submit hangs on large gas days because the screen waits for CFPSTRESP (CONF_UPD_CALL_BALANCING_AFTER=1) plus SendConfSubmitNotifications cost — fixed in 2025.04 via new config CONF_WAIT_FOR_POST_RESPONSE; interim: set CONF_UPD_CALL_BALANCING_AFTER=0 or retrieve a specific location."
+    source: "SKILL_ADO_QPTM_Confirmations_Scheduling_CAS.md §8"
+    ado_refs: ["1691300", "1728225", "1742229"]
+
+  # ---------------------------------------------------------------- G4 — Bad data
+  - id: QPTM-NOM-031
+    gate: G4
+    priority: 10
+    match:
+      any: ["dates that overlap another nomination", "overlap another nomination", "overlapping nomination"]
+    recipe: nom_ghost_delete
+    verdict: "Orphaned/overlapping NNCTRL_NOM_DTL or NNCTRL_ACTV_DTL rows ('ghost nom') that don't render on the grid trigger the overlap check — confirm with the diagnostic SQL, then deploy the standardized nom-delete cascade script for the bad NOM_ID/gas-day range before the cycle deadline."
+    source: "SKILL_Nominations.md §4"
+    ado_refs: ["1699360", "1739654", "1806364"]
+
+  - id: QPTM-NOM-032
+    gate: G4
+    priority: 20
+    match:
+      any: ["duplicate key", "duplicate nom", "ghost nomination", "nom deletion request"]
+    recipe: nom_ghost_delete
+    verdict: "Duplicate/ghost nomination rows (including the #1761678 web NOM_ID-generation pattern with NNCTRL_ACTV_DTL IDs jumping to 10000000+) must be removed with the standardized nom-delete cascade script deployed by Cloud Ops before the cycle deadline."
+    source: "SKILL_Nominations.md §4, §10, §18"
+    ado_refs: ["1761678", "1699360", "1806364"]
+
+  - id: QPTM-NOM-033
+    gate: G4
+    batch: SEGREGATED
+    match:
+      any: ["NOM CLASS ERROR", "RTCTRL_RATE_HDR", "RTCTRL_RATE_DTL", "Rate Header and Detail"]
+    sql_pack: nom_rate_mismatch
+    verdict: "A rate exists in RTCTRL_RATE_HDR without matching RTCTRL_RATE_DTL rows (or vice versa) for TSP {tsp}, so classification/CAS throws on that rate and the run fails — clean up the mismatched rate rows via script and re-run CANOMCLTG/CAS."
+    source: "SKILL_Confirmations_Scheduling.md §13 (cases 23-00930041, 23-00930211, 22-00581584)"
+
+  - id: QPTM-NOM-034
+    gate: G4
+    batch: SEGREGATED
+    match:
+      any: ["multiple instances of one ctr loc path", "KCTRL_CTR_LOC"]
+    sql_pack: nom_dup_ctr_loc
+    verdict: "Duplicate KCTRL_CTR_LOC rows for a contract+location break CANOMCLTG indexing ('Unable to index ... multiple instances of one ctr loc path') — delete the duplicate rows, then re-run CANOMCLTG."
+    source: "SKILL_ADO_QPTM_Confirmations_Scheduling_CAS.md §12"
+    ado_refs: ["1763840"]
+
+  - id: QPTM-NOM-035
+    gate: G4
+    priority: 30
+    match:
+      all: ["doubled"]
+      any: ["Flow Qty", "CAS Maintenance", "EBB", "volumes"]
+    sql_pack: nom_dup_loc_path
+    recipe: nom_dup_locpath_cleanup
+    verdict: "Duplicate Location Path Maintenance rows (NNCTRL_LOC_PATH) double/triple CAS and EBB volumes for the affected segments/locations — delete the duplicate rows and re-run CANOMCLTG."
+    source: "SKILL_Confirmations_Scheduling.md §4, §10 (cases 24-00966311, 25-01017371, 25-01055876)"
+
+  - id: QPTM-NOM-036
+    gate: G4
+    match:
+      all: ["autogen"]
+      any: ["activity", "ACTIVITY ID", "item with same key already exists"]
+    verdict: "AutoGen leaves activity codes instead of target noms when a downstream validation fails — most often duplicate/overlapping PACTRL_CYCLE rows on the target TSP ('item with same key already exists') — end-date/delete the duplicate cycle rows; a code fix also handles the case gracefully (WWM hotfix, inferred)."
+    source: "SKILL_Nominations.md §9; SKILL_ADO_QPTM_Nominations_EDI.md §11"
+    ado_refs: ["1692472"]
+
+  - id: QPTM-NOM-037
+    gate: G4
+    match:
+      any: ["New Flowing"]
+    verdict: "The ratcheted CAS view classifies all volume as New Flowing because AVG_FLOW_REC/DEL in NNCTRL_NOM_LATEST_CYLE is 0 — EPSQCALC (inside NNPSTCREAT) has not run; run EPSQCALC for the gas day and the screen classifies correctly."
+    source: "SKILL_ADO_QPTM_Confirmations_Scheduling_CAS.md §6"
+    ado_refs: ["1552981"]
+
+  # ---------------------------------------------------------------- G5 — Code change
+  - id: QPTM-NOM-038
+    gate: G5
+    match:
+      all: ["NNNOMLOAD"]
+      any: ["unique constraint", "another user submitted", "Please requery"]
+    verdict: "NNNOMLOAD merge defects on overlapping date ranges cause the unique-constraint and 'Since last Retrieve, another user submitted... Please requery' failures — code defects (#1664076/#1664436) fixed via ETC client hotfix + develop; capture the exact error and PQID for {process}."
+    source: "SKILL_Nominations.md §8; SKILL_ADO_QPTM_Nominations_EDI.md §10"
+    ado_refs: ["1664076", "1664436"]
+
+  - id: QPTM-NOM-039
+    gate: G5
+    batch: SEGREGATED
+    match:
+      all: ["Object reference not set"]
+      any: ["EDINCOMING", "NMQR", "EDINSEG"]
+    verdict: "EDINCOMING/NMQR object-reference crash — either null TrackId on NMST error records breaking QEdiQRBase.Sort (#1737489) or the TPA/DUNS not found (#1606709) — pull the QPEC GatherLogs (qtrace.QPTM.QPEC.*.segregated.log), not just EDIServ logs."
+    source: "SKILL_ADO_QPTM_Nominations_EDI.md §4 (A1/A2)"
+    ado_refs: ["1737489", "1606709", "1736915"]
+
+  - id: QPTM-NOM-040
+    gate: G5
+    match:
+      all: ["doubled"]
+      any: ["Flow Qty", "CAS Maintenance", "EBB", "volumes"]
+    verdict: "Flow Qty doubled with NO duplicate Location Path rows points to the concurrent-retrieve defect when two users retrieve CAS Maintenance simultaneously (cases 24-00973852, 23-00927006) — code defect; ask whether two users were on the screen at once."
+    source: "SKILL_Confirmations_Scheduling.md §10"

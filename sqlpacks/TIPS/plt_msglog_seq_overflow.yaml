@@ -1,0 +1,16 @@
+name: plt_msglog_seq_overflow
+product: TIPS
+queries:
+  - id: q1
+    sql: "SELECT MIN(PROCESS_LOG_ID) AS min_id, MAX(PROCESS_LOG_ID) AS max_id FROM QARCH_PROCESS_MSG_LOG"
+    proves: "whether the PROCESS_LOG_ID sequence overflowed the 2147483647 integer max and wrapped negative (all batch processes fail with an empty message log)"
+    interpret:
+      - when: "rows[0].min_id <= 0"
+        verdict: CONFIRMED
+        meaning: "sequence wrapped negative - Cloud Ops runs the QBS sequence-reset script (22-00711934 pattern)"
+      - when: "rows[0].max_id >= 2147480000"
+        verdict: INFERRED
+        meaning: "sequence approaching the integer max - overflow imminent; schedule the reset proactively"
+      - when: "rows[0].min_id is not null"
+        verdict: FALLTHROUGH
+        meaning: "IDs positive and below the limit - sequence overflow is not the cause, keep evaluating"

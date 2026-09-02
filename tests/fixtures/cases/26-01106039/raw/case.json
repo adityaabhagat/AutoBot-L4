@@ -1,0 +1,13 @@
+﻿{
+  "Id": "500UH00000qEDViYAO",
+  "CaseNumber": "26-01106039",
+  "Subject": "LPS PPA do not generate billing adjustments",
+  "Description": "LPS (Park and Loan, TOS LPS-F) PPAs complete the full lifecycle - retro nom error triggers, reallocation records trigger, PPA records trigger, PAN processing moves the PPA to processed, Customer Account Main displays it - but no billing adjustment is generated. Example: TSP 24, contract LPS 1269.2278, gas day 5/31/2026, 114 dth. Workaround: manually compute the daily parking charge and enter an LGA on the contract.",
+  "Status": "In Progress",
+  "Priority": "Medium",
+  "Product_list__c": "My Quorum Gas Pipeline",
+  "Root_Cause__c": null,
+  "Case_Category__c": "Invoice Generation",
+  "CreatedDate": "2026-06-08T16:30:36.000+0000",
+  "Account": { "Name": "EQT Corporation" }
+}

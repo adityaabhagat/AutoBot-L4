@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "azureDevOps": {
+      "command": "npx",
+      "args": ["-y", "@tiberriver256/mcp-server-azure-devops@0.1.45"],
+      "env": {
+        "AZURE_DEVOPS_ORG_URL": "https://dev.azure.com/QuorumSoftware",
+        "AZURE_DEVOPS_AUTH_METHOD": "pat",
+        "AZURE_DEVOPS_PAT": "${AZURE_DEVOPS_PAT}",
+        "AZURE_DEVOPS_DEFAULT_PROJECT": "QuorumSoftware"
+      }
+    },
+    "metadata": {
+      "command": "C:\\Users\\aditya.bhagat\\OneDrive - Quorum Business Solutions\\Desktop\\Auto-Bot\\QuorumMetadataMCP\\QuorumMetadataMCP.exe",
+      "args": ["--env", "${QUORUM_METADATA_ENV:-ASTU_HD_DEV17}"]
+    }
+  }
+}

@@ -1,0 +1,29 @@
+name: bat_trnxid_exhaustion
+product: TIPS
+queries:
+  - id: q1
+    sql: "SELECT LAST_NUMBER AS last_number FROM ALL_SEQUENCES WHERE SEQUENCE_NAME = 'QTRAN_TRNX_ID_SQ'"
+    proves: "whether the QTRAN_TRNX_ID sequence is approaching the 32-bit int ceiling (2,147,483,647) that the unpatched C++ batch overflows"
+    interpret:
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "sequence not found under this name/vendor — check manually, keep evaluating"
+      - when: "rows[0].last_number >= 2000000000"
+        verdict: CONFIRMED
+        meaning: "sequence within ~7% of the int max — TRNX_ID int-overflow defect applies if the client build predates the long-long fix (2024.04/2024.07)"
+      - when: "rows[0].last_number <= 1999999999"
+        verdict: INFERRED
+        meaning: "sequence not yet near the int ceiling — exhaustion is not imminent; the failure may instead be duplicate TRNX_IDs (see bat_paystation_dup)"
+  - id: q2
+    sql: "SELECT LAST_NUMBER AS last_number FROM ALL_SEQUENCES WHERE SEQUENCE_NAME = 'QTRAN_PAYSTATION_TRNX_ID_SQ'"
+    proves: "same int-ceiling check for the paystation TRNX_ID sequence"
+    interpret:
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "sequence not found under this name/vendor — check manually"
+      - when: "rows[0].last_number >= 2000000000"
+        verdict: CONFIRMED
+        meaning: "paystation sequence near int max — int-overflow defect applies on an unpatched build"
+      - when: "rows[0].last_number <= 1999999999"
+        verdict: INFERRED
+        meaning: "paystation sequence not near the ceiling"

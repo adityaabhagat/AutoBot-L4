@@ -1,0 +1,21 @@
+# Verifies the SKILL_Billing.md §4.4 PAL/LPS cluster (rules QPTM-BILL-039 / QPTM-BILL-041).
+name: bill_pal_ext_missing
+product: QPTM
+queries:
+  - id: q1
+    sql: "SELECT OBJECT_ID('dbo.BLSTAG_PAL_EXT') AS obj_id"
+    proves: "whether the CORE PAL staging table exists in this DB"
+    interpret:
+      - when: "rows[0].obj_id is null"
+        verdict: CONFIRMED
+        meaning: "object missing — structural schema/code mismatch (dropped by build 3.1.00.0069 while the CORE reader still joins it)"
+      - when: "rows[0].obj_id is not null"
+        verdict: FALLTHROUGH
+        meaning: "object present — this rule does not apply, keep evaluating"
+  - id: q2
+    sql: "SELECT COUNT(*) AS pex_ct FROM BLTRAN_INVOICE_GEN_QTY WHERE CHARGE_BASIS_CD = 'PEX' AND TSP_NO = {tsp} AND PROD_MTH = '{prod_mth}'"
+    proves: "whether PAL-extension (PEX) billing lines were written for the production month (0 = billing impact signature)"
+    interpret:
+      - when: "rows[0].pex_ct == 0"
+        verdict: INFERRED
+        meaning: "no PEX billing lines for the month — the PAL statement insert never completed for this period"

@@ -1,0 +1,20 @@
+name: qdo_rstg_unprocessed
+product: QDO
+queries:
+  - id: q1
+    sql: "SELECT TRANS_SEQ_NO, PROC_FL, FROM_OWNER_BA, TO_OWNER_BA, SL_NO, SL_DETAIL_NO FROM RSTG_OWNR_FUND_RLS WHERE PROC_FL = 'N'"
+    proves: "whether leftover unprocessed suspense-release staging rows are blocking OFR/EFR (red flag: trailing space in FROM_OWNER_BA/TO_OWNER_BA)"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "unprocessed RSTG_OWNR_FUND_RLS rows exist — the 'pending Suspense Release Transactions' blocker; inspect the owner/BA values for trailing spaces or BA mismatch"
+      - when: "rowcount == 0"
+        verdict: REFUTED
+        meaning: "no unprocessed staging rows — this rule's blocker is absent, keep evaluating"
+  - id: q2
+    sql: "SELECT TRANS_SEQ_NO FROM RSTG_OWNR_FUND_RLS_ERR"
+    proves: "whether rejected suspense-release rows landed in the error staging table"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: INFERRED
+        meaning: "error rows present in RSTG_OWNR_FUND_RLS_ERR — read the error text (e.g. footing tolerance) for the specific rejection reason"

@@ -1,0 +1,19 @@
+name: autobot-ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: windows-latest   # matches team runtime (pyodbc + Windows auth paths)
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      - name: Validate rule corpus
+        run: python autobot.py check
+      - name: Run tests
+        run: pytest tests/ -q

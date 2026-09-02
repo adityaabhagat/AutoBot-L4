@@ -1,0 +1,13 @@
+name: plat_ctr_empty_check
+product: QPTM
+queries:
+  - id: q1
+    sql: "SELECT COUNT(*) AS nom_rows FROM NNCTRL_NOM_DTL WHERE TSP_NO = {tsp} AND SR_CTR_NO = '{contract}'"
+    proves: "whether the contract slated for hard-delete is empty of nominations (mandatory pre-delete verification)"
+    interpret:
+      - when: "rows[0].nom_rows == 0"
+        verdict: CONFIRMED
+        meaning: "contract carries zero nominations — safe candidate for the standard cascade hard-delete via Cloud Ops"
+      - when: "rows[0].nom_rows >= 1"
+        verdict: INFERRED
+        meaning: "contract HAS nominations — do NOT hard-delete (a delete that succeeded anyway is the delete-guard defect 24-00982700); scope to the duplicate slice only or investigate further"

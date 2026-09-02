@@ -1,0 +1,356 @@
+# Auto-Bot Lite rules - TIPS platform / integration / UI
+# Compiled 2026-09-01 from TIPS skills (see per-rule source anchors). Schema: rules/SCHEMA.md
+product: TIPS
+area: platform-integration-ui
+rules:
+
+  # ---------------- G1 - Expected behavior / user education ----------------
+
+  - id: TIPS-PLT-001
+    gate: G1
+    match:
+      any:
+        - "Insert/Updates were cancelled"
+        - "Concurrency violation"
+        - "chosen as the deadlock victim"
+        - "TimeoutRejectedException"
+        - "GetEntity: Resource not found"
+    recipe: plt_ip_republish
+    verdict: "Transient Integration Platform event failure (optimistic concurrency / deadlock victim / timeout) - re-publish the failed events from IP; escalate only if the same payload fails repeatedly after republish."
+    source: "SKILL_TIPS_Integration_DataSync.md §6 / §14 item 1"
+
+  - id: TIPS-PLT-002
+    gate: G1
+    match:
+      all: ["external user"]
+      any: ["no data", "cannot see", "can't see", "Default BA", "Agent BA"]
+    verdict: "External-user report shows no data because no Default BA is set on Integrated Security User Setup (or the user is not on the Agent BA) - working as designed; set the Default BA / add to the Agent BA."
+    source: "SKILL_TIPS_CAW.md §6a / §13"
+
+  - id: TIPS-PLT-003
+    gate: G1
+    match:
+      any: ["AutoConfirm", "auto confirm", "auto-confirm"]
+    verdict: "Meter-level AutoConfirm is overridden by the contract (K) header Confirmation Method = Manual - set the contract header method to Auto; config, not a defect."
+    source: "SKILL_TIPS_Nominations_Scheduling.md §9 (26-01069130)"
+
+  - id: TIPS-PLT-004
+    gate: G1
+    match:
+      all: ["PK_STRAN_VOL_DAILY"]
+    sql_pack: plt_vol_daily_dup
+    verdict: "PI/volume import violated unique constraint PK_STRAN_VOL_DAILY because more than one import file for the same day was placed on the FTP - the TIPS import runs once daily; load only one file per day."
+    source: "SKILL_TIPS_Integration_DataSync.md §14 item 4 / §16-F (22-00691533)"
+
+  - id: TIPS-PLT-005
+    gate: G1
+    batch: NORMAL
+    match:
+      all: ["NULLABLE OBJECT MUST HAVE A VALUE"]
+    verdict: "TIPS EDINCOMING fails on NULL-quantity nominations on the TIPS side - client deletes or zeroes the null-qty noms and the process then runs clean."
+    source: "SKILL_TIPS_Integration_DataSync.md §14 item 5 (23-00921572, 23-00921194)"
+
+  - id: TIPS-PLT-006
+    gate: G1
+    match:
+      all: ["NEITHER A CONFIRMED QUANTITY"]
+    sql_pack: plt_conf_null_qty
+    verdict: "Inbound SQOP confirmation rows have CONF_IND=1 with both CONF_QTY and CONF_PCT null - user corrects the rows on the Confirmation screen; not a defect."
+    source: "SKILL_TIPS_Integration_DataSync.md §14 item 6 / §16-E (22-00609049)"
+
+  # ---------------- G2 - Configuration ----------------
+
+  - id: TIPS-PLT-007
+    gate: G2
+    match:
+      all: ["XRefDataHelper"]
+    verdict: "The XRefDataHelper connection was wiped by the environment refresh (SAP-TIPS BA send fails 'Factory XRefDataHelper does not exist') - re-add XRefDataHelper on the Connection Management screen."
+    source: "SKILL_TIPS_Integration_DataSync.md §8 (24-00984054)"
+    ado_refs: ["1692076", "1692055"]
+
+  - id: TIPS-PLT-008
+    gate: G2
+    match:
+      all: ["CAW"]
+      any: ["refresh", "TIPSCAWDataHelper", "DB reference", "Connection Management", "UAT"]
+    recipe: plt_caw_connection
+    verdict: "The CAW DB connection (TIPSCAWDataHelper) is not recreated by the environment post-refresh script - re-add it in Connection Management and add the connection block to the env's post-refresh script."
+    source: "SKILL_TIPS_CAW.md §4 (24-00947753, 24-00950735)"
+    ado_refs: ["1655053"]
+
+  - id: TIPS-PLT-009
+    gate: G2
+    match:
+      all: ["statement"]
+      any: ["Not Enough Memory", "RPT_GSTMT-QTIP", "RPTGASSTWB-QTIP", "Retain Original Image Color Depth"]
+    recipe: plt_gas_stmt_memory
+    verdict: "External gas/settlement statement fails with 'Not Enough Memory' because the Crystal logo color depth bloats the file past the web download cap - reduce logo color depth and raise the streaming size limit."
+    source: "SKILL_TIPS_CAW.md §5 (22-00875574, 23-00886361)"
+
+  - id: TIPS-PLT-010
+    gate: G2
+    match:
+      any: ["ORA-02394", "ORA-02395"]
+    sql_pack: plt_ro_profile_limits
+    verdict: "The Oracle resource profile on the {client}_READ_ONLY reporting account caps IO per call/session - DBA sets the profile limiters (LOGICAL_READS_PER_CALL/SESSION) to UNLIMITED."
+    source: "SKILL_TIPS_Security_UserAdmin.md §7 / §12-C (25-01024639)"
+
+  - id: TIPS-PLT-011
+    gate: G2
+    match:
+      all: ["Okta"]
+      any: ["SAML", "certificate", "renew"]
+    recipe: plt_saml_cert_renewal
+    verdict: "The client's Entra ID SAML signing certificate for the 'Okta - Quorum Software' app is expiring - roll the certificate on both the client (Entra) and Quorum (Okta) sides before SSO breaks."
+    source: "SKILL_TIPS_Security_UserAdmin.md §8 (25-01034697)"
+
+  - id: TIPS-PLT-012
+    gate: G2
+    match:
+      all: ["global dashboard"]
+    verdict: "Regular-user group lacks the dashboard-edit/widget security objects ('not allowed to modify a global dashboard') - run the known seeding script / grant the security object; on 2024.10+ grant the ENGS-module ALLOWSAVEDASHBOARD object; product fix #1739530 still open."
+    source: "SKILL_TIPS_UI_Widgets.md §3; SKILL_ADO_TIPS_UI_Web_InteractiveReports_eSuite.md §6 (#1674248)"
+    ado_refs: ["1739530", "1674248"]
+
+  - id: TIPS-PLT-013
+    gate: G2
+    match:
+      any: ["NT SECURITY IS BEING USED", "QARCH_CTRL_CONNECT_INFO"]
+    verdict: "Connection-info entries in QARCH_CTRL_CONNECT_INFO still point at the old domain after a refresh/clone - correct them to the new connection name so MT services start and users can log in."
+    source: "SKILL_TIPS_System_Configuration.md §3 / §17-A (24-00981688)"
+
+  - id: TIPS-PLT-014
+    gate: G2
+    match:
+      any: ["no local file path", "SFTP Connection Not Available"]
+    verdict: "Import/Export (Transfer) Definition file path is blank or still points at PROD in this environment (classic post-refresh drift) - re-set the local/remote paths for the env and re-test the transfer step."
+    source: "SKILL_TIPS_System_Configuration.md §4 (24-00964237, 25-01053157)"
+
+  - id: TIPS-PLT-015
+    gate: G2
+    match:
+      all: ["QEMAIL"]
+    recipe: plt_qemail_config
+    verdict: "QEMAIL stopped after the environment refresh because EMAIL_USERNAME / EMAIL_PASSWORD / EMAIL_HOSTNAME in Configuration Setting (Global) were not updated for the env - set the keys and restart QPEC."
+    source: "SKILL_TIPS_System_Configuration.md §7 (24-00944285, 22-00693503)"
+
+  - id: TIPS-PLT-016
+    gate: G2
+    match:
+      any: ["NNG028", "that far in the future", "Number_Of_Days_In_Future_Allow_Noms"]
+    verdict: "Validation rule NNG028 FUTURE NOM VALIDATION was added by an upgrade/hotfix and mass-errors previously-valid noms - unassign it on Validation Rule Assignment or raise Number_Of_Days_In_Future_Allow_Noms, then re-run Nightly Nomination Validation."
+    source: "SKILL_TIPS_Nominations_Scheduling.md §6 (26-01064773)"
+
+  - id: TIPS-PLT-017
+    gate: G2
+    match:
+      all: ["Confirmation Response"]
+      any: ["blank", "not populating", "empty", "UTILCALDT"]
+    recipe: plt_utilcaldt
+    verdict: "The UTILCALDT batch process is not scheduled, so QCTRL_CONF is never built from the QTRAN_CAL_DATE staging table and the Confirmation Response screen stays empty - schedule UTILCALDT and restart services."
+    source: "SKILL_TIPS_Nominations_Scheduling.md §8 (25-01001893)"
+
+  - id: TIPS-PLT-018
+    gate: G2
+    match:
+      any: ["Exago", "ExagoDataHelper", "Interactive Reports"]
+    verdict: "Interactive Reports (Exago) failures are environment config - verify the EXAGO key-group values, connection ID QTIPExagoDataHelper on the GLOBAL metadata layer, API key / network-logon password, and clear cache; note Exago is deprecated as of 2025.04 (migrate to Query Screens)."
+    source: "SKILL_TIPS_Reporting_Statements.md §7; SKILL_ADO_TIPS_CAW_ExternalUsers_Integration_DataSync.md §9 (24-00984396, 24-00947847)"
+    ado_refs: ["1655907", "1639477"]
+
+  - id: TIPS-PLT-019
+    gate: G2
+    batch: NORMAL
+    match:
+      any: ["CAWDATA", "SPAWNCAW", "CAWDATAFS", "CAWFULLSYNC"]
+    recipe: plt_cawdata_sync
+    verdict: "CAWDATA/DataSync replication to QRMTIPS_CAW is failing because the env-specific QARCH_DS_SRC_SYSTEM_SCHEMA code table is outdated and/or the TIPSDSDataHelper .NET connection type is not NULL - correct per environment and persist in the post-refresh script."
+    source: "SKILL_ADO_TIPS_CAW_ExternalUsers_Integration_DataSync.md §3 (25-01015982, 22-00272601)"
+    ado_refs: ["1427530", "1534309", "1725660"]
+
+  - id: TIPS-PLT-020
+    gate: G2
+    batch: NORMAL
+    match:
+      any: ["CWNIGHTLY", "PALOCEXP"]
+    verdict: "Batch process {process} fails in the new/refreshed environment because server file paths were not updated to the correspondent server (SOC/post-refresh drift) - pull the log by PQID and update the process file paths for the env."
+    source: "SKILL_TIPS_CAW.md §9 (26-01089624, 26-01089498)"
+
+  - id: TIPS-PLT-021
+    gate: G2
+    match:
+      any: ["Unable to create access token", "Error in FLOWCAL Integration Widget"]
+    verdict: "FlowCal Integration widget error - the FLOWCAL-eSuite API is not enabled for the client or no open billing accounting date is set (config toggle / disable widget); platform OAuth remediation shipped ~2025.04."
+    source: "SKILL_ADO_TIPS_CAW_ExternalUsers_Integration_DataSync.md §5 (widget errors)"
+    ado_refs: ["1596032", "1564930", "1709057"]
+
+  # ---------------- G3 - Version issue (already fixed, build known) ----------------
+
+  - id: TIPS-PLT-022
+    gate: G3
+    match:
+      all: ["import"]
+      any: ["1926", "two-digit year", "2-digit year"]
+    verdict: "On 2024.04 and older, 2-digit import-file years parse as 1926 so the volume import completes successfully but writes nothing - fixed in 2026.04 (hotfixable to 2 prior GAs); interim workaround is YYYY dates in the file."
+    source: "SKILL_TIPS_Integration_DataSync.md §3 (26-01065618)"
+
+  - id: TIPS-PLT-023
+    gate: G3
+    match:
+      all: ["Report Viewer"]
+      any: ["CAW"]
+    verdict: "Report Viewer failure for users with CAW security is a known fixed defect - ADO #1790197 (Closed, 2025.10 stream); verify the client's patch level carries the fix before re-raising."
+    source: "SKILL_TIPS_CAW.md §6b (#1790197)"
+    ado_refs: ["1790197"]
+
+  - id: TIPS-PLT-024
+    gate: G3
+    match:
+      all: ["Map Link"]
+    verdict: "Design Studio widgets (Map Link, Expiring Contracts, PPA Summary) return 401 / stay hidden for external users because visibility was gated on the internal-only '100 fnc_All_ReadOnly' group - fixed and cherry-picked to 2025.04 and 2025.10 (plus a required code-table link)."
+    source: "SKILL_ADO_TIPS_UI_Web_InteractiveReports_eSuite.md §6 (#1766312, SF 25-01052648)"
+    ado_refs: ["1766312"]
+
+  - id: TIPS-PLT-025
+    gate: G3
+    match:
+      all: ["API Host"]
+      any: ["KeyNotFoundException", "GetDatabaseVendor", "not starting", "won't start", "fails to start"]
+    verdict: "TIPS API Host fails to start on MSSQL because TIPSDSDataHelper DB_CON_STR_TYPE must be NULL for CAWDATA but populated for the API Host - fixed via APIHost.config in #1617552/#1762912 (~2025.10, inferred - confirm release notes); interim: set the field non-NULL to start the API, re-null for CAWDATA."
+    source: "SKILL_ADO_TIPS_CAW_ExternalUsers_Integration_DataSync.md §4"
+    ado_refs: ["1617552", "1762912", "1763112"]
+
+  # ---------------- G4 - Bad data ----------------
+
+  - id: TIPS-PLT-026
+    gate: G4
+    match:
+      all: ["refresh"]
+      any: ["SCTRL_INT_FULLSYNC", "MeterVolume", "volume interface"]
+    sql_pack: plt_int_fullsync
+    recipe: plt_int_fullsync
+    verdict: "The SCTRL_INT_FULLSYNC seed row (INT_OBJECT_ID='MeterVolume') was lost in the DB refresh, leaving the core volume/analysis interface step inert - reseed the row and re-run the import."
+    source: "SKILL_TIPS_Integration_DataSync.md §3 / §16-A (23-00907706)"
+
+  - id: TIPS-PLT-027
+    gate: G4
+    match:
+      all: ["orphan"]
+      any: ["Meter Definition", "Shared Meter", "SCTRL_MTR_FACILITY"]
+    recipe: plt_orphan_mtr_facility
+    verdict: "An orphan open-ended SCTRL_MTR_FACILITY row (often a bogus link to plant 999; sometimes SCTRL_MTR_HEADER / SEXTN_MTR_HEADER_QRMTIPS overlaps) blocks Meter Definition / Shared Meter saves - scripted delete of the orphan row(s) via a Script Review/Deployment WI."
+    source: "SKILL_TIPS_Integration_DataSync.md §7 / §16-B (25-00997682, 24-00972581)"
+    ado_refs: ["1689827", "1758912", "1722628", "1561405"]
+
+  - id: TIPS-PLT-028
+    gate: G4
+    match:
+      all: ["nomination"]
+      any: ["impossible dates", "bad date range", "invalid date range", "BEG_GAS_DAY", "cannot be deleted"]
+    sql_pack: plt_nom_invalid_dates
+    recipe: plt_nom_invalid_dates
+    verdict: "Nomination rows in QCTRL_NOM_DTL carry BEG_GAS_DAY > END_GAS_DAY (Copy-Noms-Forward page-reload corruption) so the nom cannot be updated or deleted - data script removes the bad rows; confirm the build carries the #1769494 QGValidationNomGasDates fix so it cannot recur."
+    source: "SKILL_TIPS_Nominations_Scheduling.md §4 (25-01051919, 25-01052068)"
+    ado_refs: ["1672104", "1769494"]
+
+  - id: TIPS-PLT-029
+    gate: G4
+    batch: NORMAL
+    match:
+      all: ["NOMCYCLNTF"]
+    verdict: "NOMCYCLNTF fails with a null-object reference because a meter has no confirmation for the gas day - find the meter in QTIP_RPTS_NOM_CYCLE_SUMMARY and remove the stale/orphan confirmations, then the scheduled job completes."
+    source: "SKILL_TIPS_Nominations_Scheduling.md §10 (22-00875002)"
+
+  - id: TIPS-PLT-030
+    gate: G4
+    batch: NORMAL
+    match:
+      all: ["message log"]
+      any: ["empty", "blank", "missing", "PROCESS_LOG_ID"]
+    sql_pack: plt_msglog_seq_overflow
+    verdict: "All batch processes fail with an empty message log because the PROCESS_LOG_ID sequence overflowed the 2147483647 integer max and wrapped negative - Cloud Ops runs the QBS sequence-reset script."
+    source: "SKILL_TIPS_Reporting_Statements.md §15 / §18-E (22-00711934)"
+
+  # ---------------- G5 - Code defect ----------------
+
+  - id: TIPS-PLT-031
+    gate: G5
+    match:
+      all: ["Effective From Date cannot exceed Effective To Date"]
+    verdict: "ESuite API meter-timeslice defect builds an inverted bisecting slice range (and ignores contract hour at month edges) on FC meter-updated events - code fixes ADO #1662511 / #1540498 (Closed); confirm the client's build, then re-publish the failed event."
+    source: "SKILL_TIPS_Integration_DataSync.md §4a (24-00955289, 22-00868498)"
+    ado_refs: ["1662511", "1540498"]
+
+  - id: TIPS-PLT-032
+    gate: G5
+    match:
+      all: ["prelim imbalance"]
+      any: ["run id", "run ID", "BLTRAN_STAG_IMB_OVRLY_PRE", "QTRAN_SETTLE_CTR_FEE"]
+    verdict: "Evolution prelim imbalance staged the plant run ID instead of the CO run ID in BLTRAN_STAG_IMB_OVRLY_PRE, so imbalance reports cannot read QRMTIPS.QTRAN_SETTLE_CTR_FEE - code fix stages with the CO_CD run id (matching production import)."
+    source: "SKILL_TIPS_Integration_DataSync.md §5 / §16-C (24-00954762)"
+
+  - id: TIPS-PLT-033
+    gate: G5
+    match:
+      any: ["QTIP_TRAN_PLANT_PTR", "TIK_SET_RES_MCF", "PURCH_SET_RES_MCF"]
+    verdict: "Evolution PTR column-mapping flip - TIK_SET_RES_MCF/MMBTU and PURCH_SET_RES_MCF/MMBTU are flipped versus RES_MCF/RES_MMBTU in QTIP_TRAN_PLANT_PTR; code fix required (compare the MCF values against the MMBTU column to confirm)."
+    source: "SKILL_TIPS_Integration_DataSync.md §5 / §16-D (24-00954063)"
+
+  - id: TIPS-PLT-034
+    gate: G5
+    match:
+      all: ["PTR"]
+      any: ["pro-ration", "proration", "gas lift", "gas-lift", "negative PTR"]
+    verdict: "PTR overlay stops with a pro-ration error because QPTM wellhead allocation is 0 for gas-lift meters while TIPS generated a negative PTR - code fix to the overlay's handling of zero-allocation gas-lift meters."
+    source: "SKILL_TIPS_Integration_DataSync.md §5 (24-00961955)"
+
+  - id: TIPS-PLT-035
+    gate: G5
+    match:
+      all: ["RPT_INX51"]
+    verdict: "RPT_INX51 (CAW Inventory / Agreement Balancing Statement) does not apply the BP parameter when selected - code defect fixed under ADO #1798177 (Closed); confirm the client's patch carries it."
+    source: "SKILL_TIPS_CAW.md §6b (#1798177, SF 26-01087100)"
+    ado_refs: ["1798177"]
+
+  - id: TIPS-PLT-036
+    gate: G5
+    match:
+      all: ["Daily Imbalance"]
+      any: ["unlock", "blank", "facility lock", "zero"]
+    recipe: plt_daily_imb_clrealloc
+    verdict: "Stored proc m_Sel_IMBALANCE zeros the summed REC_QTY when PPA_IND=1, blanking the Daily Imbalance view (QRPTS_IMBAL_ACCT) until the facility is unlocked - workaround: schedule the CLREALLOC step to run every time TIPSUNLOCK runs."
+    source: "SKILL_TIPS_System_Configuration.md §11 / §17-E (24-00974581)"
+
+  - id: TIPS-PLT-037
+    gate: G5
+    batch: NORMAL
+    match:
+      any: ["NOMPOST", "CFCREATE", "NOMDEL"]
+    verdict: "Nomination submission chain (NOMPOST / CFCREATE / NOMDEL) failed or never fired - read QARCH_PROCESS_MSG_LOG for PQID {pqid} and match to the known fixes (#1716164 submit-trigger gap, #1447164 CFCREATE double-update race, #1660388 NOMPOST post-step)."
+    source: "SKILL_TIPS_Nominations_Scheduling.md §5 (24-00953499, 22-00592784)"
+    ado_refs: ["1716164", "1447164", "1660388"]
+
+  - id: TIPS-PLT-038
+    gate: G5
+    match:
+      all: ["gas statement"]
+      any: ["not populating", "not generating", "no statements", "nothing generated"]
+    sql_pack: plt_gas_stmt_invoice_no
+    verdict: "SP_QTIP_SETTLE_GAS_STMT swallows the truncation error ('' instead of NULL in the handler) while INVOICE_NO built as MMDD-{contract} overflows the VARCHAR(10) QTIP_RPTS_SETTLE_GAS_STMT.INVOICE_NO column - widen INVOICE_NO to 17."
+    source: "SKILL_TIPS_Reporting_Statements.md §4 / §18-B (23-00919231)"
+
+  - id: TIPS-PLT-039
+    gate: G5
+    match:
+      all: ["AL01R"]
+      any: ["external", "no data", "blank"]
+    verdict: "AL01R returns no data for external users after the 2024.04+ upgrade because the client-override security view is stale after core moved to QCTRL_SEC_ALLOC_MTR_VW3_CORE (Feature #1639437) - update the client view/setup (alloc-group SVC role or User-ID-to-BA association), not the build."
+    source: "SKILL_ADO_TIPS_CAW_ExternalUsers_Integration_DataSync.md §8 (#1715135, SF 25-01002928)"
+    ado_refs: ["1715135", "1639437", "1732629"]
+
+  - id: TIPS-PLT-040
+    gate: G5
+    match:
+      all: ["PPA will not be logged"]
+    verdict: "Contract Meter List Web save silently fails with mtr_cct pop-up notifications enabled - a redundant 'Save' event on the Meter List DO Extension ran the PPA event detector before DO data was populated; code fix removed the extra event registration."
+    source: "SKILL_TIPS_Integration_DataSync.md §10 (24-00954043)"

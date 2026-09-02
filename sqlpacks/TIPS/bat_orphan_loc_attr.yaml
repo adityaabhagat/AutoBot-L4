@@ -1,0 +1,23 @@
+name: bat_orphan_loc_attr
+product: TIPS
+queries:
+  - id: q1
+    sql: "SELECT * FROM PACTRL_LOC_ATTR_FLAT WHERE LOC_ID NOT IN (SELECT LOC_ID FROM PACTRL_LOC)"
+    proves: "whether orphaned location-attribute rows exist in PACTRL_LOC_ATTR_FLAT (the CANOMCLTG 'Found Orphaned Location attribute' failure) — verbatim SQL from case 24-00994166"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "orphans present in the FLAT table — delete this data per the case resolution, then rerun the job"
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "no orphans in the FLAT table — check the base table (q2)"
+  - id: q2
+    sql: "SELECT * FROM PACTRL_LOC_ATTR WHERE LOC_ID NOT IN (SELECT LOC_ID FROM PACTRL_LOC)"
+    proves: "same orphan check on the base PACTRL_LOC_ATTR table"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "orphans present in PACTRL_LOC_ATTR — delete this data, then rerun"
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "no orphans in either table — this rule does not apply, keep evaluating"

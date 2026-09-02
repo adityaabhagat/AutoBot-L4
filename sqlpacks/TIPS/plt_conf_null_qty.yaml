@@ -1,0 +1,13 @@
+name: plt_conf_null_qty
+product: TIPS
+queries:
+  - id: q1
+    sql: "SELECT MTR_NO, CONF_IND FROM QRMTIPS.QCTRL_CONF WHERE CONF_IND = 1 AND CONF_PCT IS NULL AND CONF_QTY IS NULL"
+    proves: "whether confirmation rows exist with CONF_IND=1 but neither a confirmed quantity nor a confirmed interest percent (the SQOP 'RECORD CANNOT BE CONFIRMED' cause - verbatim check from 22-00609049)"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "offending confirmation rows found - user corrects them on the Confirmation screen; not a defect"
+      - when: "rowcount == 0"
+        verdict: REFUTED
+        meaning: "no null-qty/null-pct confirmed rows - this signature does not apply, keep evaluating"

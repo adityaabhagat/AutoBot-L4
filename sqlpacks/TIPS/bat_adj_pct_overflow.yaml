@@ -1,0 +1,13 @@
+name: bat_adj_pct_overflow
+product: TIPS
+queries:
+  - id: q1
+    sql: "SELECT * FROM QTRAN_RATE_RES_DETAIL WHERE ADJ_PCT > 999"
+    proves: "whether an escalation index/inflation value above 999% is overflowing QTRAN_RATE_RES_DETAIL.ADJ_PCT (the IMBALANCE-at-CTRFEE failure, ADO #1534316)"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "index value over the 999% field-size limit — correct the bad index value (data fix), then rerun IMBALANCE"
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "no over-limit index values — this rule does not apply, keep evaluating"

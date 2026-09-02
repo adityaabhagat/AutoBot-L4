@@ -1,0 +1,4817 @@
+{
+ "generated": "2026-07-05",
+ "source": {
+  "classicMenus": "Quorum.QPTM.Metadata /STANDARD 16.0/QARCH_CNFG_MENU.json (standard tree; client repos may override)",
+  "webMenus": "Quorum.QPTM.Metadata /STANDARD 16.0/QARCH_CNFG_DYNUC.json (personas)",
+  "classicChrome": "Quorum.QPTM.ClassicGUI /Native/Include/PipelineMgrCommon.rc"
+ },
+ "classic": {
+  "internal_screens_menu": [
+   {
+    "menuPath": [
+     "Screens",
+     "Allocations",
+     "Daily Allocated Quantity Maintenance..."
+    ],
+    "screenSecurityId": "QVPDAILYALLOCATEDQUANTITYMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Allocations",
+     "Gas Analysis Viewer..."
+    ],
+    "screenSecurityId": "QVPGASANALYSIS",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Allocations",
+     "Hourly Measurement Entry..."
+    ],
+    "screenSecurityId": "QVPSOAHOURLYMEASUREMENTENTRY",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Allocations",
+     "Measurement Entry..."
+    ],
+    "screenSecurityId": "QVPMEASUREMENTENTRY",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Allocations",
+     "Measurement Results..."
+    ],
+    "screenSecurityId": "QVPMEASUREMENTRESULTS",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Allocations",
+     "Monthly Allocated Quantity Maintenance..."
+    ],
+    "screenSecurityId": "QVPMONTHLYALLOCATEDQUANTITYMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Allocations",
+     "PDA Submission..."
+    ],
+    "screenSecurityId": "QVPPREDETERMINEDALLOCATIONSUBMISSION",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Allocations",
+     "PDA Maintenance..."
+    ],
+    "screenSecurityId": "QVPSOAPDASUBMISSION",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Allocations",
+     "Reallocation Status..."
+    ],
+    "screenSecurityId": "QVPREALLOCATIONSTATUS",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Billing",
+     "Demand Charge Determination..."
+    ],
+    "screenSecurityId": "QVPDEMANDCHARGEDETERMINATION",
+    "hidden": true,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Billing",
+     "Invoice Detail Maintenance..."
+    ],
+    "screenSecurityId": "QVPINVOICEDETAILMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Billing",
+     "Invoice Group Maintenance..."
+    ],
+    "screenSecurityId": "QVPINVOICEGROUP",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Billing",
+     "Invoice Header Maintenance..."
+    ],
+    "screenSecurityId": "QVPINVOICEHEADERMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Billing",
+     "Invoice Header by Contract/TOS..."
+    ],
+    "screenSecurityId": "QVPINVOICEHEADERBYCONTRACTTOS",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Billing",
+     "Invoice Sub TOC Detail Summary..."
+    ],
+    "screenSecurityId": "QVPINVOICESUBDETAILMAINTENANCETOC",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Billing",
+     "Invoice Sub-Detail Summary..."
+    ],
+    "screenSecurityId": "QVPINVOICESUBDETAILMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Billing",
+     "Penalty Results..."
+    ],
+    "screenSecurityId": "QVPPENALTYRESULTS",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Billing",
+     "Penalty Submission..."
+    ],
+    "screenSecurityId": "QVPPENALTYSUBMISSION",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Billing",
+     "PPA Event Maintenance..."
+    ],
+    "screenSecurityId": "QVPPPAEVENTMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Business Associates",
+     "Business Associate Contact..."
+    ],
+    "screenSecurityId": "QVPBUSINESSPARTYCONTACT",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Business Associates",
+     "Business Associate - Entity..."
+    ],
+    "screenSecurityId": "QVPBAENTITYTABVW",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Business Associates",
+     "Contact Mass Change..."
+    ],
+    "screenSecurityId": "QVPBUSINESSPARTYCONTACTMASSCHANGE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Business Associates",
+     "Contact Search..."
+    ],
+    "screenSecurityId": "QVPBUSINESSPARTYCONTACTSEARCH",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Business Associates",
+     "Credit Maintenance..."
+    ],
+    "screenSecurityId": "QVPCREDITMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Business Associates",
+     "Default Agents..."
+    ],
+    "screenSecurityId": "QVPCONTRACTSDEFAULTAGENTS",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Business Associates",
+     "Global Contact Search..."
+    ],
+    "screenSecurityId": "QVPCONTACTSEARCH",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Capacity Release",
+     "Award..."
+    ],
+    "screenSecurityId": "QVPCAPRELAWARD",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Capacity Release",
+     "Award Amendments..."
+    ],
+    "screenSecurityId": "QVPCAPRELAWARDAMENDMENTS",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Capacity Release",
+     "Bid..."
+    ],
+    "screenSecurityId": "QVPCAPRELBID",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Capacity Release",
+     "Bid Summary..."
+    ],
+    "screenSecurityId": "QVPBIDVIEWER",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Capacity Release",
+     "Offer..."
+    ],
+    "screenSecurityId": "QVPCAPRELOFFER",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Capacity Release",
+     "Offer Summary..."
+    ],
+    "screenSecurityId": "QVPCAPRELOFFERVIEWER",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Capacity Release",
+     "Recall/Reput..."
+    ],
+    "screenSecurityId": "QVPRECALLREPUT",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Capacity Release",
+     "Timeline Results..."
+    ],
+    "screenSecurityId": "QVPTIMELINERESULTS",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Capacity Release",
+     "Withdrawal Summary..."
+    ],
+    "screenSecurityId": "QVPCAPRELWITHDRAWALSUMMARY",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Confirmations",
+     "Confirmation Response..."
+    ],
+    "screenSecurityId": "QVPSOACONFIRMATION",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Confirmations",
+     "Confirmation Summary..."
+    ],
+    "screenSecurityId": "QVPSOACONFIRMATIONSUMMARY",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Confirmations",
+     "EPSQ Maintenance..."
+    ],
+    "screenSecurityId": "QVPEPSQMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Confirmations",
+     "Life Cycle..."
+    ],
+    "screenSecurityId": "QVPLIFECYCLE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Confirmations",
+     "Location Quick View..."
+    ],
+    "screenSecurityId": "QVPCONFIRMATIONLOCATIONQUICKVIEW",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Confirmations",
+     "Path Balance Volume Approval..."
+    ],
+    "screenSecurityId": "QVPPATHBALANCEVOLAPPROVAL",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Contracts",
+     "Contract Maintenance..."
+    ],
+    "screenSecurityId": "QVPCONTRACTMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Contracts",
+     "Contract-Contact Override Mass Change..."
+    ],
+    "screenSecurityId": "QVPCONTRACTCONTACTMASSCHANGE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Contracts",
+     "Long Term Bid Viewer..."
+    ],
+    "screenSecurityId": "QVPLONGTERMBIDVIEWER",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Contracts",
+     "Ratchet Maintenance..."
+    ],
+    "screenSecurityId": "QVPRATCHETMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Contracts",
+     "Request For Service..."
+    ],
+    "screenSecurityId": "QVPSOAREQUESTFORSERVICE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Contracts",
+     "Request For Service Approval Queue..."
+    ],
+    "screenSecurityId": "QVPREQUESTFORSERVICEAPPROVALQUEUE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Contracts",
+     "Seasonal Profile Maintenance..."
+    ],
+    "screenSecurityId": "QVPSEASONALPROFILEMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Corporate",
+     "User Notification Contact Assignment..."
+    ],
+    "screenSecurityId": "QVPUSERNOTIFICATIONCONTACTASSIGNMENT",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Corporate",
+     "User Notification Subscription Manager..."
+    ],
+    "screenSecurityId": "QVPUSERNOTIFICATIONSUBSCRIPTIONMANAGER",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "EDI",
+     "Dataset Viewer..."
+    ],
+    "screenSecurityId": "QVPEDIVIEWER",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "EDI",
+     "TPA Element Usage..."
+    ],
+    "screenSecurityId": "QVPEDITPAELEMENTUSAGE",
+    "hidden": true,
+    "inactive": true
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "EDI",
+     "TPA Maintenance..."
+    ],
+    "screenSecurityId": "QVPEDITPAMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "EDI",
+     "Transaction History..."
+    ],
+    "screenSecurityId": "QVPEDITRANSACTIONS",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "EDI",
+     "Transaction Submittal..."
+    ],
+    "screenSecurityId": "QVPEDITRANSACTIONSUBMITTAL",
+    "hidden": true,
+    "inactive": true
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Inventory Accounts",
+     "Customer Account Query..."
+    ],
+    "screenSecurityId": "QVPCUSTOMERACCTQUERY",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Inventory Accounts",
+     "Customer Accounts",
+     "Customer Account Maintenance..."
+    ],
+    "screenSecurityId": "QVPCUSTOMERACCOUNT",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Inventory Accounts",
+     "Customer Accounts",
+     "Customer Account Summary..."
+    ],
+    "screenSecurityId": "QVPSHIPPERIMBALANCESUMMARY",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Inventory Accounts",
+     "Imbalance Trades",
+     "Imbalance Trading Form..."
+    ],
+    "screenSecurityId": "QVPIMBALANCETRADINGMAINTENANCEFORM",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Inventory Accounts",
+     "Imbalance Trades",
+     "Imbalance Trading Summary..."
+    ],
+    "screenSecurityId": "QVPIMBALANCETRADINGMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Inventory Accounts",
+     "Inventory Accounts..."
+    ],
+    "screenSecurityId": "QVPINVENTORY",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Inventory Accounts",
+     "Inventory Adjustments..."
+    ],
+    "screenSecurityId": "QVPINVENTORYADJUSTMENTS",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Inventory Accounts",
+     "Storage Transfers",
+     "Storage Transfer Summary..."
+    ],
+    "screenSecurityId": "QVPSTORAGETRANSFERGRID",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Inventory Accounts",
+     "Storage Transfers",
+     "Storage Transfer Maintenance Form..."
+    ],
+    "screenSecurityId": "QVPSTORAGETRANSFERMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Locations",
+     "Location Contact Mass Change..."
+    ],
+    "screenSecurityId": "QVPLOCATIONCONTACTMASSCHANGE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Locations",
+     "Location Default Heating Factor..."
+    ],
+    "screenSecurityId": "QVPLOCATIONDEFAULTHEATINGFACTOR",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Locations",
+     "Location Group Lookup..."
+    ],
+    "screenSecurityId": "QVPLOCATIONGROUPLOOKUP",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Locations",
+     "Location Group Maintenance..."
+    ],
+    "screenSecurityId": "QVPLOCATIONGROUPMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Locations",
+     "Location Maintenance..."
+    ],
+    "screenSecurityId": "QVPLOCATIONMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Locations",
+     "Parallel Scheduling..."
+    ],
+    "screenSecurityId": "QVPSOAMULTIGROUPSCHEDULINGSCREEN",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Nominations",
+     "<NEW> Schematics..."
+    ],
+    "screenSecurityId": "QVPSOASCHEMATICS",
+    "hidden": true,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Nominations",
+     "Location-Centric Nomination Submission..."
+    ],
+    "screenSecurityId": "QVPLCSOANOMINATIONSUBMISSION",
+    "hidden": true,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Nominations",
+     "Nomination Error Overrides..."
+    ],
+    "screenSecurityId": "QVPNOMINATIONERROROVERRIDES",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Nominations",
+     "Nomination Maintenance..."
+    ],
+    "screenSecurityId": "QVPSOANOMINATIONMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Nominations",
+     "Nomination Navigation..."
+    ],
+    "screenSecurityId": "QVPSOANOMINATIONNAVIGATION",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Nominations",
+     "Nomination Submission..."
+    ],
+    "screenSecurityId": "QVPSOANOMINATIONSUBMISSION",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Nominations",
+     "On Call Calendar..."
+    ],
+    "screenSecurityId": "QVPAFTERHRSONCALLCAL",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Nominations",
+     "Post Nomination Submission Template..."
+    ],
+    "screenSecurityId": "QVPSOANOMTEMPLATE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Rates",
+     "Discount Offer Maintenance..."
+    ],
+    "screenSecurityId": "QVPDISCOUNTOFFERMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Rates",
+     "Index Maintenance..."
+    ],
+    "screenSecurityId": "QVPINDEXMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Rates",
+     "Rate Maintenance..."
+    ],
+    "screenSecurityId": "QVPRATEMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Rates",
+     "Rate Query..."
+    ],
+    "screenSecurityId": "QVPRATEQUERY",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Rates",
+     "Seasonal Profile Maintenance..."
+    ],
+    "screenSecurityId": "QVPRATESEASONALPROFILEMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Rates",
+     "Tier Maintenance..."
+    ],
+    "screenSecurityId": "QVPTIERMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Reporting"
+    ],
+    "screenSecurityId": "QVPBATCHPROCESSREPORTEXECUTION",
+    "hidden": true,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Revenue Details",
+     "Plan Data Update..."
+    ],
+    "screenSecurityId": "QVPPLANDATAUPDATE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Revenue Details",
+     "Top Side Entry..."
+    ],
+    "screenSecurityId": "QVPREVENUEDETAILTOPSIDEENTRY",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Scheduling",
+     "CAS Maintenance"
+    ],
+    "screenSecurityId": "QVPSOAGRAPHICALTABULARSCREEN",
+    "hidden": true,
+    "inactive": true
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Scheduling",
+     "Scheduling Volume Approval / Maintenance..."
+    ],
+    "screenSecurityId": "QVPCASVOLAPPROVALMAINTENANCE",
+    "hidden": true,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Scheduling",
+     "CAS Maintenance..."
+    ],
+    "screenSecurityId": "QVPSOAGRAPHICALTABULARSCREEN",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "Scheduling",
+     "Location Scheduling Capacity Override..."
+    ],
+    "screenSecurityId": "QVPSCHEDULINGCAPACITYOVERRIDE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Allocations",
+     "Allocation Plan Maintenance..."
+    ],
+    "screenSecurityId": "QVPALLOCATIONPLANMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Allocations",
+     "Allocation Transaction Type..."
+    ],
+    "screenSecurityId": "QVPALLOCATIONTRANSACTIONTYPE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Allocations",
+     "Fuel Type Of Charge Ranking..."
+    ],
+    "screenSecurityId": "QVPFUELTYPEOFCHARGERANKING",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Allocations",
+     "Hourly Penalty Schedule..."
+    ],
+    "screenSecurityId": "QVPSOAHOURLYPENALTYSCHEDULE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Billing",
+     "Bill Period Maintenance..."
+    ],
+    "screenSecurityId": "QVPBILLPERIODMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Billing",
+     "Billing Configurations..."
+    ],
+    "screenSecurityId": "QVPTSPBILLINGCONFIGURATIONS",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Billing",
+     "Chart of Accounts..."
+    ],
+    "screenSecurityId": "QVPCHARTOFACCOUNT",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Billing",
+     "Invoice Messages..."
+    ],
+    "screenSecurityId": "QVPINVOICEMSGMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Billing",
+     "Sub Account Maintenance..."
+    ],
+    "screenSecurityId": "QVPSUBACCOUNT",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Capacity Release",
+     "Timeline..."
+    ],
+    "screenSecurityId": "QVPTIMELINE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Configuration Settings",
+     "Global..."
+    ],
+    "screenSecurityId": "QVPCONFIGURATIONSETTINGGLOBAL",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Configuration Settings",
+     "TSP..."
+    ],
+    "screenSecurityId": "QVPTSPCONFIGURATIONSETTINGS",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Configuration Settings",
+     "User..."
+    ],
+    "screenSecurityId": "QVPCONFIGURATIONSETTINGUSER",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Confirmations",
+     "Confirmation Level..."
+    ],
+    "screenSecurityId": "QVPCONFIRMATIONLEVEL",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Confirmations",
+     "Confirmation Plan..."
+    ],
+    "screenSecurityId": "QVPCONFIRMATIONPLANSETUP",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Confirmations",
+     "Confirmation Plan Location..."
+    ],
+    "screenSecurityId": "QVPCONFIRMATIONPLANLOCATION",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Confirmations",
+     "Confirmation Plan Security..."
+    ],
+    "screenSecurityId": "QVPCONFIRMATIONPLANSECURITY",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Contracts",
+     "TOS Maintenance..."
+    ],
+    "screenSecurityId": "QVPTOSMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Contracts",
+     "Org - Contract Type - Sub Contract Type - Settlement Type..."
+    ],
+    "screenSecurityId": "QVPCTRTYPE_CTRSUBTYPE_SETTLETYPE_INTEGRATION",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "EDI",
+     "Dataset Loop Definition..."
+    ],
+    "screenSecurityId": "QVPDATASETLOOPDEFINITION",
+    "hidden": true,
+    "inactive": true
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "EDI",
+     "Dataset Definition..."
+    ],
+    "screenSecurityId": "QVPEDIDATASETDEFINITION",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "EDI",
+     "EDI Dependent Rule..."
+    ],
+    "screenSecurityId": "QVPEDIDEPENDENTRULE",
+    "hidden": true,
+    "inactive": true
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "EDI",
+     "Segment Definition..."
+    ],
+    "screenSecurityId": "QVPDATASETSEGMENTDEFINITION",
+    "hidden": true,
+    "inactive": true
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "EDI",
+     "Template Definition..."
+    ],
+    "screenSecurityId": "QVPEDITEMPLATEDEFINITION",
+    "hidden": true,
+    "inactive": true
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Inventory Accounts",
+     "Trading Rules Maintenance..."
+    ],
+    "screenSecurityId": "QVPTRADINGRULESMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "NAESB",
+     "Index Of Customers - Contracts..."
+    ],
+    "screenSecurityId": "QVPINDEXOFCUSTOMERSCONTRACTS",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "NAESB",
+     "Index Of Customers - Locations..."
+    ],
+    "screenSecurityId": "QVPINDEXOFCUSTOMERSLOCATIONS",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Nominations",
+     "Nomination AutoGen Maintenance..."
+    ],
+    "screenSecurityId": "QVPSOANOMINATIONAUTOGEN",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Nominations",
+     "Nomination Configuration System Preferences..."
+    ],
+    "screenSecurityId": "QVPNOMINATIONCONFIGURATIONSYSTEMPREFERENCES",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Nominations",
+     "Nomination Configuration User Preferences..."
+    ],
+    "screenSecurityId": "QVPNOMINATIONCONFIGURATIONUSERPREFERENCES",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Notice",
+     "Notice Posting..."
+    ],
+    "screenSecurityId": "QVPNOTICESETUPPLTM",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Notice",
+     "Notice Users..."
+    ],
+    "screenSecurityId": "QVPNOTICEUSERS",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Notice",
+     "Notification Preferences..."
+    ],
+    "screenSecurityId": "QVPNOTIFICATIONPREFERENCES",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Notifications",
+     "Event Detector..."
+    ],
+    "screenSecurityId": "QVPEVENTNOTIFICATIONSETUP",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Notifications",
+     "Event Log..."
+    ],
+    "screenSecurityId": "QVPEVENTDETECTORLOGVIEWER",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Notifications",
+     "Event Type..."
+    ],
+    "screenSecurityId": "QVPEVENTTYPESETUP",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Pipeline Administration",
+     "Cycles..."
+    ],
+    "screenSecurityId": "QVPCYCLES",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Pipeline Administration",
+     "Facility Maintenance..."
+    ],
+    "screenSecurityId": "QVPFACILITYMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Pipeline Administration",
+     "Middle Tier Cache Maintenance..."
+    ],
+    "screenSecurityId": "QVPSOAMIDDLETIERREFRESH",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Pipeline Administration",
+     "Preapproved Text..."
+    ],
+    "screenSecurityId": "QVPPREAPPROVEDTEXT",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Pipeline Administration",
+     "TSP Configuration Settings..."
+    ],
+    "screenSecurityId": "QVPTSPCONFIGURATIONSETTINGS",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Pipeline Administration",
+     "TSP Holiday Maintenance..."
+    ],
+    "screenSecurityId": "QVPHOLIDAYMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Pipeline Administration",
+     "TSP Inventory Configurations..."
+    ],
+    "screenSecurityId": "QVPSOATSPMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Pipeline Administration",
+     "TSP Maintenance..."
+    ],
+    "screenSecurityId": "QVPTSPMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Pipeline Administration",
+     "Validation Rule Assignment..."
+    ],
+    "screenSecurityId": "QVPVALIDATIONRULEASSIGNMENT",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Pipeline Administration",
+     "Validation Rule Cross-Reference"
+    ],
+    "screenSecurityId": "QVPVALIDATIONRULEXREF",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Pipeline Administration",
+     "Validation Rule Maintenance..."
+    ],
+    "screenSecurityId": "QVPVALIDATIONRULEMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Pipeline Administration",
+     "Advanced Archive Setup"
+    ],
+    "screenSecurityId": "QVPSOAADVANCEDARCHIVE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Rates",
+     "TOC - Object Association..."
+    ],
+    "screenSecurityId": "QVPTOCPROCESSASSOCIATION",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Rates",
+     "TOS - Charge Basis Maintenance..."
+    ],
+    "screenSecurityId": "QVPTOSCHARGEBASISMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Rates",
+     "Type Of Charge Maintenance..."
+    ],
+    "screenSecurityId": "QVPTYPEOFCHARGEMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Rates",
+     "TOC - TOS Rule Maintenance..."
+    ],
+    "screenSecurityId": "QVPTOCTOSRULEMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Scheduling",
+     "Classification Rule Setup",
+     "CAS Reduction Order Maintenance"
+    ],
+    "screenSecurityId": "QVPCASREDUCTIONORDER",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Scheduling",
+     "Classification Rule Setup",
+     "Classification Rule Transaction Groups"
+    ],
+    "screenSecurityId": "QVPCLASSIFICATIONRULESETTRANSGRP",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Scheduling",
+     "Classification Rule Setup",
+     "Classification Rules Entry Maintenance"
+    ],
+    "screenSecurityId": "QVPCLASSIFICATIONRULESENTRYMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Scheduling",
+     "Classification Rule Setup",
+     "Lease Scheduling Configuration"
+    ],
+    "screenSecurityId": "QVPLEASESCHEDULINGMAINTENANCE",
+    "hidden": true,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Scheduling",
+     "Classification Rule Setup",
+     "Nomination Classification Maintenance"
+    ],
+    "screenSecurityId": "QVPNOMCLASSIFICATIONMAINT",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Scheduling",
+     "Classification Rule Setup",
+     "Scheduling Object/Rule Set Maintenance"
+    ],
+    "screenSecurityId": "QVPSCHEDOBJECTRULESETMAINT",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Scheduling",
+     "Scheduling Group/Entry Maintenance..."
+    ],
+    "screenSecurityId": "QVPSCHEDULINGGROUPENTRYMAINTENANCE",
+    "hidden": true,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Scheduling",
+     "Location Group Path Maintenance..."
+    ],
+    "screenSecurityId": "QVPLOCATIONGROUPPATHMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Scheduling",
+     "Location Path Maintenance..."
+    ],
+    "screenSecurityId": "QVPLOCATIONPATHMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Scheduling",
+     "Parallel Scheduling..."
+    ],
+    "screenSecurityId": "QVPSOAMULTIGROUPSCHEDULINGSCREEN",
+    "hidden": true,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "Screens",
+     "System Setup",
+     "Scheduling",
+     "Route Path Maintenance..."
+    ],
+    "screenSecurityId": "QVPSOAROUTEPATHMAINTSCREEN",
+    "hidden": false,
+    "inactive": false
+   }
+  ],
+  "caw_external_screens_menu": [
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Allocations",
+     "Daily Allocated Quantity Maintenance"
+    ],
+    "screenSecurityId": "QVPDAILYALLOCATEDQUANTITYMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Allocations",
+     "PDA Submission"
+    ],
+    "screenSecurityId": "QVPPREDETERMINEDALLOCATIONSUBMISSION",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Nominations",
+     "Nomination",
+     "Location-Centric Nomination Submission..."
+    ],
+    "screenSecurityId": "QVPLCSOANOMINATIONSUBMISSION",
+    "hidden": true,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Nominations",
+     "Nomination",
+     "Nomination Submission..."
+    ],
+    "screenSecurityId": "QVPSOANOMINATIONSUBMISSION",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Nominations",
+     "Nomination",
+     "Nomination Configuration User Preferences..."
+    ],
+    "screenSecurityId": "QVPNOMINATIONCONFIGURATIONUSERPREFERENCES",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Nominations",
+     "Nomination",
+     "Nomination Maintenance..."
+    ],
+    "screenSecurityId": "QVPSOANOMINATIONMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Nominations",
+     "Nomination",
+     "Nomination Navigation..."
+    ],
+    "screenSecurityId": "QVPSOANOMINATIONNAVIGATION",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Nominations",
+     "Confirmation",
+     "Confirmation Response..."
+    ],
+    "screenSecurityId": "QVPSOACONFIRMATION",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Nominations",
+     "Confirmation",
+     "Confirmation Summary..."
+    ],
+    "screenSecurityId": "QVPSOACONFIRMATIONSUMMARY",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Nominations",
+     "Confirmation",
+     "Confirmation Location Quick View..."
+    ],
+    "screenSecurityId": "QVPCONFIRMATIONLOCATIONQUICKVIEW",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Nominations",
+     "Confirmation",
+     "Life Cycle..."
+    ],
+    "screenSecurityId": "QVPLIFECYCLE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Nominations",
+     "Scheduled Quantity",
+     "Scheduled Quantity Reports..."
+    ],
+    "screenSecurityId": "QVPBATCHPROCESSREPORTEXECUTION",
+    "hidden": true,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Nominations",
+     "Scheduled Quantity",
+     "Scheduled Quantity for Operator"
+    ],
+    "screenSecurityId": "QVPBATCHPROCESSREPORTEXECUTION",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Nominations",
+     "Scheduled Quantity",
+     "Scheduled Quantity for Shipper"
+    ],
+    "screenSecurityId": "QVPBATCHPROCESSREPORTEXECUTION",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Flowing Gas",
+     "Pre-determined Allocation",
+     "PDA Submission..."
+    ],
+    "screenSecurityId": "QVPPREDETERMINEDALLOCATIONSUBMISSION",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Flowing Gas",
+     "Allocation",
+     "Daily Allocated Quantity Maintenance..."
+    ],
+    "screenSecurityId": "QVPDAILYALLOCATEDQUANTITYMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Flowing Gas",
+     "Allocation",
+     "Monthly Allocated Quantity Maintenance..."
+    ],
+    "screenSecurityId": "QVPMONTHLYALLOCATEDQUANTITYMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Flowing Gas",
+     "Imbalance",
+     "Customer Accounts",
+     "Authorization to Post Imbalance..."
+    ],
+    "screenSecurityId": "QVPCUSTOMERACCOUNT",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Flowing Gas",
+     "Imbalance",
+     "Customer Accounts",
+     "Customer Account Query..."
+    ],
+    "screenSecurityId": "QVPCUSTOMERACCTQUERY",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Flowing Gas",
+     "Imbalance",
+     "Customer Accounts",
+     "Customer Account Summary..."
+    ],
+    "screenSecurityId": "QVPSHIPPERIMBALANCESUMMARY",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Flowing Gas",
+     "Imbalance",
+     "Authorization to Post Imbalances..."
+    ],
+    "screenSecurityId": "QVPCUSTOMERACCOUNT",
+    "hidden": true,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Flowing Gas",
+     "Imbalance",
+     "Imbalance Trades",
+     "Imbalance Trading Summary..."
+    ],
+    "screenSecurityId": "QVPIMBALANCETRADINGMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Flowing Gas",
+     "Imbalance",
+     "Imbalance Trades",
+     "Imbalance Trading Form..."
+    ],
+    "screenSecurityId": "QVPIMBALANCETRADINGMAINTENANCEFORM",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Flowing Gas",
+     "Imbalance",
+     "Imbalance Trade Notification..."
+    ],
+    "screenSecurityId": "QVPIMBALANCETRADINGMAINTENANCE",
+    "hidden": true,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Flowing Gas",
+     "Imbalance",
+     "Storage Transfers",
+     "Storage Transfer Summary..."
+    ],
+    "screenSecurityId": "QVPSTORAGETRANSFERGRID",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Flowing Gas",
+     "Imbalance",
+     "Storage Transfers",
+     "Storage Transfer Maintenance Form..."
+    ],
+    "screenSecurityId": "QVPSTORAGETRANSFERMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Flowing Gas",
+     "Imbalance",
+     "Imbalance Account Inquiry..."
+    ],
+    "screenSecurityId": "QVPCUSTOMERACCOUNT",
+    "hidden": true,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Flowing Gas",
+     "Imbalance",
+     "Customer Account Summary..."
+    ],
+    "screenSecurityId": "QVPSHIPPERIMBALANCESUMMARY",
+    "hidden": true,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Flowing Gas",
+     "Measurement",
+     "Measurement Information..."
+    ],
+    "screenSecurityId": "QVPBATCHPROCESSREPORTEXECUTION",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Invoicing",
+     "Invoice",
+     "Invoice Detail Maintenance..."
+    ],
+    "screenSecurityId": "QVPINVOICEDETAILMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Invoicing",
+     "Invoice",
+     "Invoice Header Maintenance..."
+    ],
+    "screenSecurityId": "QVPINVOICEHEADERMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Invoicing",
+     "Invoice",
+     "Invoice Header by Contract/TOS..."
+    ],
+    "screenSecurityId": "QVPINVOICEHEADERBYCONTRACTTOS",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Invoicing",
+     "Invoice",
+     "Invoice Sub-Detail Summary..."
+    ],
+    "screenSecurityId": "QVPINVOICESUBDETAILMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Invoicing",
+     "Invoice",
+     "Invoice Sub TOC Detail Summary..."
+    ],
+    "screenSecurityId": "QVPINVOICESUBDETAILMAINTENANCETOC",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Invoicing",
+     "Payment Remittance",
+     "Invoice Documents..."
+    ],
+    "screenSecurityId": "QVPBATCHPROCESSREPORTEXECUTION",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Invoicing",
+     "Invoice Group Maintenance"
+    ],
+    "screenSecurityId": "QVPINVOICEGROUP",
+    "hidden": true,
+    "inactive": true
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Invoicing",
+     "Statement of Account...",
+     "Invoice Documents..."
+    ],
+    "screenSecurityId": "QVPBATCHPROCESSREPORTEXECUTION",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Capacity Release",
+     "Offers",
+     "Offer..."
+    ],
+    "screenSecurityId": "QVPCAPRELOFFER",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Capacity Release",
+     "Offers",
+     "Offer Summary..."
+    ],
+    "screenSecurityId": "QVPCAPRELOFFERVIEWER",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Capacity Release",
+     "Bids",
+     "Bid..."
+    ],
+    "screenSecurityId": "QVPCAPRELBID",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Capacity Release",
+     "Bids",
+     "Bid Summary..."
+    ],
+    "screenSecurityId": "QVPBIDVIEWER",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Capacity Release",
+     "Awards",
+     "Award..."
+    ],
+    "screenSecurityId": "QVPCAPRELAWARD",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Capacity Release",
+     "Awards",
+     "Recall/Reput..."
+    ],
+    "screenSecurityId": "QVPRECALLREPUT",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Capacity Release",
+     "Withdrawal Summary..."
+    ],
+    "screenSecurityId": "QVPCAPRELWITHDRAWALSUMMARY",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Confirmations",
+     "Confirmation Summary"
+    ],
+    "screenSecurityId": "QVPSOACONFIRMATIONSUMMARY",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Confirmations",
+     "Confirmation Response"
+    ],
+    "screenSecurityId": "QVPSOACONFIRMATION",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Inventory Accounts",
+     "Customer Accounts",
+     "Authorization to Post Imbalance"
+    ],
+    "screenSecurityId": "QVPCUSTOMERACCOUNT",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Inventory Accounts",
+     "Customer Accounts",
+     "Customer Account Summary"
+    ],
+    "screenSecurityId": "QVPSHIPPERIMBALANCESUMMARY",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Inventory Accounts",
+     "Customer Account Summary..."
+    ],
+    "screenSecurityId": "QVPSHIPPERIMBALANCESUMMARY",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Inventory Accounts",
+     "Imbalance Trades",
+     "Imbalance Trading Summary"
+    ],
+    "screenSecurityId": "QVPIMBALANCETRADINGMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Inventory Accounts",
+     "Imbalance Trades",
+     "Imbalance Trading Form"
+    ],
+    "screenSecurityId": "QVPIMBALANCETRADINGMAINTENANCEFORM",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Inventory Accounts",
+     "Storage Transfers",
+     "Storage Transfer Summary"
+    ],
+    "screenSecurityId": "QVPSTORAGETRANSFERGRID",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Inventory Accounts",
+     "Storage Transfers",
+     "Storage Transfer Maintenance Form"
+    ],
+    "screenSecurityId": "QVPSTORAGETRANSFERMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Contracts",
+     "Request For Service..."
+    ],
+    "screenSecurityId": "QVPSOAREQUESTFORSERVICE",
+    "hidden": true,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Contracts",
+     "Long Term Bid Viewer..."
+    ],
+    "screenSecurityId": "QVPLONGTERMBIDVIEWER",
+    "hidden": true,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Contracts",
+     "Contract Reports..."
+    ],
+    "screenSecurityId": "QVPBATCHPROCESSREPORTEXECUTION",
+    "hidden": true,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Contracts",
+     "Transportation Contract Brief..."
+    ],
+    "screenSecurityId": "QVPBATCHPROCESSREPORTEXECUTION",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Contracts",
+     "FSS  NNS Contract Brief..."
+    ],
+    "screenSecurityId": "QVPBATCHPROCESSREPORTEXECUTION",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Contracts",
+     "PAL Contract Brief..."
+    ],
+    "screenSecurityId": "QVPBATCHPROCESSREPORTEXECUTION",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Notification Preferences",
+     "Notification Preferences..."
+    ],
+    "screenSecurityId": "QVPNOTIFICATIONPREFERENCES",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Corporate",
+     "E-Mail Documents..."
+    ],
+    "screenSecurityId": "QVPUSERNOTIFICATIONSUBSCRIPTIONMANAGER",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "CAW Screens",
+     "Reporting"
+    ],
+    "screenSecurityId": "QVPBATCHPROCESSREPORTEXECUTION",
+    "hidden": false,
+    "inactive": false
+   }
+  ],
+  "system_menu_injected": [
+   {
+    "menuPath": [
+     "System",
+     "Organizational Hierarchy Maintenance..."
+    ],
+    "screenSecurityId": "QVPORGHIERARCHYMAINTENANCE",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "System",
+     "Company Address..."
+    ],
+    "screenSecurityId": "QVPCOMPANYADDRESS",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "System",
+     "Batch Process Execution..."
+    ],
+    "screenSecurityId": "QVPBATCHPROCESSEXECUTION",
+    "hidden": true,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "System",
+     "Batch Process Message Log Viewer..."
+    ],
+    "screenSecurityId": "QVPPROCESSMESSAGELOG",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "System",
+     "Report Execution..."
+    ],
+    "screenSecurityId": "QVPBATCHPROCESSREPORTEXECUTION",
+    "hidden": true,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "System",
+     "Generated Report Finder..."
+    ],
+    "screenSecurityId": "QVPREPORTFILEVIEWER",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "System",
+     "User Configuration Parameters..."
+    ],
+    "screenSecurityId": "QVPCONFIGURATIONSETTINGUSER",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "System",
+     "Event Subscription Manager..."
+    ],
+    "screenSecurityId": "QVPUSERSUBSCRIPTIONMGR",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "System",
+     "User Notification Profile..."
+    ],
+    "screenSecurityId": "QVPUSERPROFILESETUP",
+    "hidden": false,
+    "inactive": false
+   },
+   {
+    "menuPath": [
+     "System",
+     "Notification Preferences..."
+    ],
+    "screenSecurityId": "QVPNOTIFICATIONPREFERENCES",
+    "hidden": false,
+    "inactive": false
+   }
+  ],
+  "system_menu_static": [
+   {
+    "menuPath": [
+     "System",
+     "TSP Maintenance..."
+    ],
+    "commandId": "ID_TSPMAINTENANCE"
+   },
+   {
+    "menuPath": [
+     "System",
+     "Batch Process Execution..."
+    ],
+    "commandId": "ID_BATCH_PROCESS_EXECUTION"
+   },
+   {
+    "menuPath": [
+     "System",
+     "Report Execution..."
+    ],
+    "commandId": "ID_BATCH_PROCESS_RPT_EXECUTION"
+   },
+   {
+    "menuPath": [
+     "System",
+     "Schedule Creation..."
+    ],
+    "commandId": "ID_QFCSCREENS_BATCH_SCHEDULER"
+   },
+   {
+    "menuPath": [
+     "System",
+     "Scheduled Process Viewer..."
+    ],
+    "commandId": "IDD_QARK_SCHEDULER_CONSOLIDATED"
+   },
+   {
+    "menuPath": [
+     "System",
+     "Screen Message Log Viewer..."
+    ],
+    "commandId": "ID_QARK_MSG_VIEWER"
+   },
+   {
+    "menuPath": [
+     "System",
+     "Cache Maintenance..."
+    ],
+    "commandId": "ID_QARK_CACHEMAINTENANCE"
+   }
+  ],
+  "maintenance_menu_injected": [
+   {
+    "menuPath": [
+     "Maintenance",
+     "Registered SQL"
+    ],
+    "screenSecurityId": "QVPSOAREGISTEREDSQL",
+    "hidden": false,
+    "inactive": false
+   }
+  ],
+  "per_screen_links_menus": {
+   "QVPAGENCYIMBALANCEMAINTENANCE": [
+    {
+     "caption": "Customer Accounts...",
+     "targetSecurityId": "QVPCUSTOMERACCOUNT",
+     "hidden": false
+    },
+    {
+     "caption": "Customer Account Summary...",
+     "targetSecurityId": "QVPSHIPPERIMBALANCESUMMARY",
+     "hidden": false
+    }
+   ],
+   "QVPALLOCATIONPLANMAINTENANCE": [
+    {
+     "caption": "Penalty Results...",
+     "targetSecurityId": "QVPPENALTYRESULTS",
+     "hidden": false
+    },
+    {
+     "caption": "Penalty Submission...",
+     "targetSecurityId": "QVPPENALTYSUBMISSION",
+     "hidden": false
+    }
+   ],
+   "QVPBIDVIEWER": [
+    {
+     "caption": "Bid...",
+     "targetSecurityId": "QVPCAPRELBID",
+     "hidden": false
+    },
+    {
+     "caption": "Offer...",
+     "targetSecurityId": "QVPCAPRELOFFER",
+     "hidden": false
+    }
+   ],
+   "QVPUIBIDVIEWER": [
+    {
+     "caption": "Bid...",
+     "targetSecurityId": "QVPCAPRELBID",
+     "hidden": false
+    }
+   ],
+   "QVPBUSINESSPARTY": [
+    {
+     "caption": "Contact Search...",
+     "targetSecurityId": "QVPBUSINESSPARTYCONTACTSEARCH",
+     "hidden": false
+    }
+   ],
+   "QVPCAPRELAWARD": [
+    {
+     "caption": "Award Download...",
+     "targetSecurityId": "CRX06",
+     "hidden": false
+    },
+    {
+     "caption": "Contract Maintenance...",
+     "targetSecurityId": "QVPCONTRACTMAINTENANCE",
+     "hidden": false
+    }
+   ],
+   "QVPCAPRELBID": [
+    {
+     "caption": "Bid Download...",
+     "targetSecurityId": "CRX05",
+     "hidden": false
+    },
+    {
+     "caption": "Award...",
+     "targetSecurityId": "QVPCAPRELAWARD",
+     "hidden": false
+    },
+    {
+     "caption": "Offer...",
+     "targetSecurityId": "QVPCAPRELOFFER",
+     "hidden": false
+    },
+    {
+     "caption": "Bid...",
+     "targetSecurityId": "QVPCAPRELBID",
+     "hidden": false
+    }
+   ],
+   "QVPCAPRELOFFER": [
+    {
+     "caption": "Bid Viewer...",
+     "targetSecurityId": "QVPBIDVIEWER",
+     "hidden": false
+    },
+    {
+     "caption": "Award...",
+     "targetSecurityId": "QVPCAPRELAWARD",
+     "hidden": false
+    },
+    {
+     "caption": "Bid...",
+     "targetSecurityId": "QVPCAPRELBID",
+     "hidden": false
+    },
+    {
+     "caption": "Offer Download...",
+     "targetSecurityId": "CRX04",
+     "hidden": false
+    },
+    {
+     "caption": "Recall/Reput...",
+     "targetSecurityId": "QVPRECALLREPUT",
+     "hidden": false
+    }
+   ],
+   "QVPCAPRELOFFERVIEWER": [
+    {
+     "caption": "Bid...",
+     "targetSecurityId": "QVPCAPRELBID",
+     "hidden": false
+    },
+    {
+     "caption": "Bid Viewer...",
+     "targetSecurityId": "QVPBIDVIEWER",
+     "hidden": false
+    },
+    {
+     "caption": "Offer...",
+     "targetSecurityId": "QVPCAPRELOFFER",
+     "hidden": false
+    }
+   ],
+   "QVPCARGORECORD": [
+    {
+     "caption": "Cargo Change Request...",
+     "targetSecurityId": "QVPCARGOCHANGEREQUEST",
+     "hidden": false
+    }
+   ],
+   "QVPCASVOLAPPROVALMAINTENANCE": [
+    {
+     "caption": "Location Quick View...",
+     "targetSecurityId": "QVPCONFIRMATIONLOCATIONQUICKVIEW",
+     "hidden": false
+    },
+    {
+     "caption": "Nomination Submission...",
+     "targetSecurityId": "QVPSOANOMINATIONSUBMISSION",
+     "hidden": false
+    }
+   ],
+   "QVPCONFIRMATIONRESPONSE": [
+    {
+     "caption": "Business Party Maintenence... ...",
+     "targetSecurityId": "QVPBAENTITYTABVWINTEGRATEDCOMMON",
+     "hidden": false
+    },
+    {
+     "caption": "Path Balancing EPSQ...",
+     "targetSecurityId": "QVPEPSQMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Life Cycle...",
+     "targetSecurityId": "QVPLIFECYCLE",
+     "hidden": false
+    },
+    {
+     "caption": "Location Quick View...",
+     "targetSecurityId": "QVPCONFIRMATIONLOCATIONQUICKVIEW",
+     "hidden": false
+    }
+   ],
+   "QVPSOACONFIRMATION": [
+    {
+     "caption": "Business Associate - Entity...",
+     "targetSecurityId": "QVPBAENTITYTABVW",
+     "hidden": false
+    },
+    {
+     "caption": "Business Party Contact Search...",
+     "targetSecurityId": "QVPBUSINESSPARTYCONTACTSEARCH",
+     "hidden": false
+    },
+    {
+     "caption": "Life Cycle...",
+     "targetSecurityId": "QVPLIFECYCLE",
+     "hidden": false
+    },
+    {
+     "caption": "Location Quick View...",
+     "targetSecurityId": "QVPCONFIRMATIONLOCATIONQUICKVIEW",
+     "hidden": false
+    },
+    {
+     "caption": "Nomination Submission...",
+     "targetSecurityId": "QVPSOANOMINATIONSUBMISSION",
+     "hidden": false
+    },
+    {
+     "caption": "Confirmation Download...",
+     "targetSecurityId": "CFX66",
+     "hidden": false
+    }
+   ],
+   "QVPCONFIRMATIONPLANLOCATION": [
+    {
+     "caption": "Confirmation Plan Security...",
+     "targetSecurityId": "QVPCONFIRMATIONPLANSECURITY",
+     "hidden": false
+    },
+    {
+     "caption": "Confirmation Plan...",
+     "targetSecurityId": "QVPCONFIRMATIONPLANSETUP",
+     "hidden": false
+    }
+   ],
+   "QVPCONFIRMATIONPLANSECURITY": [
+    {
+     "caption": "Confirmation Plan Location...",
+     "targetSecurityId": "QVPCONFIRMATIONPLANLOCATION",
+     "hidden": false
+    },
+    {
+     "caption": "Confirmation Plan...",
+     "targetSecurityId": "QVPCONFIRMATIONPLANSETUP",
+     "hidden": false
+    }
+   ],
+   "QVPCONFIRMATIONPLANSETUP": [
+    {
+     "caption": "Confirmation Plan Location...",
+     "targetSecurityId": "QVPCONFIRMATIONPLANLOCATION",
+     "hidden": false
+    },
+    {
+     "caption": "Confirmation Plan Security...",
+     "targetSecurityId": "QVPCONFIRMATIONPLANSECURITY",
+     "hidden": false
+    }
+   ],
+   "QVPSOACONFIRMATIONSUMMARY": [
+    {
+     "caption": "Business Associate - Entity...",
+     "targetSecurityId": "QVPBAENTITYTABVW",
+     "hidden": false
+    },
+    {
+     "caption": "Business Party Contact Search...",
+     "targetSecurityId": "QVPBUSINESSPARTYCONTACTSEARCH",
+     "hidden": false
+    },
+    {
+     "caption": "Confirmation Response...",
+     "targetSecurityId": "QVPSOACONFIRMATION",
+     "hidden": false
+    },
+    {
+     "caption": "Life Cycle...",
+     "targetSecurityId": "QVPLIFECYCLE",
+     "hidden": false
+    },
+    {
+     "caption": "Location Quick View...",
+     "targetSecurityId": "QVPCONFIRMATIONLOCATIONQUICKVIEW",
+     "hidden": false
+    },
+    {
+     "caption": "Nomination Submission...",
+     "targetSecurityId": "QVPSOANOMINATIONSUBMISSION",
+     "hidden": false
+    }
+   ],
+   "QVPBUSINESSPARTYCONTACTSEARCH": [
+    {
+     "caption": "Notification Preferences ...",
+     "targetSecurityId": "QVPNOTIFICATIONPREFERENCES",
+     "hidden": false
+    }
+   ],
+   "QVPCONTRACTCONTACTMASSCHANGE": [
+    {
+     "caption": "Business Associate - Entity...",
+     "targetSecurityId": "QVPBAENTITYTABVW",
+     "hidden": false
+    },
+    {
+     "caption": "Contract Maintenance...",
+     "targetSecurityId": "QVPCONTRACTMAINTENANCE",
+     "hidden": false
+    }
+   ],
+   "QVPCONTRACTMAINTENANCE": [
+    {
+     "caption": "Business Associate - Entity...",
+     "targetSecurityId": "QVPBAENTITYTABVW",
+     "hidden": false
+    },
+    {
+     "caption": "Contract-Contact Override Mass Change...",
+     "targetSecurityId": "QVPCONTRACTCONTACTMASSCHANGE",
+     "hidden": false
+    },
+    {
+     "caption": "Invoice Group Maintenance...",
+     "targetSecurityId": "QVPINVOICEGROUP",
+     "hidden": false
+    },
+    {
+     "caption": "Location Group Maintenance...",
+     "targetSecurityId": "QVPLOCATIONGROUPMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Location Maintenance...",
+     "targetSecurityId": "QVPLOCATIONMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Request For Service...",
+     "targetSecurityId": "QVPSOAREQUESTFORSERVICE",
+     "hidden": false
+    },
+    {
+     "caption": "Seasonal Profile Maintenance...",
+     "targetSecurityId": "QVPSEASONALPROFILEMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "TOS Maintenance...",
+     "targetSecurityId": "QVPTOSMAINTENANCE",
+     "hidden": false
+    }
+   ],
+   "QVPCAPRELAWARDAMENDMENTS": [
+    {
+     "caption": "Offer...",
+     "targetSecurityId": "QVPCAPRELOFFER",
+     "hidden": false
+    }
+   ],
+   "QVPCUSTOMERACCOUNT": [
+    {
+     "caption": "Contract Maintenance...",
+     "targetSecurityId": "QVPCONTRACTMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Customer Account Summary...",
+     "targetSecurityId": "QVPSHIPPERIMBALANCESUMMARY",
+     "hidden": false
+    },
+    {
+     "caption": "Imbalance Trading Summary...",
+     "targetSecurityId": "QVPIMBALANCETRADINGMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Imbalance Trading Maintenance Form...",
+     "targetSecurityId": "QVPIMBALANCETRADINGMAINTENANCEFORM",
+     "hidden": false
+    },
+    {
+     "caption": "Inventory...",
+     "targetSecurityId": "QVPINVENTORY",
+     "hidden": false
+    },
+    {
+     "caption": "Auth to Post Imbal Download...",
+     "targetSecurityId": "INX59",
+     "hidden": false
+    }
+   ],
+   "QVPSHIPPERIMBALANCESUMMARY": [
+    {
+     "caption": "Contract Maintenance...",
+     "targetSecurityId": "QVPCONTRACTMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Customer Accounts...",
+     "targetSecurityId": "QVPCUSTOMERACCOUNT",
+     "hidden": false
+    },
+    {
+     "caption": "Inventory...",
+     "targetSecurityId": "QVPINVENTORY",
+     "hidden": false
+    },
+    {
+     "caption": "Inventory Adjustments...",
+     "targetSecurityId": "QVPINVENTORYADJUSTMENTS",
+     "hidden": false
+    },
+    {
+     "caption": "Customer Account Maintenance...",
+     "targetSecurityId": "QVPCUSTOMERACCOUNT",
+     "hidden": false
+    }
+   ],
+   "QVPCYCLES": [
+    {
+     "caption": "Facility Maintenance...",
+     "targetSecurityId": "QVPFACILITYMAINTENANCE",
+     "hidden": false
+    }
+   ],
+   "QVPDAILYALLOCATEDQUANTITYMAINTENANCE": [
+    {
+     "caption": "Allocation Download...",
+     "targetSecurityId": "ALRX37D",
+     "hidden": false
+    }
+   ],
+   "QVPDATASETLOOPDEFINITION": [
+    {
+     "caption": "Segment Definition...",
+     "targetSecurityId": "QVPDATASETSEGMENTDEFINITION",
+     "hidden": false
+    },
+    {
+     "caption": "Dataset Definition...",
+     "targetSecurityId": "QVPEDIDATASETDEFINITION",
+     "hidden": false
+    }
+   ],
+   "QVPDISCOUNTOFFERMAINTENANCE": [
+    {
+     "caption": "Rate Query...",
+     "targetSecurityId": "QVPRATEQUERY",
+     "hidden": false
+    }
+   ],
+   "QVPEDIDATASETDEFINITION": [
+    {
+     "caption": "Segment Definition...",
+     "targetSecurityId": "QVPDATASETSEGMENTDEFINITION",
+     "hidden": false
+    }
+   ],
+   "QVPEDIDEPENDENTRULE": [
+    {
+     "caption": "Segment Definition...",
+     "targetSecurityId": "QVPDATASETSEGMENTDEFINITION",
+     "hidden": false
+    }
+   ],
+   "QVPEDITPAMAINTENANCE": [
+    {
+     "caption": "Business Party Contact...",
+     "targetSecurityId": "QVPBUSINESSPARTYCONTACT",
+     "hidden": false
+    },
+    {
+     "caption": "Contract Maintenance...",
+     "targetSecurityId": "QVPCONTRACTMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Dataset Definition...",
+     "targetSecurityId": "QVPEDIDATASETDEFINITION",
+     "hidden": false
+    }
+   ],
+   "QVPEDITRANSACTIONS": [
+    {
+     "caption": "Business Associate - Entity...",
+     "targetSecurityId": "QVPBAENTITYTABVW",
+     "hidden": false
+    },
+    {
+     "caption": "Dataset Definition...",
+     "targetSecurityId": "QVPEDIDATASETDEFINITION",
+     "hidden": false
+    },
+    {
+     "caption": "TPA Maintenance...",
+     "targetSecurityId": "QVPEDITPAMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "File Viewer...",
+     "targetSecurityId": "QVPEDIVIEWER",
+     "hidden": false
+    }
+   ],
+   "QVPQVPEDIVIEWER": [
+    {
+     "caption": "Dataset Definition...",
+     "targetSecurityId": "QVPEDIDATASETDEFINITION",
+     "hidden": false
+    }
+   ],
+   "QVPFACILITYMAINTENANCE": [
+    {
+     "caption": "Location Maintenance...",
+     "targetSecurityId": "QVPLOCATIONMAINTENANCE",
+     "hidden": false
+    }
+   ],
+   "QVPGASANALYSIS": [
+    {
+     "caption": "Location Maintenance...",
+     "targetSecurityId": "QVPLOCATIONMAINTENANCE",
+     "hidden": false
+    }
+   ],
+   "QVPIMBALANCETRADINGMAINTENANCE": [
+    {
+     "caption": "Customer Accounts...",
+     "targetSecurityId": "QVPCUSTOMERACCOUNT",
+     "hidden": false
+    },
+    {
+     "caption": "Customer Account Summary...",
+     "targetSecurityId": "QVPSHIPPERIMBALANCESUMMARY",
+     "hidden": false
+    },
+    {
+     "caption": "Imbalance Trading Maintenance Form...",
+     "targetSecurityId": "QVPIMBALANCETRADINGMAINTENANCEFORM",
+     "hidden": false
+    }
+   ],
+   "QVPIMBALANCETRADINGMAINTENANCEFORM": [
+    {
+     "caption": "Imbalance Trade Download...",
+     "targetSecurityId": "INX60",
+     "hidden": false
+    },
+    {
+     "caption": "Customer Accounts...",
+     "targetSecurityId": "QVPCUSTOMERACCOUNT",
+     "hidden": false
+    },
+    {
+     "caption": "Customer Account Summary...",
+     "targetSecurityId": "QVPSHIPPERIMBALANCESUMMARY",
+     "hidden": false
+    },
+    {
+     "caption": "Imbalance Trading Summary...",
+     "targetSecurityId": "QVPIMBALANCETRADINGMAINTENANCE",
+     "hidden": false
+    }
+   ],
+   "QVPINVENTORY": [
+    {
+     "caption": "Customer Accounts...",
+     "targetSecurityId": "QVPCUSTOMERACCOUNT",
+     "hidden": false
+    },
+    {
+     "caption": "Customer Account Summary...",
+     "targetSecurityId": "QVPSHIPPERIMBALANCESUMMARY",
+     "hidden": false
+    }
+   ],
+   "QVPINVOICEDETAILMAINTENANCE": [
+    {
+     "caption": "Rate Maintenance...",
+     "targetSecurityId": "QVPRATEMAINTENANCE",
+     "hidden": false
+    }
+   ],
+   "QVPINVOICEGROUP": [
+    {
+     "caption": "Contract-Contact Override Mass Change...",
+     "targetSecurityId": "QVPCONTRACTCONTACTMASSCHANGE",
+     "hidden": false
+    }
+   ],
+   "QVPINVOICEHEADERMAINTENANCE": [
+    {
+     "caption": "Invoice Group Maintenance...",
+     "targetSecurityId": "QVPINVOICEGROUP",
+     "hidden": false
+    }
+   ],
+   "QVPINVOICESUBDETAILMAINTENANCE": [
+    {
+     "caption": "Rate Maintenance...",
+     "targetSecurityId": "QVPRATEMAINTENANCE",
+     "hidden": false
+    }
+   ],
+   "QVPINVOICESUBDETAILMAINTENANCETOC": [
+    {
+     "caption": "Rate Maintenance...",
+     "targetSecurityId": "QVPRATEMAINTENANCE",
+     "hidden": false
+    }
+   ],
+   "QVPLCSOANOMINATIONSUBMISSION": [
+    {
+     "caption": "Business Associate - Entity...",
+     "targetSecurityId": "QVPBAENTITYTABVW",
+     "hidden": false
+    },
+    {
+     "caption": "Contract Maintenance...",
+     "targetSecurityId": "QVPCONTRACTMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Life Cycle...",
+     "targetSecurityId": "QVPLIFECYCLE",
+     "hidden": false
+    },
+    {
+     "caption": "Location Group Maintenance...",
+     "targetSecurityId": "QVPLOCATIONGROUPMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Location Maintenance...",
+     "targetSecurityId": "QVPLOCATIONMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Location Quick View...",
+     "targetSecurityId": "QVPCONFIRMATIONLOCATIONQUICKVIEW",
+     "hidden": false
+    }
+   ],
+   "QVPLOCATIONGROUPMAINTENANCE": [
+    {
+     "caption": "Location Maintenance...",
+     "targetSecurityId": "QVPLOCATIONMAINTENANCE",
+     "hidden": false
+    }
+   ],
+   "QVPLOCATIONMAINTENANCE": [
+    {
+     "caption": "Allocation Plan Maintenance...",
+     "targetSecurityId": "QVPALLOCATIONPLANMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Location Group Lookup...",
+     "targetSecurityId": "QVPLOCATIONGROUPLOOKUP",
+     "hidden": false
+    },
+    {
+     "caption": "Measurement Results...",
+     "targetSecurityId": "QVPMEASUREMENTRESULTS",
+     "hidden": false
+    }
+   ],
+   "QVPLOCATIONPATHMAINTENANCE": [
+    {
+     "caption": "Location Maintenance...",
+     "targetSecurityId": "QVPLOCATIONMAINTENANCE",
+     "hidden": false
+    }
+   ],
+   "QVPMEASUREMENTRESULTS": [
+    {
+     "caption": "Location Maintenance...",
+     "targetSecurityId": "QVPLOCATIONMAINTENANCE",
+     "hidden": false
+    }
+   ],
+   "QVPMONTHLYALLOCATEDQUANTITYMAINTENANCE": [
+    {
+     "caption": "Allocation Download...",
+     "targetSecurityId": "ALRX37M",
+     "hidden": false
+    }
+   ],
+   "QVPSOANOMINATIONMAINTENANCE": [
+    {
+     "caption": "Business Associate - Entity...",
+     "targetSecurityId": "QVPBAENTITYTABVW",
+     "hidden": false
+    },
+    {
+     "caption": "Contract Maintenance...",
+     "targetSecurityId": "QVPCONTRACTMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Life Cycle...",
+     "targetSecurityId": "QVPLIFECYCLE",
+     "hidden": false
+    },
+    {
+     "caption": "Location Group Maintenance...",
+     "targetSecurityId": "QVPLOCATIONGROUPMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Location Maintenance...",
+     "targetSecurityId": "QVPLOCATIONMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Location Quick View...",
+     "targetSecurityId": "QVPCONFIRMATIONLOCATIONQUICKVIEW",
+     "hidden": false
+    }
+   ],
+   "QVPSOANOMINATIONSUBMISSION": [
+    {
+     "caption": "Business Associate - Entity...",
+     "targetSecurityId": "QVPBAENTITYTABVW",
+     "hidden": false
+    },
+    {
+     "caption": "Contract Maintenance...",
+     "targetSecurityId": "QVPCONTRACTMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Life Cycle...",
+     "targetSecurityId": "QVPLIFECYCLE",
+     "hidden": false
+    },
+    {
+     "caption": "Location Group Maintenance...",
+     "targetSecurityId": "QVPLOCATIONGROUPMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Location Maintenance...",
+     "targetSecurityId": "QVPLOCATIONMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Location Quick View...",
+     "targetSecurityId": "QVPCONFIRMATIONLOCATIONQUICKVIEW",
+     "hidden": false
+    },
+    {
+     "caption": "Nomination Download...",
+     "targetSecurityId": "NNX41",
+     "hidden": false
+    }
+   ],
+   "QVPNOTICESETUP": [
+    {
+     "caption": "Notice Users...",
+     "targetSecurityId": "QVPNOTICEUSERS",
+     "hidden": false
+    }
+   ],
+   "QVPNOTICEUSERS": [
+    {
+     "caption": "Notice Posting...",
+     "targetSecurityId": "QVPNOTICESETUP",
+     "hidden": false
+    }
+   ],
+   "QVPSOAPDASUBMISSION": [
+    {
+     "caption": "PDA Download...",
+     "targetSecurityId": "ALRX36",
+     "hidden": false
+    }
+   ],
+   "QVPPREDETERMINEDALLOCATIONSUBMISSION": [
+    {
+     "caption": "PDA Download...",
+     "targetSecurityId": "ALRX36",
+     "hidden": false
+    }
+   ],
+   "QVPCUSTOMERACCTQUERY": [
+    {
+     "caption": "Customer Accounts...",
+     "targetSecurityId": "QVPCUSTOMERACCOUNT",
+     "hidden": false
+    }
+   ],
+   "QVPRATECONTRACTASSOCIATIONS": [
+    {
+     "caption": "Contract Maintenance...",
+     "targetSecurityId": "QVPCONTRACTMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Rate Maintenance...",
+     "targetSecurityId": "QVPRATEMAINTENANCE",
+     "hidden": false
+    }
+   ],
+   "QVPRATEMAINTENANCE": [
+    {
+     "caption": "Location Group Maintenance...",
+     "targetSecurityId": "QVPLOCATIONGROUPMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Location Maintenance...",
+     "targetSecurityId": "QVPLOCATIONMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Rate Query...",
+     "targetSecurityId": "QVPRATEQUERY",
+     "hidden": false
+    },
+    {
+     "caption": "Seasonal Profile Maintenance...",
+     "targetSecurityId": "QVPRATESEASONALPROFILEMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Tier Maintenance...",
+     "targetSecurityId": "QVPTIERMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "TOS Maintenance...",
+     "targetSecurityId": "QVPTOSMAINTENANCE",
+     "hidden": false
+    }
+   ],
+   "QVPRATEQUERY": [
+    {
+     "caption": "Business Associate - Entity...",
+     "targetSecurityId": "QVPBAENTITYTABVW",
+     "hidden": false
+    },
+    {
+     "caption": "Discount Offer Maintenance...",
+     "targetSecurityId": "QVPDISCOUNTOFFERMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Rate Maintenance...",
+     "targetSecurityId": "QVPRATEMAINTENANCE",
+     "hidden": false
+    }
+   ],
+   "QVPRATESEASONALPROFILEMAINTENANCE": [
+    {
+     "caption": "Rate Maintenance...",
+     "targetSecurityId": "QVPRATEMAINTENANCE",
+     "hidden": false
+    }
+   ],
+   "QVPRATETYPEOFSERVICEASSOCIATION": [
+    {
+     "caption": "Rate Maintenance...",
+     "targetSecurityId": "QVPRATEMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "TOS Maintenance...",
+     "targetSecurityId": "QVPTOSMAINTENANCE",
+     "hidden": false
+    }
+   ],
+   "QVPRECALLREPUT": [
+    {
+     "caption": "Award...",
+     "targetSecurityId": "QVPCAPRELAWARD",
+     "hidden": false
+    },
+    {
+     "caption": "Bid...",
+     "targetSecurityId": "QVPCAPRELBID",
+     "hidden": false
+    },
+    {
+     "caption": "Offer...",
+     "targetSecurityId": "QVPCAPRELOFFER",
+     "hidden": false
+    }
+   ],
+   "QVPREQUESTFORSERVICE": [
+    {
+     "caption": "Business Associate - Entity...",
+     "targetSecurityId": "QVPBAENTITYTABVW",
+     "hidden": false
+    },
+    {
+     "caption": "Capacity Release Offer...",
+     "targetSecurityId": "QVPCAPRELOFFER",
+     "hidden": false
+    },
+    {
+     "caption": "Contract Maintenance...",
+     "targetSecurityId": "QVPCONTRACTMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Ratchet Maintenance...",
+     "targetSecurityId": "QVPRATCHETMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Seasonal Profile Maintenance...",
+     "targetSecurityId": "QVPSEASONALPROFILEMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "TOS Maintenance...",
+     "targetSecurityId": "QVPTOSMAINTENANCE",
+     "hidden": false
+    }
+   ],
+   "QVPSIMULATIONSUBMISSION": [
+    {
+     "caption": "Contract Maintenance...",
+     "targetSecurityId": "QVPCONTRACTMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Request For Service...",
+     "targetSecurityId": "QVPREQUESTFORSERVICE",
+     "hidden": false
+    }
+   ],
+   "QVPSTORAGETRANSFERGRID": [
+    {
+     "caption": "Storage Transfer Maintenance Form...",
+     "targetSecurityId": "QVPSTORAGETRANSFERMAINTENANCE",
+     "hidden": false
+    }
+   ],
+   "QVPSTORAGETRANSFERMAINTENANCE": [
+    {
+     "caption": "Storage Transfer Summary...",
+     "targetSecurityId": "QVPSTORAGETRANSFERGRID",
+     "hidden": false
+    }
+   ],
+   "QVPTIERMAINTENANCE": [
+    {
+     "caption": "Rate Maintenance...",
+     "targetSecurityId": "QVPRATEMAINTENANCE",
+     "hidden": false
+    }
+   ],
+   "QVPTIMELINERESULTS": [
+    {
+     "caption": "Award..",
+     "targetSecurityId": "QVPCAPRELAWARD",
+     "hidden": false
+    },
+    {
+     "caption": "Bid..",
+     "targetSecurityId": "QVPCAPRELBID",
+     "hidden": false
+    },
+    {
+     "caption": "Offer..",
+     "targetSecurityId": "QVPCAPRELOFFER",
+     "hidden": false
+    },
+    {
+     "caption": "Recall/Reput...",
+     "targetSecurityId": "QVPRECALLREPUT",
+     "hidden": false
+    }
+   ],
+   "QVPTOSCHARGEBASISMAINTENANCE": [
+    {
+     "caption": "TOS Maintenance...",
+     "targetSecurityId": "QVPTOSMAINTENANCE",
+     "hidden": false
+    }
+   ],
+   "QVPTRADINGRULESMAINTENANCE": [
+    {
+     "caption": "Imbalance Trading Summary...",
+     "targetSecurityId": "QVPIMBALANCETRADINGMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Imbalance Trading Maintenance Form...",
+     "targetSecurityId": "QVPIMBALANCETRADINGMAINTENANCEFORM",
+     "hidden": false
+    },
+    {
+     "caption": "Storage Transfer Summary...",
+     "targetSecurityId": "QVPSTORAGETRANSFERGRID",
+     "hidden": false
+    },
+    {
+     "caption": "Storage Transfer Maintenance Form...",
+     "targetSecurityId": "QVPSTORAGETRANSFERMAINTENANCE",
+     "hidden": false
+    }
+   ],
+   "QVPTSPMAINTENANCE": [
+    {
+     "caption": "Facility Maintenance...",
+     "targetSecurityId": "QVPFACILITYMAINTENANCE",
+     "hidden": false
+    },
+    {
+     "caption": "Location Maintenance...",
+     "targetSecurityId": "QVPLOCATIONMAINTENANCE",
+     "hidden": false
+    }
+   ],
+   "QVPSOACONFIRMATIONRESPONSE": [
+    {
+     "caption": "Business Associate - Entity...",
+     "targetSecurityId": "QVPBAENTITYTABVW",
+     "hidden": false
+    },
+    {
+     "caption": "Business Party Contact Search...",
+     "targetSecurityId": "QVPBUSINESSPARTYCONTACTSEARCH",
+     "hidden": false
+    },
+    {
+     "caption": "Life Cycle...",
+     "targetSecurityId": "QVPLIFECYCLE",
+     "hidden": false
+    },
+    {
+     "caption": "Location Quick View...",
+     "targetSecurityId": "QVPCONFIRMATIONLOCATIONQUICKVIEW",
+     "hidden": false
+    },
+    {
+     "caption": "Nomination Submission...",
+     "targetSecurityId": "QVPSOANOMINATIONSUBMISSION",
+     "hidden": false
+    },
+    {
+     "caption": "Confirmation Download...",
+     "targetSecurityId": "CFX66",
+     "hidden": false
+    }
+   ],
+   "QVPUSERNOTIFICATIONSUBSCRIPTIONMANAGER": [
+    {
+     "caption": "User Notification Contact Assignment...",
+     "targetSecurityId": "QVPUSERNOTIFICATIONCONTACTASSIGNMENT",
+     "hidden": false
+    }
+   ],
+   "QVPVALIDATIONRULEMAINTENANCE": [
+    {
+     "caption": "TOS / Validation Rule Cross Reference...",
+     "targetSecurityId": "QVPTOSVALIDATIONRULECROSSREFERENCE",
+     "hidden": false
+    }
+   ]
+  }
+ },
+ "web_personas": {
+  "PIPELINE INTERNAL": [
+   {
+    "menuPath": [
+     "Allocations",
+     "Daily Allocated Quantity Maintenance"
+    ],
+    "screenSecurityId": "QVPDAILYALLOCATEDQUANTITYMAINTENANCE",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Allocations",
+     "Gas Analysis Search"
+    ],
+    "screenSecurityId": "QVPGASANALYSIS",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Allocations",
+     "Hourly Measurement Maintenance"
+    ],
+    "screenSecurityId": "QVPSOAHOURLYMEASUREMENTENTRY",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Allocations",
+     "Measurement Entry"
+    ],
+    "screenSecurityId": "QVPMEASUREMENTENTRY",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Allocations",
+     "Measurement Results"
+    ],
+    "screenSecurityId": "QVPMEASUREMENTRESULTS",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Allocations",
+     "Monthly Allocated Quantity Maintenance"
+    ],
+    "screenSecurityId": "QVPMONTHLYALLOCATEDQUANTITYMAINTENANCE",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Allocations",
+     "PDA Submission"
+    ],
+    "screenSecurityId": "QUCPREDETERMINEDALLOCATIONSUBMISSION",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Allocations",
+     "Reallocation Maintenance"
+    ],
+    "screenSecurityId": "QVPREALLOCATIONSTATUS",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Billing",
+     "Invoice Maintenance"
+    ],
+    "screenSecurityId": "QVPINVOICEHEADERMAINTENANCE",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Billing",
+     "Invoice Group Maintenance"
+    ],
+    "screenSecurityId": "QVPINVOICEGROUP",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Billing",
+     "PPA Event Maintenance"
+    ],
+    "screenSecurityId": "QVPPPAEVENTMAINTENANCE",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Billing",
+     "Penalty Submission"
+    ],
+    "screenSecurityId": "QUCPenaltySubmission",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Billing",
+     "Penalty Results"
+    ],
+    "screenSecurityId": "QVPPENALTYRESULTS",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Business Associate",
+     "Business Associate"
+    ],
+    "screenSecurityId": "QUCBusinessAssociate",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Business Associate",
+     "BA Contact"
+    ],
+    "screenSecurityId": "QVPBUSINESSPARTYCONTACT",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Business Associate",
+     "User Contact Information"
+    ],
+    "screenSecurityId": "QUCUserContactInformation",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Business Associate",
+     "Credit Maintenance"
+    ],
+    "screenSecurityId": "QUCBACredit",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Business Associate",
+     "Contact Mass Change"
+    ],
+    "screenSecurityId": "QVPBUSINESSPARTYCONTACTMASSCHANGE",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Business Associate",
+     "Organization Hierarchy Maintenance"
+    ],
+    "screenSecurityId": "QVPORGHIERARCHYMAINTENANCE",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Business Associate",
+     "Company Address"
+    ],
+    "screenSecurityId": "QVPCOMPANYADDRESS",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Business Associate",
+     "Global Contact Search"
+    ],
+    "screenSecurityId": "QVPCONTACTSEARCH",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Business Associate",
+     "Default Agents"
+    ],
+    "screenSecurityId": "QVPCONTRACTSDEFAULTAGENTS",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Capacity Release",
+     "Offers"
+    ],
+    "screenSecurityId": "QVpCapRelOfferV2",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Capacity Release",
+     "Offer Summary"
+    ],
+    "screenSecurityId": "QUCCROfferViewer",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Capacity Release",
+     "Bids"
+    ],
+    "screenSecurityId": "QVpCapRelBidWizardV2",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Capacity Release",
+     "Bid Summary"
+    ],
+    "screenSecurityId": "QUCCRBidViewer",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Capacity Release",
+     "Awards"
+    ],
+    "screenSecurityId": "QUCCRAward",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Capacity Release",
+     "Award Amendments"
+    ],
+    "screenSecurityId": "QVPCAPRELAWARDAMENDMENTS",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Capacity Release",
+     "Recall / Reput"
+    ],
+    "screenSecurityId": "QUCCRRecallReput",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Capacity Release",
+     "Withdrawal Summary"
+    ],
+    "screenSecurityId": "QUCCRWithdrawalSummary",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Confirmations",
+     "Confirmation Response"
+    ],
+    "screenSecurityId": "QVpSOAConfirmationResponse",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Confirmations",
+     "EPSQ Maintenance"
+    ],
+    "screenSecurityId": "QVPEPSQMAINTENANCE",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Confirmations",
+     "Life Cycle"
+    ],
+    "screenSecurityId": "QVPLIFECYCLE",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Confirmations",
+     "Path Balance Volume Approval"
+    ],
+    "screenSecurityId": "QVPPATHBALANCEVOLAPPROVAL",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Confirmations",
+     "Confirmation Summary"
+    ],
+    "screenSecurityId": "QVPSOACONFIRMATIONSUMMARY",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Contracts",
+     "Long Term Bid Viewer"
+    ],
+    "screenSecurityId": "QUCLongTermBidViewer",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Contracts",
+     "Request for Service (RFS)"
+    ],
+    "screenSecurityId": "QUCRFSWizardScreenV2",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Contracts",
+     "RFS Approvals"
+    ],
+    "screenSecurityId": "QUCRFSApproval",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Contracts",
+     "Contract Maintenance"
+    ],
+    "screenSecurityId": "QVPCONTRACTMAINTENANCE",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Contracts",
+     "Contract Seasonal Profile Maintenance"
+    ],
+    "screenSecurityId": "QVPSEASONALPROFILEMAINTENANCE",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Contracts",
+     "Ratchet Maintenance"
+    ],
+    "screenSecurityId": "QVPRATCHETMAINTENANCE",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Contracts",
+     "Contract Contact Mass Change"
+    ],
+    "screenSecurityId": "QVPCONTRACTCONTACTMASSCHANGE",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "EDI",
+     "TPA Maintenance"
+    ],
+    "screenSecurityId": "QVPEDITPAMAINTENANCE",
+    "hidden": false,
+    "url": ""
+   },
+   {
+    "menuPath": [
+     "EDI",
+     "EDI Transaction Viewer"
+    ],
+    "screenSecurityId": "QVPEDITRANSACTIONS",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Inventory Accounts",
+     "Customer Accounts",
+     "Authorization to Post Imbalances"
+    ],
+    "screenSecurityId": "QVpCustomerAccount",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Inventory Accounts",
+     "Customer Accounts",
+     "Customer Account Query"
+    ],
+    "screenSecurityId": "QVPCUSTOMERACCTQUERY",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Inventory Accounts",
+     "Customer Accounts",
+     "Customer Account Summary"
+    ],
+    "screenSecurityId": "QVPSHIPPERIMBALANCESUMMARY",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Inventory Accounts",
+     "Imbalance Trading Form"
+    ],
+    "screenSecurityId": "QUCImbalanceTradingMaintenanceForm",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Inventory Accounts",
+     "TSP Inventory"
+    ],
+    "screenSecurityId": "QVpInventory",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Inventory Accounts",
+     "Inventory Adjustments"
+    ],
+    "screenSecurityId": "QVPINVENTORYADJUSTMENTS",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Inventory Accounts",
+     "Storage Transfer Maintenance Form"
+    ],
+    "screenSecurityId": "QUCStorageTransferMaintenanceForm",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Location",
+     "Location Group Lookup"
+    ],
+    "screenSecurityId": "QVPLOCATIONGROUPLOOKUP",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Location",
+     "Location Maintenance"
+    ],
+    "screenSecurityId": "QVPLOCATIONMAINTENANCE",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Location",
+     "Location Group Maintenance"
+    ],
+    "screenSecurityId": "QVPLocationGroupMaintenance",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Location",
+     "Location Contact Mass Change"
+    ],
+    "screenSecurityId": "QUCLocationContactMassChange",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Nominations",
+     "Nomination Error Overrides"
+    ],
+    "screenSecurityId": "QVPNOMINATIONERROROVERRIDES",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Nominations",
+     "Nomination Maintenance"
+    ],
+    "screenSecurityId": "QVpSOANominationMaintenance",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Nominations",
+     "Nomination Submission"
+    ],
+    "screenSecurityId": "QVpSOANominationSubmission",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Nominations",
+     "Location Centric Nominations"
+    ],
+    "screenSecurityId": "QVpSOALCNominationSubmission",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Nominations",
+     "On Call Calendar"
+    ],
+    "screenSecurityId": "QVpAfterHrsOnCallCal",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Nominations",
+     "Nomination Autogen Setup"
+    ],
+    "screenSecurityId": "QvpSOANominationAutogen",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Rates",
+     "Index Maintenance"
+    ],
+    "screenSecurityId": "QVPINDEXMAINTENANCE",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Rates",
+     "Rate Maintenance"
+    ],
+    "screenSecurityId": "QVPRATEMAINTENANCE",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Rates",
+     "Rate/Offer Query"
+    ],
+    "screenSecurityId": "QVPRATEQUERY",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Rates",
+     "Tier Maintenance"
+    ],
+    "screenSecurityId": "QVPTIERMAINTENANCE",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Rates",
+     "Rate Seasonal Profile Maintenance"
+    ],
+    "screenSecurityId": "QVPRATESEASONALPROFILEMAINTENANCE",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Scheduling",
+     "CAS Maintenance"
+    ],
+    "screenSecurityId": "QVPSOAGRAPHICALTABULARSCREEN",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Scheduling",
+     "Scheduling Capacity Override Maintenance"
+    ],
+    "screenSecurityId": "QVPSCHEDULINGCAPACITYOVERRIDE",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "System Setup",
+     "Allocations",
+     "Hourly Penalty Schedule"
+    ],
+    "screenSecurityId": "QVPSOAHOURLYPENALTYSCHEDULE",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "System Setup",
+     "Billing",
+     "TSP Billing Configurations"
+    ],
+    "screenSecurityId": "QVPTSPBILLINGCONFIGURATIONS",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "System Setup",
+     "Billing",
+     "Chart Of Accounts"
+    ],
+    "screenSecurityId": "QVPCHARTOFACCOUNT",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "System Setup",
+     "Billing",
+     "Invoice Message Maintenance"
+    ],
+    "screenSecurityId": "QVPINVOICEMSGMAINTENANCE",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "System Setup",
+     "Rates",
+     "TOC - Object Setup"
+    ],
+    "screenSecurityId": "QVpTOCProcessAssociation",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "System Setup",
+     "Rates",
+     "TOS - Charge Basis Setup"
+    ],
+    "screenSecurityId": "QVpTOSChargeBasisMaintenance",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "System Setup",
+     "Rates",
+     "TOC - TOS Setup"
+    ],
+    "screenSecurityId": "QVpTOCTOSRuleMaintenance",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "System Setup",
+     "Rates",
+     "Type Of Charge Setup"
+    ],
+    "screenSecurityId": "QVPTYPEOFCHARGEMAINTENANCE",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "System Setup",
+     "Scheduling",
+     "Scheduling Object Rule Set Maintenance"
+    ],
+    "screenSecurityId": "QVPSCHEDOBJECTRULESETMAINT",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "System Setup",
+     "Scheduling",
+     "Location Path Maintenance"
+    ],
+    "screenSecurityId": "QVPLOCATIONPATHMAINTENANCE",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "System Setup",
+     "Scheduling",
+     "Classification Rule Setup",
+     "Nomination Classification Maintenance"
+    ],
+    "screenSecurityId": "QVPNOMCLASSIFICATIONMAINT",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "System Setup",
+     "Pipeline Administration",
+     "Validation Rule Assignment"
+    ],
+    "screenSecurityId": "QVpValidationRuleAssignment",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "System Setup",
+     "Pipeline Administration",
+     "Tsp Maintenance"
+    ],
+    "screenSecurityId": "QVPTSPMAINTENANCE",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "System Setup",
+     "Contracts",
+     "Type Of Service Setup"
+    ],
+    "screenSecurityId": "QVPTOSMAINTENANCE",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "System Setup",
+     "Contracts",
+     "Organization - Contract  XRef Setup"
+    ],
+    "screenSecurityId": "QVPCTRTYPE_CTRSUBTYPE_SETTLETYPE_INTEGRATION",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "System Setup",
+     "Confirmations",
+     "Confirmation Level"
+    ],
+    "screenSecurityId": "QVPCONFIRMATIONLEVEL",
+    "hidden": false,
+    "url": ""
+   },
+   {
+    "menuPath": [
+     "System Setup",
+     "Nominations",
+     "Nomination Autogen Setup"
+    ],
+    "screenSecurityId": "QvpSOANominationAutogen",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "System Setup",
+     "TSP Configuration Settings"
+    ],
+    "screenSecurityId": "QVPTSPCONFIGURATIONSETTINGS",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "System Setup",
+     "Contact Notice Preferences"
+    ],
+    "screenSecurityId": "QVPNOTIFICATIONPREFERENCES",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Invoicing",
+     "Supplemental Documents"
+    ],
+    "screenSecurityId": "QUCSupplementalDocuments",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Informational Postings",
+     "Informational Postings"
+    ],
+    "screenSecurityId": "IPWS_SecurityId",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Sitemap"
+    ],
+    "screenSecurityId": "QUCSitemap",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Local Distribution",
+     "Aggregate Viewer"
+    ],
+    "screenSecurityId": "QUCAggregateViewer",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Local Distribution",
+     "Aggregate Location Rules"
+    ],
+    "screenSecurityId": "QUCAggregateLocationRules",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Local Distribution",
+     "Account Summary"
+    ],
+    "screenSecurityId": "QUCAccountSummary",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Local Distribution",
+     "Enrollment Management"
+    ],
+    "screenSecurityId": "QUIControllerEnrollmentWizard",
+    "hidden": false,
+    "url": ""
+   },
+   {
+    "menuPath": [
+     "Local Distribution",
+     "LDC Curtailment Management"
+    ],
+    "screenSecurityId": "CurtailmentManagementWizard",
+    "hidden": false,
+    "url": ""
+   }
+  ],
+  "PIPELINE OPERATOR": [
+   {
+    "menuPath": [
+     "Nomination Maintenance"
+    ],
+    "screenSecurityId": "QVpSOANominationMaintenance",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Confirmation Response"
+    ],
+    "screenSecurityId": "QVpSOAConfirmationResponse",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "PDA Submission"
+    ],
+    "screenSecurityId": "QUCPREDETERMINEDALLOCATIONSUBMISSION",
+    "hidden": false,
+    "url": null
+   }
+  ],
+  "PIPELINE SCHEDULER": [
+   {
+    "menuPath": [
+     "Nominations",
+     "Nomination",
+     "Nomination Submission"
+    ],
+    "screenSecurityId": "QVpSOANominationSubmission",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Nominations",
+     "Nomination",
+     "Nomination Maintenance"
+    ],
+    "screenSecurityId": "QVpSOANominationMaintenance",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Nominations",
+     "Confirmation",
+     "Confirmation Response"
+    ],
+    "screenSecurityId": "QVpSOAConfirmationResponse",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Flowing Gas",
+     "Pre-determined Allocation",
+     "PDA Submission"
+    ],
+    "screenSecurityId": "QUCPREDETERMINEDALLOCATIONSUBMISSION",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Flowing Gas",
+     "Imbalance",
+     "Customer Accounts",
+     "Authorization to Post Imbalances"
+    ],
+    "screenSecurityId": "QVpCustomerAccount",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Flowing Gas",
+     "Imbalance",
+     "Imbalance Trades",
+     "Imbalance Trading Form"
+    ],
+    "screenSecurityId": "QUCImbalanceTradingMaintenanceForm",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Flowing Gas",
+     "Imbalance",
+     "Storage Transfers",
+     "Storage Transfer Maintenance Form"
+    ],
+    "screenSecurityId": "QUCStorageTransferMaintenanceForm",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Invoicing",
+     "Supplemental Documents",
+     "Supplemental Documents"
+    ],
+    "screenSecurityId": "QUCSupplementalDocuments",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Capacity Release",
+     "Offers",
+     "Offers"
+    ],
+    "screenSecurityId": "QVpCapRelOffer",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Capacity Release",
+     "Offers",
+     "Offer Summary"
+    ],
+    "screenSecurityId": "QUCCROfferViewer",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Capacity Release",
+     "Bids",
+     "Bids"
+    ],
+    "screenSecurityId": "QVpCapRelBidWizard",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Capacity Release",
+     "Bids",
+     "Bid Summary"
+    ],
+    "screenSecurityId": "QUCCRBidViewer",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Capacity Release",
+     "Awards",
+     "Recall / Reput"
+    ],
+    "screenSecurityId": "QUCCRRecallReput",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Capacity Release",
+     "Withdrawal Summary"
+    ],
+    "screenSecurityId": "QUCCRWithdrawalSummary",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Contracts",
+     "Request for Service (RFS)"
+    ],
+    "screenSecurityId": "QUCRFSWizardScreenV2",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Contracts",
+     "Long Term Bid Viewer"
+    ],
+    "screenSecurityId": "QUCLongTermBidViewer",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Contracts",
+     "RFS Approvals"
+    ],
+    "screenSecurityId": "QUCRFSApproval",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Reports",
+     "Reports"
+    ],
+    "screenSecurityId": "QVpBatchReportExecution",
+    "hidden": false,
+    "url": null
+   },
+   {
+    "menuPath": [
+     "Reports",
+     "Report Viewer"
+    ],
+    "screenSecurityId": "QVPReportFileViewer",
+    "hidden": false,
+    "url": null
+   }
+  ]
+ },
+ "classic_screen_sources": {
+  "PipelineMgrAL": [
+   "QVpDailyAllocatedQuantityMaintenance",
+   "QVpMonthlyAllocatedQuantityMaintenance",
+   "QVpPreDeterminedAllocationSubmission",
+   "QVpPreDeterminedAllocationSubmissionFormDlg"
+  ],
+  "PipelineMgrALInt": [
+   "QVpAllocationPlanMaintenance",
+   "QVpAllocationTransactionType",
+   "QVpFuelTypeOfChargeRanking",
+   "QVpGasAnalysis",
+   "QVpMeasurementEntry",
+   "QVpMeasurementResults",
+   "QVpMonthlyVolumeQuantitiesDlg",
+   "QVpReallocationStatus"
+  ],
+  "PipelineMgrBL": [
+   "QVpInvoiceDetailMaintenance",
+   "QVpInvoiceHeaderByContractTOS",
+   "QVpInvoiceHeaderMaintenance",
+   "QVpInvoiceHeaderMaintenanceRIL",
+   "QVpInvoiceSubDetailMaintenance",
+   "QVpInvoiceSubDetailMaintenanceTOC",
+   "QVpReallocationPPAPopUp",
+   "QVpSubAccount"
+  ],
+  "PipelineMgrBLInt": [
+   "QVpBillPeriodMaintenance",
+   "QVpChartOfAccount",
+   "QVpInvoiceGroup",
+   "QVpInvoiceMsgMaintenance",
+   "QVpPPAEventMaintenance",
+   "QVpPenaltyResults",
+   "QVpPenaltySubmission",
+   "QVpPenaltyTierDetailDlg",
+   "QVpTSPBillingConfigurations"
+  ],
+  "PipelineMgrCF": [
+   "QVpConfirmationLocationQuickView",
+   "QVpConfirmationResponseFilterDlg",
+   "QVpLifeCycle"
+  ],
+  "PipelineMgrCFInt": [
+   "QVpConfirmationLevel",
+   "QVpConfirmationPlanLocation",
+   "QVpConfirmationPlanSecurity",
+   "QVpConfirmationPlanSetup"
+  ],
+  "PipelineMgrCP": [
+   "QVpUserNotificationContactAssignment",
+   "QVpUserNotificationSubscriptionManager"
+  ],
+  "PipelineMgrCR": [
+   "QVpBidViewer",
+   "QVpCapRelAward",
+   "QVpCapRelAwardAmendments",
+   "QVpCapRelBid",
+   "QVpCapRelOffer",
+   "QVpCapRelOfferViewer",
+   "QVpCapRelWithdrawalSummary",
+   "QVpRecallReput",
+   "QVpTimeline"
+  ],
+  "PipelineMgrCRInt": [
+   "QVpTimeline",
+   "QVpTimelineResults"
+  ],
+  "PipelineMgrCWInt": [
+   "QVpIndexOfCustomersContracts",
+   "QVpIndexOfCustomersLocations"
+  ],
+  "PipelineMgrED": [
+   "QVpDatasetLoopDefinition",
+   "QVpDatasetSegmentDefinition",
+   "QVpEDIDatasetDefinition",
+   "QVpEDIDependentRule",
+   "QVpEDITPAElementUsage",
+   "QVpEDITPAMaintenance",
+   "QVpEDITemplateDefinition",
+   "QVpEDITransactionSubmittal",
+   "QVpEDIViewer"
+  ],
+  "PipelineMgrEDInt": [
+   "QVpEDIDatasetDefinition",
+   "QVpEDITPAMaintenance",
+   "QVpEDITransactions",
+   "QVpEDIViewer"
+  ],
+  "PipelineMgrIN": [
+   "QVpCustomerAccount",
+   "QVpCustomerAcctQuery",
+   "QVpImbalanceTradingMaintenance",
+   "QVpImbalanceTradingMaintenanceForm",
+   "QVpManualPostingQuantityDlg",
+   "QVpShipperImbalanceSummary",
+   "QVpStorageTransferGrid",
+   "QVpStorageTransferMaintenance"
+  ],
+  "PipelineMgrINInt": [
+   "QVpInventory",
+   "QVpInventoryAdjustments",
+   "QVpTradingRulesMaintenance"
+  ],
+  "PipelineMgrK": [
+   "QVpContractMaintenance",
+   "QVpLongTermBidViewer"
+  ],
+  "PipelineMgrKInt": [
+   "QVpAggregateQuantitySplitDlg",
+   "QVpContractContactMassChange",
+   "QVpContractMaintenance",
+   "QVpContractsDefaultAgents",
+   "QVpCurrentMDIQAndMDWQDlg",
+   "QVpRatchetMaintenance",
+   "QVpRequestForService",
+   "QVpRequestForServiceApprovalQueue",
+   "QVpSeasonalProfileMaintenance",
+   "QVpTOSMaintenance",
+   "QVpTabGridEditMultiApprovalText"
+  ],
+  "PipelineMgrNN": [
+   "QVpNominationConfigurationUserPreferences",
+   "QVpNominationErrorOverrides"
+  ],
+  "PipelineMgrNNInt": [
+   "QVpNominationConfigurationSystemPreferences",
+   "QVpValidationRuleAssignment",
+   "QVpValidationRuleMaintenance",
+   "QVpValidationRuleXRef"
+  ],
+  "PipelineMgrPA": [
+   "QVpLocationGroupLookup",
+   "QVpNotificationPreferences"
+  ],
+  "PipelineMgrPAInt": [
+   "QVpAfterHrsOnCallCal",
+   "QVpCASReductionOrder",
+   "QVpClassificationRuleSetTransGrp",
+   "QVpClassificationRulesEntryMaintenance",
+   "QVpCycles",
+   "QVpELIRuleMaintenance",
+   "QVpFacilityMaintenance",
+   "QVpHolidayMaintenance",
+   "QVpLocationContactMassChange",
+   "QVpLocationDefaultHeatingFactor",
+   "QVpLocationGroupMaintenance",
+   "QVpLocationGroupPathMaintenance",
+   "QVpLocationMaintenance",
+   "QVpLocationPathMaintenance",
+   "QVpNomClassificationMaint",
+   "QVpNoticeSetup",
+   "QVpNoticeSetupPLTM",
+   "QVpPreapprovedText",
+   "QVpSchedObjectRuleSetMaint",
+   "QVpSchedulingCapacityOverride",
+   "QVpTSPConfigurationSettings",
+   "QVpTSPMaintenance"
+  ],
+  "PipelineMgrPBInt": [
+   "QVpEPSQMaintenance",
+   "QVpPathBalanceVolApproval"
+  ],
+  "PipelineMgrRT": [
+   "QVpRateQuery"
+  ],
+  "PipelineMgrRTInt": [
+   "QVpDiscountOfferMaintenance",
+   "QVpIndexMaintenance",
+   "QVpRateMaintenance",
+   "QVpRateSeasonalProfileMaintenance",
+   "QVpTOCProcessAssociation",
+   "QVpTOCTOSRuleMaintenance",
+   "QVpTOSChargeBasisMaintenance",
+   "QVpTierMaintenance",
+   "QVpTypeOfChargeMaintenance",
+   "QVpTypeofChargeMaintenance"
+  ],
+  "PipelineMgrSCInt": [
+   "QVpCASVolApprovalMaintenance",
+   "QVpLeaseSchedulingMaintenance",
+   "QVpSchedulingGroupEntryMaintenance"
+  ],
+  "PipelineMgrShared": [
+   "QVpReallocationPPAPopUp",
+   "QVpSecurityUser",
+   "QVpSecurityUserPLTM",
+   "QVpTreeNavigationCAW",
+   "QVpTreeNavigationTSP"
+  ],
+  "SOAAutoGen": [
+   "QVpSOANominationAutoGen"
+  ],
+  "SOAConfirmations": [
+   "QVpConfResponseOnlineRptDlg",
+   "QVpSOAConfirmation",
+   "QVpSOAConfirmationSummary"
+  ],
+  "SOAContracts": [
+   "QVpContractMaintenance"
+  ],
+  "SOANominations": [
+   "QVpSOALCNominationSubmission",
+   "QVpSOAMiddleTierRefresh",
+   "QVpSOANomTemplate",
+   "QVpSOANominationMaintenance",
+   "QVpSOANominationNavigation",
+   "QVpSOANominationSubmission"
+  ],
+  "SOAPDASubmission": [
+   "QVpSOAHourlyMeasurementEntry",
+   "QVpSOAPDASubmission"
+  ],
+  "SOAPipelineAdmin": [
+   "QVpSOAAdvancedArchive",
+   "QVpSOATSPMaintenance"
+  ],
+  "SOARequestForService": [
+   "QVpSOARequestForService"
+  ],
+  "SOAScheduling": [
+   "QVpSOAGraphicalTabularScreen",
+   "QVpSOAMultiGroupSchedulingScreen",
+   "QVpSOARoutePathMaintScreen"
+  ]
+ }
+}

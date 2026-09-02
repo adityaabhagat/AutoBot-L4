@@ -1,0 +1,13 @@
+name: bat_paystation_dup
+product: TIPS
+queries:
+  - id: q1
+    sql: "SELECT TRNX_ID, COUNT(*) AS dup_ct FROM QTRAN_PAYSTATION GROUP BY TRNX_ID HAVING COUNT(*) > 1"
+    proves: "whether duplicate TRNX_IDs already exist in QTRAN_PAYSTATION (the PK_QTRAN_PAYSTATION / CTRMTR failure feeder)"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "duplicate TRNX_IDs present — trace to the meter and check overlapping effective dates across SCTRL_MTR_FACILITY / SCTRL_MTR_HEADER / SEXTN_MTR_HEADER_QRMTIPS; delete-dups script needed before rerun"
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "no duplicates in QTRAN_PAYSTATION — this rule does not apply, keep evaluating"

@@ -1,0 +1,22 @@
+name: mea_asscglm_gaslift
+product: TIPS
+# ASSCGLM gas-lift duplication precondition + row check (ADO #1731166, fixed 2025.04.1.3 HF).
+# Source: SKILL_TIPS_Master_Data_Contracts.md §16-C; SKILL_ADO_TIPS_MasterData_Contracts_CCT_Meter.md §5
+queries:
+  - id: q1
+    sql: "SELECT COUNT(*) AS REALLOC_CT FROM QTRAN_PLANT_STATUS_REALLOC WHERE PROD_DT = '{prod_mth}'"
+    proves: "whether the plant ran {prod_mth} in reallocation mode — the precondition for the ASSCGLM re-insert-without-purge defect"
+    interpret:
+      - when: "rows[0].REALLOC_CT >= 1"
+        verdict: INFERRED
+        meaning: "reallocation-mode rows present for the month — the #1731166 stacking precondition holds"
+      - when: "rows[0].REALLOC_CT == 0"
+        verdict: FALLTHROUGH
+        meaning: "plant not flagged for reallocation this month — the ASSCGLM stacking precondition is absent; keep evaluating (dups could still be residue of a past realloc rerun — check manually)"
+  - id: q2
+    sql: "SELECT PROCESS_ID, PROD_DT, COUNT(*) AS ROW_CT FROM QTRAN_ALLOC_VOL WHERE PROCESS_ID = 'ASSCGLM' AND PROD_DT = '{prod_mth}' GROUP BY PROCESS_ID, PROD_DT"
+    proves: "whether ASSCGLM wrote gas-lift allocation rows for {prod_mth} (stacked/duplicate counts after a realloc rerun = the defect)"
+    interpret:
+      - when: "rowcount == 0"
+        verdict: REFUTED
+        meaning: "no ASSCGLM rows for this production month — the gas-lift doubling cannot come from this step for {prod_mth}"

@@ -1,0 +1,23 @@
+name: nom_cycle_deadline_missing
+product: QPTM
+queries:
+  - id: q1
+    sql: "SELECT COUNT(*) AS cnt FROM PACTRL_CYCLE_DEADLINE WHERE TSP_NO = {tsp} AND DEADLINE_CATEGORY = 'NOM'"
+    proves: "whether the TSP is missing NOM cycle-deadline configuration entirely (breaks/mis-times all nomination submission)"
+    interpret:
+      - when: "rows[0].cnt == 0"
+        verdict: CONFIRMED
+        meaning: "no NOM deadline rows exist for this TSP — missing cycle-deadline configuration is the root cause (25-01044634 pattern); add the PACTRL_CYCLE_DEADLINE rows"
+      - when: "rows[0].cnt >= 1"
+        verdict: FALLTHROUGH
+        meaning: "deadline rows exist — config not wholesale missing; check effective-date gaps and deadline time/offset values manually, or the late submission is legitimate"
+  - id: q2
+    sql: "SELECT COUNT(*) AS active_cnt FROM PACTRL_CYCLE_DEADLINE WHERE TSP_NO = {tsp} AND DEADLINE_CATEGORY = 'NOM' AND GETDATE() BETWEEN EFF_DT_FROM AND EFF_DT_TO"
+    proves: "whether the existing NOM deadline rows are currently effective (expired EFF_DT_TO is root cause #3 in the EDI skill)"
+    interpret:
+      - when: "rows[0].active_cnt == 0"
+        verdict: CONFIRMED
+        meaning: "deadline rows exist but none are effective today — expired/gapped effective dates; extend EFF_DT_TO or add new rows"
+      - when: "rows[0].active_cnt >= 1"
+        verdict: FALLTHROUGH
+        meaning: "currently-effective deadline rows exist — config present; this rule does not apply"

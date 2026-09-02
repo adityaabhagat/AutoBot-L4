@@ -1,0 +1,13 @@
+name: bat_gas_price_daily_dup
+product: TIPS
+queries:
+  - id: q1
+    sql: "SELECT GAS_DAY, MTR_NO, PRICE_TYPE, COUNT(*) AS dup_ct FROM ESUITE_QENT.ETRAN_GAS_PRICE_DAILY WHERE PROD_MTH = '{prod_mth}' GROUP BY GAS_DAY, MTR_NO, PRICE_TYPE HAVING COUNT(*) > 1"
+    proves: "whether duplicate daily gas-price rows exist for the production month (the UNIQUE_ETRAN_GAS_PRICE_DAILY collision at the SETTLEDAY step)"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "duplicate daily price rows present — dedupe for the prod month, ensure ETRAN_GAS_PRICE_DAILY is in the Settle-Day rec-purge list, confirm the ENT_DAILY_VOL_LOGIC_CHANGE_DT cutoff patch"
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "no duplicates for this prod month — this rule does not apply, keep evaluating (check rate-schedule config per 24-00940256)"

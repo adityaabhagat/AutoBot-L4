@@ -1,0 +1,13 @@
+name: nom_dup_ctr_loc
+product: QPTM
+queries:
+  - id: q1
+    sql: "SELECT CTR_NO, LOC_ID, COUNT(*) AS dup_cnt FROM KCTRL_CTR_LOC GROUP BY CTR_NO, LOC_ID HAVING COUNT(*) > 1"
+    proves: "whether duplicate KCTRL_CTR_LOC rows exist for a contract+location (breaks CANOMCLTG indexing — 'multiple instances of one ctr loc path', ADO #1763840)"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "duplicate contract-location rows found — delete the duplicate KCTRL_CTR_LOC row(s), then re-run CANOMCLTG"
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "no duplicates — the CANOMCLTG failure has another cause (Cap Type setup, DB-vs-MT version drift per ADO #1777688)"

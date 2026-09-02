@@ -1,0 +1,24 @@
+# Verifies the WGT wellhead-approval reallocation lock (rule QPTM-BILL-003).
+# Source SQL: SKILL_Allocations.md §16-F.
+name: bill_wgt_lock_config
+product: QPTM
+queries:
+  - id: q1
+    sql: "SELECT TSP_NO, CONFIG_KEY, CONFIG_VALUE FROM QARCH_TSP_CONFIG WHERE TSP_NO = {tsp} AND CONFIG_KEY = 'TIPS_PROCESS_CONTROLS_PRM'"
+    proves: "whether the TSP config that locks WGT reallocation after wellhead-allocation approval is active"
+    interpret:
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "config key not present for this TSP — the approval lock is not the confirmed cause, keep evaluating"
+      - when: "rows[0].CONFIG_VALUE == '1'"
+        verdict: CONFIRMED
+        meaning: "TIPS_PROCESS_CONTROLS_PRM=1 — WGT reallocation is locked by design once wellhead allocation is approved"
+      - when: "rows[0].CONFIG_VALUE == 1"
+        verdict: CONFIRMED
+        meaning: "TIPS_PROCESS_CONTROLS_PRM=1 — WGT reallocation is locked by design once wellhead allocation is approved"
+      - when: "rows[0].CONFIG_VALUE == '0'"
+        verdict: REFUTED
+        meaning: "config is 0 — the lock should not apply; the blocked/warning behavior is not expected behavior here"
+      - when: "rows[0].CONFIG_VALUE == 0"
+        verdict: REFUTED
+        meaning: "config is 0 — the lock should not apply; the blocked/warning behavior is not expected behavior here"

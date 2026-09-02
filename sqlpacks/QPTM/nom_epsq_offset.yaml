@@ -1,0 +1,13 @@
+name: nom_epsq_offset
+product: QPTM
+queries:
+  - id: q1
+    sql: "SELECT COUNT(*) AS null_cnt FROM PACTRL_CYCLE WHERE TSP_NO = {tsp} AND GAS_FLOW_START_TIME_OFFSET IS NULL"
+    proves: "whether any cycle on the TSP has a NULL GAS_FLOW_START_TIME_OFFSET (the engine then has no flow-start anchor, so EPSQ only fires in ID3 / returns 0)"
+    interpret:
+      - when: "rows[0].null_cnt >= 1"
+        verdict: CONFIRMED
+        meaning: "one or more cycles have a NULL gas-flow-start offset — the 24-00982666 / 26-01088719 pattern; set the offset for the affected cycles (see recipe nom_epsq_offset)"
+      - when: "rows[0].null_cnt == 0"
+        verdict: FALLTHROUGH
+        meaning: "all cycles have an offset — the EPSQ symptom has another cause (check EPSQCALC ran and PASTAG_EPSQ_CALC_INPUT staleness)"

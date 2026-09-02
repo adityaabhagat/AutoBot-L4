@@ -1,0 +1,13 @@
+name: qdo_afe_doi_null
+product: QDO
+queries:
+  - id: q1
+    sql: "SELECT AFE_NO, BUS_UNIT_CD, OPER_BUS_SEG_CD, AFE_DOI_DEC, AFE_STAT_CD, WF_STATUS_CD, WF_INSTANCE_ID FROM QCTRL_AFE_HDR WHERE AFE_DOI_DEC IS NULL OR (WF_STATUS_CD IS NULL AND WF_INSTANCE_ID IS NULL AND AFE_STAT_CD = 'O')"
+    proves: "whether converted AFEs exist with a NULL header DOI decimal or NULL workflow status (re-submittable Open AFEs)"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "converted AFEs with NULL AFE_DOI_DEC / NULL workflow status present — run the data correction scripts"
+      - when: "rowcount == 0"
+        verdict: REFUTED
+        meaning: "no NULL-decimal or NULL-workflow AFEs — this rule does not apply"

@@ -1,0 +1,13 @@
+name: plat_realloc_ppa_map
+product: QPTM
+queries:
+  - id: q1
+    sql: "SELECT COUNT(*) AS bad_map FROM BLXREF_REALLOC_PPA WHERE OBJECT_ID = 'QVPCONTRACTHEADER' AND DBTBL_NM = 'SCTRL_CTR_HEADER'"
+    proves: "whether the PPA/Reallocation code table 27310 carries the mis-keyed Object-ID mapping (code expects OBJECT_ID='QVPCONTRACTMAINTENANCE', DBTBL_NM='CONTRACTHEADER')"
+    interpret:
+      - when: "rows[0].bad_map >= 1"
+        verdict: CONFIRMED
+        meaning: "mis-keyed BLXREF_REALLOC_PPA mapping present (ADO #1784462 signature) — update it to OBJECT_ID='QVPCONTRACTMAINTENANCE', DBTBL_NM='CONTRACTHEADER'"
+      - when: "rows[0].bad_map == 0"
+        verdict: INFERRED
+        meaning: "mapping is not the mis-keyed variant — check the change-event handler table list (ADO #1773033: SCTRL_RELATED_CTR missing) and confirm a CLOSED accounting month is impacted with no pre-existing unprocessed BLTRAN_PPA_EVENT row"

@@ -1,0 +1,13 @@
+name: qdo_do129_stuck
+product: QDO
+queries:
+  - id: q1
+    sql: "SELECT TRANS_SEQ_NO, XFER_STAT_CD, OPER_BUS_SEG_CD, UPDT_DT FROM DONL_INT_FUNDS_XFER_HDR WHERE XFER_STAT_CD = '3'"
+    proves: "whether funds-release headers are stuck at status 3 (Approved) instead of 6 (Completed) — the double-approval signature"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "stuck 3-Approved release headers present — match the reported TRANS_SEQ_NO and check UPDT_DT is stale before flipping 3 to 6"
+      - when: "rowcount == 0"
+        verdict: REFUTED
+        meaning: "no headers stuck at 3-Approved — the DO129 double-approval rule does not apply"

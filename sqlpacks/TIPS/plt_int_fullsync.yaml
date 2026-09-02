@@ -1,0 +1,13 @@
+name: plt_int_fullsync
+product: TIPS
+queries:
+  - id: q1
+    sql: "SELECT INT_OBJECT_ID FROM SCTRL_INT_FULLSYNC WHERE INT_OBJECT_ID = 'MeterVolume'"
+    proves: "whether the MeterVolume full-sync seed row survived the environment refresh (missing row leaves the core volume interface step inert)"
+    interpret:
+      - when: "rowcount == 0"
+        verdict: CONFIRMED
+        meaning: "seed row missing - reseed per recipe plt_int_fullsync, then re-run the volume interface"
+      - when: "rowcount > 0"
+        verdict: REFUTED
+        meaning: "seed row present - the full-sync seed is not the cause, keep evaluating"

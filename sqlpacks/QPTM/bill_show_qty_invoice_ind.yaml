@@ -1,0 +1,15 @@
+# Verifies the receipt-allocation invoice-doubling cluster (rule QPTM-BILL-013).
+# Source SQL: SKILL_ADO_QPTM_Allocations_PPA_Imbalance.md §16-G (ADO #1813295).
+name: bill_show_qty_invoice_ind
+product: QPTM
+queries:
+  - id: q1
+    sql: "SELECT TOS_CD, CHARGE_BASIS_CD, SHOW_QTY_INVOICE_IND FROM BLXREF_TOS_CHARGE_BASIS WHERE TSP_NO = {tsp} AND TOS_CD = 'ITS' AND CHARGE_BASIS_CD IN ('REC','RECF') AND SHOW_QTY_INVOICE_IND = 1"
+    proves: "whether the ITS REC/RECF charge bases are configured to show quantity on the invoice (the doubling source)"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "SHOW_QTY_INVOICE_IND=1 on ITS REC/RECF — both rows print and merge into a doubled quantity line; set to 0 and re-run BLINVGEN (recipe bill_show_qty_fix)"
+      - when: "rowcount == 0"
+        verdict: FALLTHROUGH
+        meaning: "config already 0 / rows absent — this rule does not apply, keep evaluating"

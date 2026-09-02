@@ -1,0 +1,24 @@
+name: mea_ctr_slice_overlap
+product: TIPS
+# Contract header time-slice overlap/gap — the top TIPS bad-data signature.
+# Table SEXTN_CTR_HEADER lives client-suffixed (e.g. QRMTIPS.SEXTN_CTR_HEADER_QRMTIPS);
+# adjust schema/suffix per client before trusting a zero result.
+# Source: SKILL_TIPS_Master_Data_Contracts.md §3 / §16-A (25-01002372, 26-01100512)
+queries:
+  - id: q1
+    sql: "SELECT COUNT(*) AS OVERLAP_CT FROM QRMTIPS.SEXTN_CTR_HEADER_QRMTIPS A JOIN QRMTIPS.SEXTN_CTR_HEADER_QRMTIPS B ON A.CTR_NO = B.CTR_NO AND A.EFF_DT_FROM < B.EFF_DT_FROM AND A.EFF_DT_TO >= B.EFF_DT_FROM WHERE A.CTR_NO = '{contract}'"
+    proves: "whether contract {contract} has overlapping header time slices (two slices covering the same date range)"
+    interpret:
+      - when: "rows[0].OVERLAP_CT >= 1"
+        verdict: CONFIRMED
+        meaning: "overlapping contract time slices — the 25-01002372 paystation-duplicate signature; Cloud Ops slice-correction script, then rerun"
+      - when: "rows[0].OVERLAP_CT == 0"
+        verdict: FALLTHROUGH
+        meaning: "no overlap detected — check for a GAP instead (q2); if neither, this rule does not apply"
+  - id: q2
+    sql: "SELECT CTR_NO, EFF_DT_FROM, EFF_DT_TO, MTR_SFX_CD, UPDT_DT, USER_ID FROM QRMTIPS.SEXTN_CTR_HEADER_QRMTIPS WHERE CTR_NO = '{contract}' ORDER BY EFF_DT_FROM DESC"
+    proves: "the full slice history for {contract} — eyeball for a gap: no slice covering the failing production/accounting month (26-01100512 QCM end-date pattern)"
+    interpret:
+      - when: "rowcount == 0"
+        verdict: INFERRED
+        meaning: "no header slices returned — either a total gap or the wrong client schema suffix (SEXTN_CTR_HEADER_<suffix> varies by client); verify the schema before concluding"

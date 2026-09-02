@@ -1,0 +1,13 @@
+name: nom_cycle_deadline_present
+product: QPTM
+queries:
+  - id: q1
+    sql: "SELECT COUNT(*) AS cnt FROM PACTRL_CYCLE_DEADLINE WHERE TSP_NO = {tsp} AND DEADLINE_CATEGORY = 'NOM'"
+    proves: "whether NOM cycle-deadline configuration exists for the TSP (drives the ENMQR315 late-nom check)"
+    interpret:
+      - when: "rows[0].cnt == 0"
+        verdict: REFUTED
+        meaning: "no NOM deadline rows for this TSP — this is NOT a simple late submission; fall through to the config gate (missing deadline config)"
+      - when: "rows[0].cnt >= 1"
+        verdict: INFERRED
+        meaning: "deadline config exists — ENMQR315 is most likely a legitimate late submission; manually verify the exact deadline time/offset/TZ vs the submit timestamp (SKILL_Cycle_Deadline_Reference.md Steps 2-4)"

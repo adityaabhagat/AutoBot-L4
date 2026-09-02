@@ -1,0 +1,422 @@
+# Auto-Bot Lite rules — QPTM contracts / admin / platform
+# Compiled 2026-09-01 from 11 QPTM skills (SF-mined + ADO-mined). Conforms to rules/SCHEMA.md.
+product: QPTM
+area: contracts-admin-platform
+rules:
+
+  # ---------------- G1 — Expected Behavior ----------------
+
+  - id: QPTM-PLAT-001
+    gate: G1
+    priority: 10
+    match:
+      all: ['Okta']
+      any: ['password reset', 'activation link', 'reset MFA', 'one-time password',
+            'new account', 'create new external user', 'new security user',
+            'locked out', 'unable to login', 'disable', 'remove access',
+            'email update', 'user extract', 'MFA phone']
+      none: ['/not prompt/']
+    verdict: 'Routine user-administration runbook request for {client} — provision/reset/unlock/deactivate via QCloud Okta plus the QPTM Security User Setup screen; not a defect (external users need BOTH an Okta account AND a QPTM persona/group + BA mapping).'
+    source: 'SKILL_Security_UserAdmin.md §1'
+
+  - id: QPTM-PLAT-002
+    gate: G1
+    priority: 50
+    match:
+      all: ['/not post\w*/', 'IPW']
+      any: ['offer', 'capacity release', 'release start']
+    verdict: 'Offer is correctly excluded from IPWS posting when its release start date is later than gas day + posting offset — expected behavior; verify the dates before treating this as a defect.'
+    source: 'SKILL_Capacity_Release.md §7 (case 25-01042897)'
+
+  - id: QPTM-PLAT-003
+    gate: G1
+    priority: 50
+    match:
+      all: ['notice']
+      any: ['stays in Pending', 'still Pending', 'status is Pending', 'NTCPOSTNTC',
+            'send email date', 'sent at the wrong time']
+    verdict: 'Expected behavior — a notice flips Pending to Posted only when the NTCPOSTNTC scheduled job runs, and the email send time is governed by the QEMAIL scheduled job (about every 30 minutes in core); verify the schedules ran.'
+    source: 'SKILL_ADO_QPTM_Reporting_Postings_Regulatory.md §5 B4'
+    ado_refs: ['1738226', '1559756', '1655602']
+
+  # ---------------- G2 — Configuration ----------------
+
+  - id: QPTM-PLAT-004
+    gate: G2
+    priority: 10
+    match:
+      all: ['Value cannot be null']
+      any: ['offer', 'capacity release', 'Offer Wizard', 'MAX_TARIFF_RATE']
+      none: ['SplitAction', 'Rate Maintenance', 'Index Maintenance']
+    sql_pack: plat_offer_max_tariff
+    recipe: plat_rate_resolution
+    verdict: 'Max Tariff rate not resolved onto the offer for TSP {tsp} — the Rate Resolution batch has not tied MAX_TARIFF_RATE onto CRCTRL_OFFER_DTL; run Rate Resolution, then resubmit the offer.'
+    source: 'SKILL_Capacity_Release.md §4 (case 24-00953290)'
+
+  - id: QPTM-PLAT-005
+    gate: G2
+    priority: 20
+    match:
+      any: ['RuleCROF000250', 'USE_SEASNL_DATES', 'SEASNL_START_DT', 'seasonal dates']
+    recipe: plat_seasnl_dates
+    verdict: 'Seasonal-date defect family — with USE_SEASNL_DATES=0 the hidden seasonal dates on CRCTRL_OFFER_DTL go stale on Copy Offer and drive wrong replacement-contract dates or a RuleCROF000250 block; verify the config and correct the offer-detail seasonal dates to equal the release dates.'
+    source: 'SKILL_Capacity_Release.md §8; SKILL_ADO_QPTM_Contracts_RFS_Offer_CapacityRelease.md §5 B1'
+    ado_refs: ['1604135', '1702160', '1773394']
+
+  - id: QPTM-PLAT-006
+    gate: G2
+    priority: 50
+    match:
+      all: ['/n.t retain/']
+      any: ['dropdown', 'drop-down', 'picklist', 'code table', 'Penalty Type']
+    verdict: 'The code table is missing its Displayed Column Order assignment — the dropdown shows values but the selection will not retain/display; assign Displayed Column Order in Code Table Definition Maintenance (e.g. table 26204 Penalty Type).'
+    source: 'SKILL_Pipeline_Admin_Config.md §6 (case 24-00984137)'
+    ado_refs: ['1692629']
+
+  - id: QPTM-PLAT-007
+    gate: G2
+    priority: 20
+    match:
+      any: ['GetConfigKey.Missing', 'NUM_STREAMING_OBJECTS',
+            'SHOW_UP_DN_CONTRACT_PICKLIST_IN_GRID',
+            'DISABLE_NOMINATION_SUBMISSION_BY_CONTRACT', 'qarch_cnfg_ctrl']
+    sql_pack: plat_cnfg_key_missing
+    verdict: 'Middletier logs QConfigMgrBase.GetConfigKey.Missing because the config key(s) were never created in qarch_cnfg_ctrl and the code falls back to hard-coded defaults (non-fatal) — create the keys with their defaults to quiet the log flood.'
+    source: 'SKILL_Pipeline_Admin_Config.md §7 (case 25-01031118)'
+    ado_refs: ['1744270']
+
+  - id: QPTM-PLAT-008
+    gate: G2
+    priority: 50
+    match:
+      all: ['/accounting month/']
+      any: ['expired', 'still open', 'still active']
+    verdict: 'An expired Accounting Month is still marked open in Code/Decode Value Maintenance and blocks Location saves in both Web and Classic — close the expired month(s) and refresh the cache.'
+    source: 'SKILL_Pipeline_Admin_Config.md §9 (case 25-01035258)'
+
+  - id: QPTM-PLAT-009
+    gate: G2
+    priority: 30
+    match:
+      all: ['/fail\w*|error/']
+      any: ['PALOCEXP', 'CWNIGHTLY']
+    batch: NORMAL
+    verdict: 'Environment file paths for the {process} batch were not updated for the new build/server — point the export/import file paths at the correct server via Cloud Ops; this is environment configuration, not a product defect.'
+    source: 'SKILL_Pipeline_Admin_Config.md §11 (cases 26-01089498, 26-01089624, 24-00956879)'
+
+  - id: QPTM-PLAT-010
+    gate: G2
+    priority: 100
+    match:
+      all: ['/missing|not showing|not present|not appearing/']
+      any: ['after upgrade', 'after hotfix', 'post hotfix', 'after the hotfix',
+            'new build', 'menu tree', 'ESUITE menu', 'Batch Process Execution',
+            'not showing in picklist', 'sysgen']
+    verdict: 'Screen/tab/menu/process definition missing after an upgrade or hotfix — client-layer metadata was not checked in / packaged (sysgen); check the metadata into the client layer instead of hunting a code bug.'
+    source: 'SKILL_Pipeline_Admin_Config.md §10; SKILL_Integration_Processing.md §5c (cases 26-01102793, 25-01033214, 26-01098795)'
+
+  - id: QPTM-PLAT-011
+    gate: G2
+    priority: 40
+    match:
+      any: ['QRPTLAUNCH', 'QEMAIL', '/reports? (are |were )?not (being )?emailed/',
+            'not receiving cut reports', '/not receiving .{0,30}reports/']
+    batch: NORMAL
+    verdict: 'Report delivery-chain failure — check the QRPTLAUNCH render step, then the QEMAIL send step (SMTP config; UAT often has no valid relay by design), then that the event-detector recipient list resolves to active contacts with email.'
+    source: 'SKILL_Reporting_Regulatory_Postings.md §5; SKILL_Integration_Processing.md §12 (cases 23-00913987, 23-00921160, 24-00940028)'
+
+  - id: QPTM-PLAT-012
+    gate: G2
+    priority: 100
+    match:
+      any: ['report type missing', 'missing from the reports list', 'canned reports missing',
+            'unable to see some report types', 'cannot see the report', "can't see the report"]
+    verdict: 'The report/process type is not registered for that build or not cross-referenced to the security group — register the report type and verify the security-group x-ref (most frequent for External shipper users).'
+    source: 'SKILL_Reporting_Regulatory_Postings.md §4 A2-A3 (cases 25-01034708, 25-01029305, 25-00996569)'
+
+  - id: QPTM-PLAT-013
+    gate: G2
+    priority: 60
+    match:
+      all: ['/notice (type|sub-?type)/']
+      any: ['missing', 'unchecked', 'not migrated', 'select list']
+      none: ['Security User Setup']
+    verdict: 'Notice type/sub-type metadata was not migrated by the upgrade — re-add the notice (sub)type configuration; recurring pattern after 2023.04/2024.04/2025.04 upgrades.'
+    source: 'SKILL_Reporting_Regulatory_Postings.md §9 (cases 25-01030338, 24-00946449, 24-00958185)'
+
+  - id: QPTM-PLAT-014
+    gate: G2
+    priority: 40
+    match:
+      any: ['no tile', 'tile missing', 'tiles are missing', 'sees no tile',
+            'no persona', 'missing chiclet']
+    verdict: 'User was provisioned in Okta only — the QPTM persona/security-group mapping (plus BA scope for external users) is missing, so login succeeds but no tile/menu appears; assign the persona/group and confirm the tile.'
+    source: 'SKILL_Security_UserAdmin.md §7 (case 26-01094136)'
+
+  - id: QPTM-PLAT-015
+    gate: G2
+    priority: 60
+    match:
+      all: ['persona']
+      any: ['cache', 'not honoring', 'not taking effect', 'still shows old', 'switched but']
+    verdict: 'Stale security cache — the persona/security change saved but the app still serves the old access; clear the security cache and run Cache maintenance before any deeper diagnosis.'
+    source: 'SKILL_Security_UserAdmin.md §7 (case 26-01095187)'
+
+  - id: QPTM-PLAT-016
+    gate: G2
+    priority: 20
+    match:
+      any: ['ALLOW_BA_MISMATCH', 'VALIDATE_MDQ_REC_DEL', 'K_RFSME020']
+    verdict: 'Web is validation-driven, not config-key-driven — the behavior gate in Web is the matching Object-Usage validation rule (e.g. ContractMaintenance0008), so toggle that validation at the client layer; the config key only governs Classic.'
+    source: 'SKILL_ADO_QPTM_Security_Admin_Config_Integration.md §4 Cluster C'
+    ado_refs: ['1778592', '1764767']
+
+  - id: QPTM-PLAT-017
+    gate: G2
+    priority: 30
+    match:
+      any: ['Error Communicating with Server', 'IQEndpointbrokerservice', '/CommunicationException/']
+    verdict: 'Middle-tier/QPEC infrastructure failure, not product code — confirm the scope (all users, Web AND Classic simultaneously), then route to QCloud Ops to check/restart the QPEC services, web tier and gateway.'
+    source: 'SKILL_UI_Widgets.md §4 (cases 26-01066310, 26-01088449)'
+
+  - id: QPTM-PLAT-018
+    gate: G2
+    priority: 40
+    match:
+      all: ['/[Rr]eallocation|PPA/']
+      any: ['pop-up', 'popup', 'not trigger', 'not triggered', 'not firing', 'BLXREF_REALLOC_PPA']
+    sql_pack: plat_realloc_ppa_map
+    recipe: plat_realloc_ppa_map
+    verdict: 'PPA/Reallocation pop-up not firing on Contract Maintenance save — check the BLXREF_REALLOC_PPA (code table 27310) Object-ID mapping, that a CLOSED accounting month is impacted, and that no unprocessed BLTRAN_PPA_EVENT row already exists for the contract + production month.'
+    source: 'SKILL_ADO_QPTM_Contracts_RFS_Offer_CapacityRelease.md §10 G2'
+    ado_refs: ['1784462', '1773033']
+
+  - id: QPTM-PLAT-019
+    gate: G2
+    priority: 30
+    match:
+      any: ['EXP_OVERWRITE_FILE_IND', 'CSURDD', 'CSUPCC',
+            '/export\w* .{0,40}(tripl|duplicat)/', '/(tripl|duplicat)\w+ .{0,40}export/']
+    recipe: plat_exp_overwrite
+    verdict: 'The export definition has EXP_OVERWRITE_FILE_IND off, so each run APPENDS to the output file and values triple/duplicate — set the flag to 1 on the definition in QARCH_CTRL_IMPEXP.'
+    source: 'SKILL_Integration_Processing.md §7b and §16 Script A (case 24-00992623)'
+    ado_refs: ['1705697']
+
+  - id: QPTM-PLAT-020
+    gate: G2
+    priority: 50
+    match:
+      any: ['@@FULL_WHERE_CLAUSE', 'Filter Column Expression',
+            '/picklist .{0,40}not filter/', '/picklist doesn.t filter/']
+    verdict: 'Pick-definition metadata defect — the Filter Column Expression holds a label instead of the real DB column and/or the picklist SQL is missing the @@FULL_WHERE_CLAUSE token, so the typed filter is never applied; fix the pick definition metadata.'
+    source: 'SKILL_ADO_QPTM_UI_Widgets_Web.md §6 Cluster C'
+    ado_refs: ['1757897']
+
+  # ---------------- G3 — Version (already fixed) ----------------
+
+  - id: QPTM-PLAT-021
+    gate: G3
+    priority: 10
+    match:
+      all: ['NETMDQRES']
+    batch: NORMAL
+    verdict: 'NETMDQRES eligibility/calc defect (misses mid-month capacity-release contracts and misapplies net MDQ to receipt-location MDQ) — core fix shipped in DB migration QPTM_17.0.00.0027.0000_*_1632004.sql and releases 2024.04.1.5 / 2025.10; verify the client build.'
+    source: 'SKILL_Contracts.md §6 (cases 23-00933989, 24-00956689, 24-00965618)'
+    ado_refs: ['1674954', '1720842', '1663622', '1664390']
+
+  - id: QPTM-PLAT-022
+    gate: G3
+    priority: 10
+    match:
+      all: ['SqlDateTime overflow']
+    verdict: 'IPWS Capacity Release import crashing on a null GAS_DAY (SqlDateTime overflow in CapRelNaesb30DatabaseWriterHandler) — collateral of the CR dedup change, reverted/corrected in 2024.04 / 2025.04 / 2025.10 (build inferred; confirm in release notes).'
+    source: 'SKILL_ADO_QPTM_Contracts_RFS_Offer_CapacityRelease.md §8 E2'
+    ado_refs: ['1774746', '1806705', '1759366']
+
+  - id: QPTM-PLAT-023
+    gate: G3
+    priority: 40
+    match:
+      all: ['/duplicat/']
+      any: ['CWCAPRTRAN', 'CWCAPTRAN', 'Transactional Reporting', 'IPWS']
+    verdict: 'IPWS transactional posting appends a new row each nightly run because Post Date / Gas Day / Cycle ID changed — fixed as one record per OfferNo in 2025.10 (inferred; confirm release notes), and pre-existing duplicate rows must still be scripted off the site.'
+    source: 'SKILL_ADO_QPTM_Reporting_Postings_Regulatory.md §4 A1 (case 25-01018583)'
+    ado_refs: ['1739076', '1775918', '1366389']
+
+  - id: QPTM-PLAT-024
+    gate: G3
+    priority: 10
+    match:
+      all: ['K01010']
+    verdict: 'RFS Approvals null-reference in QContractDataAccess.IsContractAttributeTrue ("Validation rule K01010 failed to execute ... Object reference not set") — fixed for 2026.04 and cherry-picked to 2025.10 (inferred; confirm release notes).'
+    source: 'SKILL_ADO_QPTM_Contracts_RFS_Offer_CapacityRelease.md §7 D2'
+    ado_refs: ['1783675', '1770527', '1768578']
+
+  - id: QPTM-PLAT-025
+    gate: G3
+    priority: 10
+    match:
+      all: ['SplitAction']
+    verdict: 'ENT web Contract Maintenance time-slice defect ("...SplitAction is not set nor is a SplitActionDelegate set") — the CHECK_PRIMARY_TERM_EXPIRE_DT split pop-up path was never wired in Web; fixed in the ENT 2024.04 hotfix and 2026.04 (inferred; confirm release notes).'
+    source: 'SKILL_ADO_QPTM_Contracts_RFS_Offer_CapacityRelease.md §10 G1'
+    ado_refs: ['1789425', '1765986']
+
+  # ---------------- G4 — Bad Data ----------------
+
+  - id: QPTM-PLAT-026
+    gate: G4
+    priority: 10
+    match:
+      all: ['Effective dates overlap existing data']
+    sql_pack: plat_ctr_agg_split
+    verdict: 'Meter/location delete on contract {contract} blocked by orphaned KCTRL_CTR_AGG_QTY_SPLIT_HDR rows or overlapping amendment slices — clear the agg-qty-split rows for the contract first, then end-date any conflicting slice.'
+    source: 'SKILL_Contracts.md §11 step 4 and §16-E (case 23-00928312)'
+
+  - id: QPTM-PLAT-027
+    gate: G4
+    priority: 60
+    match:
+      any: ['duplicate contract', 'incorrect contract number', 'wrong contract number',
+            'contract entered in error', 'delete the contract', 'delete this contract',
+            'delete a contract']
+    sql_pack: plat_ctr_empty_check
+    recipe: plat_delete_contract
+    verdict: 'Mis-entered or duplicate contract {contract} is dispositioned with the standard QPTM cascade hard-delete (child tables first, SCTRL_CTR_HEADER last) via Cloud Ops, only after verifying the contract carries zero nominations.'
+    source: 'SKILL_Contracts.md §11'
+    ado_refs: ['1601380', '1586886']
+
+  - id: QPTM-PLAT-028
+    gate: G4
+    priority: 20
+    match:
+      all: ['CRBIDEVAL']
+      any: ['STOPPED PROCESSING ON ERROR', '/fail\w*|error/']
+    batch: NORMAL
+    sql_pack: plat_crbideval_ibr
+    verdict: 'CRBIDEVAL bid-eval failure is usually bad offer data — REL_ACCPT_BID_BASIS_CD of IP with NULL IBR_FORMULA_CD (inconsistent IBR indicator), or no bid actually submitted before the eval ran; clean the offer data before escalating to code.'
+    source: 'SKILL_ADO_QPTM_Contracts_RFS_Offer_CapacityRelease.md §4 Cluster A (case 23-00935940)'
+    ado_refs: ['1639052']
+
+  - id: QPTM-PLAT-029
+    gate: G4
+    priority: 10
+    match:
+      all: ['same key has already been added']
+      any: ['recall', 'reput', 'QCODE_RECALL_NOTIF_PERIOD']
+    sql_pack: plat_recall_notif_dup
+    verdict: 'Duplicate rows in QCODE_RECALL_NOTIF_PERIOD (overlapping code/decode values) break the web dictionary on Recall/Reput — dedupe the code rows to match core.'
+    source: 'SKILL_ADO_QPTM_Contracts_RFS_Offer_CapacityRelease.md §9'
+    ado_refs: ['1724570']
+
+  - id: QPTM-PLAT-030
+    gate: G4
+    priority: 50
+    match:
+      all: ['/recall/']
+      any: ['stuck', 'orphan', 'cancelled', 'delete', 'CRCTRL_RECALL_REPUT', 'AWARD_AMEND_ID']
+    recipe: plat_recall_cleanup
+    verdict: 'Orphaned/incorrect recall record left in CRCTRL_RECALL_REPUT (plus possible bad CRCTRL_AWARD_AMEND rows after a cancelled recall) — verify the exact row, then delete it via PDM pinned by UPDT_DT.'
+    source: 'SKILL_Capacity_Release.md §6 (cases 22-00661770, 22-00661775)'
+
+  - id: QPTM-PLAT-031
+    gate: G4
+    priority: 20
+    match:
+      all: ['/RR30|549D/']
+      any: ['unique constraint', 'unique-constraint', 'PK_RRRPTS_30_FERC_FORM_549D']
+    sql_pack: plat_rr30_dup
+    verdict: 'The RR30/549D run halts on a primary-key collision in RRRPTS_30_FERC_FORM_549D — stale duplicate TOS rows (a contract briefly on another TOS during setup) feed the report; clean the duplicate TOS data and apply the DTE LEFT-to-INNER join report-SQL fix.'
+    source: 'SKILL_ADO_QPTM_Reporting_Postings_Regulatory.md §8 (case 21-00106983)'
+    ado_refs: ['1320990']
+
+  - id: QPTM-PLAT-032
+    gate: G4
+    priority: 30
+    match:
+      all: ['/orphan/']
+      any: ['location', 'KATYPOOL', '/jobs? stopp/', 'warning']
+    batch: NORMAL
+    recipe: plat_orphan_loc
+    verdict: 'Dangling rows for an orphaned location across PACTRL_LOC_* / KCTRL_CTR_LOC / SEXTN_MTR_HEADER_QPTM make every batch job in the TSP stop with a warning — delete the orphaned location rows (verify-SELECT first).'
+    source: 'SKILL_Integration_Processing.md §16 Script B (case 24-00951885)'
+    ado_refs: ['1660692']
+
+  - id: QPTM-PLAT-033
+    gate: G4
+    priority: 50
+    match:
+      any: ['Nominatable', 'PACTRL_LOC_ATTR',
+            '/[Ii]nterruptible .{0,40}(not selectable|attribute)/',
+            '/attribute .{0,40}not selectable/']
+    recipe: plat_loc_attr_insert
+    verdict: 'A location attribute row is missing from PACTRL_LOC_ATTR (data conversion never seeded it), so the attribute is unselectable or the meter is absent from the nomination picklist — insert the attribute row with value 0 so it becomes toggleable.'
+    source: 'SKILL_Pipeline_Admin_Config.md §4 and §15 Template M (cases 26-01096011, 26-01097568)'
+
+  - id: QPTM-PLAT-034
+    gate: G4
+    priority: 40
+    match:
+      all: ['location group']
+      any: ['delete', 'deleted', 'deletion', 'remove']
+    recipe: plat_locgrp_delete
+    verdict: 'QPTM blocks Location Group deletion in the UI by design — disposition is the standard Cloud-Ops two-table delete (PACTRL_LOC_GRP_ASSOC_QTY child first, then PACTRL_LOC_GRP) after verifying no transactional references.'
+    source: 'SKILL_Pipeline_Admin_Config.md §5 and §15 Template L (cases 26-01064296, 25-01047587)'
+    ado_refs: ['1778532', '1780227']
+
+  # ---------------- G5 — Code Change ----------------
+
+  - id: QPTM-PLAT-035
+    gate: G5
+    priority: 10
+    match:
+      all: ['QUIControllerContractMaintenance']
+    verdict: 'Web Contract Maintenance query defect (QUIControllerContractMaintenance.DoQuery error, often tied to Invoice-Group-linked data shapes) — code fix; check for a <CLIENT>.QPTM.Web override controller before assuming base behavior.'
+    source: 'SKILL_Contracts.md §4 (case 23-00886181)'
+
+  - id: QPTM-PLAT-036
+    gate: G5
+    priority: 10
+    match:
+      all: ['Amendment Effective Date']
+      any: ['/rolls? back/', 'prior day', 'previous day', 'day earlier']
+    verdict: 'Amendment-editor date-default defect — the Amendment Effective Date From rolls back to the prior day when BA/TOS/end-date is changed before the date field; workaround is to set the Amendment Effective Date From FIRST.'
+    source: 'SKILL_Contracts.md §5 (cases 22-00630726, 22-00630721)'
+    ado_refs: ['1397848']
+
+  - id: QPTM-PLAT-037
+    gate: G5
+    priority: 10
+    match:
+      all: ['QCFSDataHelper']
+    verdict: 'Business Associate screen data-helper factory defect ("Factory QCFSDataHelper does not exist" saving a BA or Royalty Payment Type on 2022.04-2024.04 builds) — code fix delivered; verify the client build.'
+    source: 'SKILL_Security_UserAdmin.md §8 (cases 25-00999022, 25-01002942)'
+    ado_refs: ['1709045', '1718362']
+
+  - id: QPTM-PLAT-038
+    gate: G5
+    priority: 10
+    match:
+      all: ["/another shipper|other shipper.s/"]
+      any: ['widget', 'inventory', 'MDQ', 'pool', 'see']
+    verdict: 'CRITICAL cross-tenant data exposure — a widget/screen showing another shipper''s data is a security/context-scoping code defect; immediate workaround is log out and back in, then open an RCA/bug and treat as a security incident.'
+    source: 'SKILL_UI_Widgets.md §7 (cases 23-00926187, 22-00607592)'
+
+  - id: QPTM-PLAT-039
+    gate: G5
+    priority: 30
+    match:
+      any: ['CWUNSUBCAP', 'CAALLUNCAP', 'CWALLUNCAP', 'TspNm', 'Unable to enforce constants']
+    batch: NORMAL
+    verdict: 'Unsubscribed Capacity export defect family — export missing TSP_NM (IPWS import rejects with "Unable to enforce constants ... TspNm DBNull"), wrong unsubscribed calculation, or blank XML from 1900-dated location ranges; code fixes exist, and CWUNSUBCAP must not run for TSPs not configured on IPWS.'
+    source: 'SKILL_Reporting_Regulatory_Postings.md §8 E1; SKILL_ADO_QPTM_Reporting_Postings_Regulatory.md §6 (case 24-00971317)'
+    ado_refs: ['1668756', '1680441', '1669924']
+
+  - id: QPTM-PLAT-040
+    gate: G5
+    priority: 20
+    match:
+      all: ['Security User Setup']
+      any: ['notice type', 'not saving', 'unchecked', 'cannot be updated']
+    verdict: 'Web Security User Setup persistence defect — notice-type selections not saving (or unchecked after an upgrade) while Classic persists correctly; interim workaround is to set the notice types in Classic.'
+    source: 'SKILL_Security_UserAdmin.md §6 (cases 22-00804903, 24-00986453)'
+    ado_refs: ['1556308', '1721675', '1448962']

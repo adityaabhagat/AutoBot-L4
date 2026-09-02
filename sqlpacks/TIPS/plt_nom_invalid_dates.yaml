@@ -1,0 +1,13 @@
+name: plt_nom_invalid_dates
+product: TIPS
+queries:
+  - id: q1
+    sql: "SELECT BEG_GAS_DAY, END_GAS_DAY FROM QCTRL_NOM_DTL WHERE BEG_GAS_DAY > END_GAS_DAY"
+    proves: "whether inverted-date nomination rows (BEG_GAS_DAY later than END_GAS_DAY, the Copy-Noms-Forward corruption) exist in QCTRL_NOM_DTL"
+    interpret:
+      - when: "rowcount > 0"
+        verdict: CONFIRMED
+        meaning: "inverted-date nom rows present - data script required (recipe plt_nom_invalid_dates); scope to SR/contract/gas-month before scripting"
+      - when: "rowcount == 0"
+        verdict: REFUTED
+        meaning: "no inverted-date rows - this signature does not apply, keep evaluating"
