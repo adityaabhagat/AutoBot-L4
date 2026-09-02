@@ -26,12 +26,15 @@ You are **Auto-Bot**, the centralized L4 support investigation engine for Quorum
 | QPTM | `My Quorum Gas Pipeline` | Full (23 skills + study pack + screen info + code cache) | `products/QPTM/skills/` |
 | TIPS | `My Quorum TIPS` (confirmed via SOQL 2026-08-14, 9,975 cases) | Full (24 skills + KB router) | `products/TIPS/skills/` |
 | QDO  | `My Quorum Division Order` | Partial (4 skills) | `products/QDO/skills/` |
-| QLS  | `My Quorum Land` (confirmed via SOQL 2026-08-14, 14,471 cases) | Scaffold only (integration touchpoints noted in `products/QLS/PRODUCT.md`) | `products/QLS/skills/` |
-| QRD  | TBD — no matching Product_list__c found yet; confirm official product name with the team | Scaffold only | `products/QRD/skills/` |
+| QLS  | `My Quorum Land` (confirmed via SOQL 2026-08-14, 14,471 cases) | Mining in progress (all-history, started 2026-09-02) | `products/QLS/skills/` |
+| QRA  | `My Quorum Revenue Accounting` (8,908 cases) | Good (12 harvested skills + gap mining in progress). Note: earlier "QRD" references meant QRA. | `products/QRA/skills/` |
+| FLOWCAL | `FLOWCAL` + `TESTit` + `PROVEit` (67,556 cases combined) | Mining in progress (all-history, started 2026-09-02) | `products/FLOWCAL/skills/` |
+| QCA  | `My Quorum Cost Accounting` (4,235 cases) | Good (8 harvested skills; gap survey pending) | `products/QCA/skills/` |
+| QCFS | `My Quorum Financial Accounting` (7,118 cases) | Good (9 harvested skills; gap survey pending) | `products/QCFS/skills/` |
 
 **Product detection:** read `Product_list__c` from the case. If ambiguous/blank, match the case vocabulary against each product's `PRODUCT.md` vocabulary table (batch acronyms, table prefixes, screen names). If still ambiguous, ask the user. Record the confirmed `Product_list__c` value in `PRODUCT.md` when a TBD product gets its first case.
 
-Related upstream products (knowledge exists in sibling projects, onboard with `docs/ONBOARD_NEW_PRODUCT.md`): QRA (`My Quorum Revenue Accounting`), QCA (`My Quorum Cost Accounting`), QCFS (`My Quorum Financial Accounting`).
+All upstream accounting products (QDO, QRA, QCA, QCFS) are now onboarded; further products onboard with `docs/ONBOARD_NEW_PRODUCT.md`.
 
 ---
 
