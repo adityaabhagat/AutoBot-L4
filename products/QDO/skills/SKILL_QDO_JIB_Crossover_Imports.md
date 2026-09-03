@@ -1,187 +1,234 @@
 # SKILL: QDO JIB / Cost Center / AFE Crossover + Imports & Bulk Data Loads
 
-**Version:** 1.0 | **Created:** 2026-09-02 | **Product:** My Quorum Division Order (QDO)
-**Built by Auto-Bot — the L4 issue solver by Aditya Bhagat.**
-**Scope — two families:**
-**Section I (JIB crossover):** JIB-type DOIs (`DO_TYPE_CD='JIB'`), JIB decks/tiers, JIB Base Flag, JIB netting/offset (owner pay-reason interplay + `DSTG_SAP_JIB_OFFSET`), Cost Center creation from the eSuite web (ORGCOSTGEN), and the AFE↔DOI sync (`AFE_SYNCDO`). The *ADO defect-reference* side of DOI validation on AP/GL/AFE (AP055, GL025, JB020, AFEEXTIMP) is owned by S4 `SKILL_ADO_QDO_DivisionOrder_Transfers.md` — this skill owns the SF case families.
-**Section II (Imports & bulk loads):** DOI Worksheet / DOI Setup "Import From Excel", Bulk Edit/View grids, Bulk Modify Loader, external loaders (Mineral Answers, Datayank), Owner Lease Xref (deep dive in S3 Cluster H), and well imports.
+**Version:** 1.0 | **Created:** 2026-09-03 | **Product:** My Quorum Division Order (QDO) — `Product_list__c = 'My Quorum Division Order'`
+**Scope:** Two coverage-plan GAP groups in one skill.
+**Section I — JIB / Cost Center / AFE crossover (G12, ~18 actionable):** JIB DOI decks (Base Flag, tiers, backdating, templates, offset flag), JIB interest transfers and their warning codes (RADOITRW58/59), Cost Center creation/numbering/security, AFE sync. The *ADO defect-reference* side of DOI-validation on AP/GL/AFE (AP055, GL025, JB020, AFEEXTIMP) lives in `SKILL_ADO_QDO_DivisionOrder_Transfers.md` — this skill covers the SF case families.
+**Section II — Imports & bulk data loads (G13, ~16 actionable):** Import From Excel (DOI Setup / DO Maintenance / DOI Worksheet), Owner Lease Xref import, Bulk View/Edit, Datayank and third-party loads (Mineral Answers).
+**Companion skills:** `SKILL_QDO_Division_Orders.md` (DOI setup/worksheet core), `SKILL_QDO_Transfers_SuspendRelease.md` (transfer pipeline), `SKILL_QDO_Upgrade_Patch_Regressions.md` (upgrade-wave regressions), `SKILL_QDO_Platform_Integration.md` (Owner Lease Xref via Design Studio, SAP JIB netting).
 
-> **Evidence base:** all-history mining 2026-09-02, coverage-plan groups G12 (~18 actionable) + G13 (~16 actionable). SOQL sample: 50 closed JIB/cost-center/AFE/voucher cases + 47 closed import/excel/datayank/bulk cases, newest-first; 25 deep-read (Description + Resolution__c + comment/email probes); ADO confirmations via `search_workitem`/`wit_work_item`. Every claim cites a verbatim SF case number or ADO WI. Fixed-in builds **INFERRED** unless the WI states the merge.
+> **Evidence base:** all 17 closed actionable JIB/CC/AFE cases + all 16 closed actionable import/bulk cases (single LIMIT-25 pages each — complete populations, `Root_Cause__c IN ('Software Defect','Application Configuration','ChangeConfig')`), with Description/Resolution + case-feed deep-dives on 12 of the richest, and ADO verification of 7 work items. Every claim cites a verbatim SF case number and/or ADO ID. Fixed-in builds **INFERRED** unless a tag/release note confirms.
+> **PII:** individual names redacted; 3-letter client prefixes retained (org identifiers).
 
 ---
 
-# SECTION I — JIB / Cost Center / AFE crossover
-
-## 1. Quick Triage (JIB)
+## 1. Quick Triage Table
 
 | Symptom | Likely cause | Go to |
 |---|---|---|
-| JIB transfer Preview/Approve shows warnings `RADOITRW58` / `RADOITRW59`, or *"No default market rep found… This may cause fatal error"* | **Warning noise** — invalid on JIB DOIs (they don't use market groups); combine warning fires even when combine worked | §3-A (26-01064806, 25-01027179; ADO #1622910, #1739512) |
-| Can't backdate a **JIB deck** — BD006 only lists Revenue decks | Registered SQL `SELECT_DONL_DO_PROP_BACKDATE_PICK` excludes JIB | §4-B1 (26-01118522) |
-| **JIB Tier # reverts to Tier 1** on save | Configs `CAN_CHANGE_TIER_VALUE` / `CAN_CHANGE_TIER_JIB_VALUE` disabled | §4-B2 (25-01043348) |
-| Error setting up **multiple JIB tiers** on one property | Code defect in `tierJibFlagList` filter (fixed) | §4-B3 (23-00916387) |
-| "JIB Base Flag required" blocks a **file-copy DO** | Validation `QDODonlDoHdr_000022_ValidateJIBbaseFlag` | §4-B4 (24-00940784) |
-| **Cost Center creation fails** with a security error (sometimes property still created) | Missing grants: `ORGCOSTGEN` process / ORG-BTYP-QRA security objects | §5-C (25-01042097, 25-01048054) |
-| Saving an owner flagged **JIB Offset** demands Pay Reason **5-Pay Regardless**; tiny checks then get paid | JIB-netting pay-reason requirement vs $100 minimum-suspense conflict (by design; long-running gripe) | §6-D (23-00878496, 26-01094960) |
-| MG **removing JIB netting** from a BA errors on Preview | Netting-removal defect | §6-D (23-00920921) |
-| BA JIB-netting changes push **wrong values into `DSTG_SAP_JIB_OFFSET`** | Web BA screen → SAP staging mapping defect | §6-D (22-00830502; 22-00676527 fixed Spring 2021 GA) |
-| **AFE not updated** after a JIB DOI transfer | `AFE_SYNCDO` failed to auto-launch; run it manually | §7-E (ADO #1397799) |
-| JIB DOI MG **approve completes but errors** `Unable to establish a connection with any endpoint` | Middle-tier endpoint config (`EndpointInfoResolver… endpointInfos was non-null, but is empty`) | §7-E (ADO #1723387, related #1732619) |
-| AP055/GL025/JB020 "not an effective JIB DOI" validation on vouchers/GL/AFE | Financials-side DOI validation defects | **S4** (ADO reference skill) |
+| Can't save/set up a 2nd JIB tier: "must have JIB Base Flag checked" | Base-flag validation defect family (should require exactly ONE base tier per property, not one per deck) | §4 A |
+| JIB tier number typed as 100 saves as Tier 1 | Configs `CAN_CHANGE_TIER_VALUE` / `CAN_CHANGE_TIER_JIB_VALUE` disabled | §4 B |
+| JIB deck won't appear in the backdate screen (BD006) — only REV decks listed | Registered SQL `SELECT_DONL_DO_PROP_BACKDATE_PICK` filters JIB out; add JIB to the pick query | §4 B |
+| JIB transfer preview/approve throws warnings `RADOITRW58` ("No default market rep found… may cause fatal error") / `RADOITRW59` (combine warning with 'WI' in every parameter) | Invalid warnings on JIB DOIs — market-rep validation belongs to REV only (code table 29100); messages corrected in later builds | §4 C |
+| JIB deck template imports interest type MI but system shows DI | Template/config mapping (Application Configuration) | §4 D |
+| Saving an owner flagged JIB Offset forces Pay Reason 5-Pay Regardless (ignores $100 minimum) | Working-as-configured product rule; recurring complaint | §8 FAQ |
+| New cost center errors "number already in use" | Auto-number bug: creating multiple CCs at once bumps code-table "Last No" by 1 only (code table **29111** / `QARCH_TRAN_SEQ`); ADO **1837136** | §4 E |
+| Cost center saves but property screen never opens → can't create property/DOI | User lacks execute on **ORGCOSTGEN** process — security scripts | §4 E |
+| Cost center setup shows security error but still creates the CC | Missing `ORG/BTYP/QRA` security object on the user's groups | §4 E |
+| Import From Excel loads some NRIs as **0.00000000** | Excel emits tiny decimals as scientific notation ("1E-08"); parser drops them (ADO **1322617**, **1813832**) | §5 G |
+| Import From Excel: small decimals invisible in grid, total allocation < 1.0, validation blocks import | Same scientific-notation family, DO Maintenance path (26-01103568) | §5 G |
+| DOI Worksheet import skips ~50 owners' NRI | Precision-mask defect — `NRIDecMasked` fix in worksheet import/export | §5 G |
+| Owner Lease Xref import "Replace Content" reverts on Save | Xref replace defect — fixed in patch (22-00672538) | §6 H |
+| Bulk View/Edit on Bearer Group adds/deletes rows instead of updating; FK error; pasted decimals rounded | Two logged defects (FK error → 2025.10 GA; rounding → 2024.04 hotfix) | §6 I |
+| "Load BA data from Mineral Answers" | No standard product loader — route to Services (Datayank/scripts) | §7 J |
+
+---
 
 ## 2. Concepts
 
-- **JIB DOI** = Joint Interest Billing deck: working-interest cost-share ownership (vs REV = revenue). Same DOI machinery (DO006 setup, MG/workspace transfers, tiers) with `DO_TYPE_CD='JIB'`; consumed by JIB billing (JB020) and AP/GL DOI validation (S4).
-- **JIB tier** = a JIB deck's tier number; tier edits are config-gated (§4-B2). **JIB Base Flag** (`JIB_BASE_FL` on `DONL_DO_HDR`; users asked to expose it on DO005 — 26-01069400, closed No Action) marks the base JIB deck; duplicated base flags have needed cleanup scripts (22-00825881).
-- **JIB netting / JIB Offset** = a working-interest owner's revenue is offset against their JIB (billing) balance. Flagged on the BA/owner; integrates to SAP via **`DSTG_SAP_JIB_OFFSET`**. Netting requires the owner to pay regardless of minimum-suspense thresholds — hence the forced **Pay Reason 5-Pay Regardless** (§6-D).
-- **Cost Center** = the accounting entity behind a property; created from the eSuite web via the **`ORGCOSTGEN`** batch process (security-gated). Property and cost-center creation are separate steps that can half-succeed (§5-C).
-- **AFE_SYNCDO** = batch process that pushes DOI ownership changes to AFE cost-center information after a JIB DOI transfer (§7-E).
-- **Warning codes:** `RADOITRW58`/`RADOITRW59` are transfer-preview warnings; message id `{DO-DOINTXFRWB-7316856}` appears in the "No default market rep found… may cause fatal error" text. Market reps come from **Code Table 29100** (per ADO #1622910 repro).
-
-## 3. Cluster A — JIB transfer warning noise ("Fatal Error" that isn't)
-
-**Signature:** MG Preview/Approve on a **JIB** DOI logs warnings — `RADOITRW58` (*"No default market rep found. This may cause fatal error {DO-DOINTXFRWB-7316856}"*) and/or `RADOITRW59` (combine-interest warning) — process itself completes green.
-**Root cause:** two related message defects. (1) JIB DOIs don't use market groups, so the market-rep warning is invalid on JIB (valid but overworded on REV; rep configured on Code Table 29100) — ADO **#1622910** "23-00918228--No default market rep found warning message on converted dummy DOIs for Revenue Suspense" (Closed 2025-10-22). (2) Combine warnings fire on many-to-one JIB transfers with Combine Flag even though the interest *did* combine and the transfer-to owner was not sequenced — ADO **#1739512** "MEW - Invalid Warning Messages About Combining Interest (25-01027179)" (Closed; reproduced in MEWU_HD_DEVA1 and CORE_SUP).
-**Fix recipe:** on current builds the message was reworded (no more "Fatal Error") and restricted to REV DOIs. On older builds, per SF `26-01064806` resolution (verbatim): *"this warning has been updated in later versions… to no longer say 'Fatal Error' and also was changed to only hit on REV DOIs. Since they don't have this change and this is for JIB, [client] can ignore this warning."* → classify **Version issue (G3)**; customer explanation: warning is cosmetic on JIB, transfer results are correct (verify the Message Log shows the process green and decimals foot).
-**Anchors:** SF 26-01064806 (Software Defect, Closed 2026-01-09), SF 25-01027179 (Software Defect, Closed 2026-04-14), ADO #1622910, #1739512.
-
-## 4. Cluster B — JIB deck / tier setup & backdating (config-heavy)
-
-**B1 — Backdating a JIB deck.** `26-01118522` (App Config, Closed 2026-08-03): BD006 backdate picklist only offered Revenue decks. Resolution (verbatim): *"We provided the client a configuration in the Reg SQL ID: `SELECT_DONL_DO_PROP_BACKDATE_PICK`, where JIB was added in order to allow the client to run the DO backdate process for JIB decks."*
-**Recipe:** edit that registered SQL to include `DO_TYPE_CD='JIB'` in the pick; retest BD006. Related how-to: `25-01021825` "Backdate a JIB Tier" (App Config — same lever; REV worked, JIB needed the config).
-
-**B2 — JIB tier # auto-reverts to Tier 1.** `25-01043348` (App Config, Closed 2025-09-22). Resolution (verbatim): *"Enabled the following configs CAN_CHANGE_TIER_VALUE, CAN_CHANGE_TIER_JIB_VALUE."*
-**Recipe:** both configs must be on for users to key a non-default tier on JIB DOIs; check them before suspecting a save defect.
-
-**B3 — Multiple JIB tiers error.** `23-00916387` "UAT2 - Error when trying to set up multiple JIB tiers" (Software Defect, Closed). Resolution (verbatim): *"Updated the filter for tierJibFlagList to check whether any DOI with JIB flag checked is present in the database while adding DOI."* → G3 on old builds; cite the case when a client on a pre-fix build can't add a second JIB tier.
-
-**B4 — JIB Base Flag validation blocks file-copy DO.** `24-00940784` (App Config). Resolution (verbatim): *"Disabled QDODonlDoHdr_000022_ValidateJIBbaseFlag validation."*
-**Recipe:** the validation requiring a JIB base flag can be disabled per client when their file-copy workflow legitimately creates DOs without it. Cleanup precedent for *duplicate* base flags: 22-00825881 (script).
-
-## 5. Cluster C — Cost Center creation & security (eSuite web)
-
-**Signature:** user creates a Cost Center / property from the web; gets a security error; sometimes the property is still created (half-committed workflow).
-- `25-01042097` "UNABLE TO CREATE PROPERTY AFTER COST CENTER CREATED" (App Config). Resolution (verbatim): *"Ran security update scripts to give users access to the ORGCOSTGEN process."*
-- `25-01048054` "UAT tried setting up a cost center. security error, but it also says that the property was successfully created." (App Config). Resolution (verbatim): *"Added ORG/BTYP/QRA security object to groups 70000 and 90671012."*
-- `26-01111459` "COST CENTER ISSUES-HIGH IMPORTANCE" (Software Defect, **Closed - Deferred**): sudden failures creating cost centers regardless of name; deferred without published fix — if this signature reappears, treat as open defect and re-escalate citing 26-01111459.
-**Recipe:** (1) capture the exact security-object name from the error; (2) grant `ORGCOSTGEN` process access + ORG/BTYP/QRA objects to the user's groups; (3) after a "half-created" run, verify whether the property exists before re-running, to avoid duplicates. Expected-behavior note: cost-center *code/renumbering* questions (26-01098849, 26-01092858, 23-00913910) are usually Training/Customer-Error — check numbering standards before investigating.
-
-## 6. Cluster D — JIB netting / JIB Offset
-
-**D1 — JIB Offset forces Pay Reason 5-Pay Regardless.** `23-00878496` + repeat `26-01094960` (App Config, Closed 2026-04-22). Description (verbatim, condensed): *"When trying to save an owner record and the owner is marked with JIB OFFSET the system requires us to change the pay reason to 5-PAY REGARDLESS… Pay Regardless will ignore the minimum suspense amount and pay checks under $100."* This is the JIB-netting design: netted owners must be payable regardless of minimum-release thresholds so revenue can offset billing; the side effect is small checks. No config to make 5-Pay-Regardless honor the minimum was delivered on these cases — treat as **Expected Behavior + enhancement flag**; workaround used historically (from 23-00878496): mass-set non-netted owners back to 1-Normal, keep 5 only on true netting owners.
-**D2 — Removing JIB netting errors the MG.** `23-00920921` "MG Error - Remove JIB Netting from BA…" (Software Defect, Closed 2023-12-13; resolution not recorded in SF — comments empty). Reproduce on two MGs before escalating; cite this case as precedent.
-**D3 — SAP staging values wrong.** `22-00830502` "Changes to JIB Netting Information within Business Associate Screen Populating Incorrect Values into `DSTG_SAP_JIB_OFFSET`" (Closed - No Response) and `22-00676527` "JIB Netting Interface with SAP" (Software Defect) — resolution (verbatim): *"Included in Spring 2021 GA Release."* → G3 for legacy builds; verify staging rows against the BA screen values (SQL §12).
-**D4 — Misc anchors:** JIB decks not appearing in MG Creation (26-01087387, 26-01083172, 26-01069321 — all closed No Action Taken; check DOI-type filters/effectivity before escalating); JIB deck changes missing in SAP (23-00912174, Customer Cancelled); JIB DOI integrations failing on MG approval (22-00581746); suspense owners for JIB net (22-00809679, Training).
-
-## 7. Cluster E — AFE crossover & JIB process launch failures
-
-**E1 — AFE_SYNCDO not launching after JIB DOI transfer.** ADO **#1397799** "APHU - myQDO Web - AFE Sync DO Process Failure to Launch Upon JIB DOI XFER" (Closed, MergedToDevelop, 2022.04 retest tag). Per WI description: *"When initiating a JIB DOI transfer associated with an AFE, the AFE_SYNCDO updates the AFE Cost Center information"* — the process was expected to auto-run on every JIB DOI transfer but didn't; AFE stayed stale until `AFE_SYNCDO` was run manually.
-**Recipe:** if AFE cost-center ownership doesn't reflect a completed JIB transfer, run `AFE_SYNCDO` manually and compare; on pre-fix builds classify G3, else re-escalate.
-**E2 — JIB MG approve: endpoint error after green batch.** ADO **#1723387** "QDO - Getting error on JIB DOI Maintenance Group approve" (Closed, tag `not 2026.04 Ups`): approve batch completes but UI shows *"Unable to establish a connection with any endpoint."* MT log (verbatim): `EndpointInfoResolver.Construct.NoEndpointInfos… parameter endpointInfos was non-null, but is empty` from `Quorum.QFC.Metadata.ServiceCommon\EndpointManagement\EndpointInfoResolver.cs`, service `Quorum.Upstream.QDO.Application.MiddleTier`; blocked for a time by Bug **#1732619** "'Preview DOI Interest transfer for Workspace Group - DOINTXWRK' batch process gets failed."
-**Recipe:** this is *environment/service endpoint config*, not data: verify the QDO MT service endpoints (metadata endpoint registration) before touching the MG. The MG data itself is usually fine (batch completed).
-**E3 — Financials-side validations** (AP055 voucher "not an effective JIB DOI", GL025, JB020, AFEEXTIMP, converted-AFE DOI decimals) → **S4** owns the ADO defect map; `25-01029847` "'AFER ENDDATEOILOWNER DO…' error on PA059" (Project Debt) is a related SF-side anchor.
+- **JIB DOI decks:** a property can carry REV and **JIB** DOI decks (`DO_TYPE_CD='JIB'`), multi-tier (base + overhead tiers). Rule: **exactly one tier per property carries the JIB Base Flag** — enforcement of this rule was buggy in both directions (forced on every deck, then not enforced at all). JIB decks route suspense with reason `JB`; JIB DOIs are validated by Financials screens (AP055 vouchers, GL025 batches, JB020 — "not an effective JIB DOI", see S4 skill).
+- **Cost Centers** are created from the eSuite/web Cost Center Maintenance screen; on save the system auto-assigns the next number from a code table (**29111**, ADO title says `QARCH_TRAN_SEQ`) and is supposed to chain into Property creation (**ORGCOSTGEN** process) → then DOI setup.
+- **Imports:** grid-level "Import From Excel" exists on DOI Setup detail grids, DO Maintenance, DOI Worksheet, External Funds Transfer, Owner Lease Xref (Design Studio). The recurring killer is **Excel representing small decimals as scientific-notation strings**, which different import paths mishandle (silent 0s or blocked validation).
 
 ---
 
-# SECTION II — Imports & bulk data loads
+## 3. Decision Tree
 
-## 8. Quick Triage (Imports)
+```
+JIB question?
+├─ Setup/save of the deck (base flag, tier #, backdate) → §4 A/B (mostly config + known defects)
+├─ Warnings during a JIB transfer → §4 C (invalid-warning family; usually ignorable, verify)
+├─ Values wrong coming FROM a template/import → §4 D or §5 G
+└─ Netting / SAP / AP-GL-AFE validation → S3 / S4 skills
 
-| Symptom | Likely cause | Go to |
+Cost Center question?
+├─ Numbering error on create → §4 E (code table 29111 Last No; ADO 1837136)
+├─ Nothing happens after create (no property screen) → §4 E (ORGCOSTGEN security)
+└─ Security error but record created anyway → §4 E (ORG/BTYP/QRA object)
+
+Import/bulk question?
+├─ Decimals become 0 / disappear / block validation → §5 G (scientific notation)
+├─ Imported values don't SAVE (revert) → §6 H (Xref replace) / §6 I (bulk edit)
+└─ "Load external data set" (Mineral Answers, PRD→UAT copy) → §7 J (Services/Datayank)
+```
+
+---
+
+# SECTION I — JIB / COST CENTER / AFE CROSSOVER
+
+## 4. Symptom clusters
+
+### A — JIB Base Flag validation (multi-tier setup blocked or unguarded)
+
+**Signature:** Web DOI Setup refuses a new JIB tier header with an error demanding JIB Base Flag, even though an approved base tier already exists — or (post-fix regressions) approves JIB decks with **no** base tier at all.
+
+- **23-00916387** "UAT2 - Error when trying to set up multiple JIB tiers" (Software Defect). `Resolution__c` (verbatim): "Updated the filter for **tierJibFlagList** to check whether any DOI with JIB flag checked is present in the database while adding DOI."
+- ADO Bug **1618171** "CNR, MEW - Cannot save JIB DOI without JIB Base Flag checked" (Closed, tags `SEPT 2022.04; OCT 2022.04`): "The JIB Base flag is required for one tier per property, but current validation is forcing checking this box on every JIB DOI upon saving the header." Workaround users found (checking the flag everywhere) is dangerous: "there should only be one JIB base defined per property… multiple… will cause functional issues in JIB processing."
+- ADO Bug **1639565** "CNR - JIB Base Flag Fix Still Does Not Work" (Closed): original fix #1618171 incomplete — DOI Copy to a new tier gave an erroneous error yet approved on refresh; and a brand-new JIB DOI with **no** base flag and no other JIB deck approved without validation.
+- **24-00940784** "Upgrade Project: QDO - JIB Base Flag required on file copy DO" (Application Configuration) — same family on the copy path.
+
+**Recipe:** confirm exactly one `JIB_BASE_FL`-checked tier exists per property in `DONL_DO_HDR`-level data (verify column names via metadata server); if validation blocks a legitimate overhead tier, check build vintage against #1618171/#1639565 (2022.04-era fixes, INFERRED); if multiple base flags exist, treat as bad data — fix before JIB processing.
+
+### B — JIB tier numbering & backdating
+
+- **25-01043348** "JIB Tier number not saving correctly - it is auto changing to Tier 1" (Application Configuration). `Resolution__c` (verbatim): "Enabled the following configs `CAN_CHANGE_TIER_VALUE` `CAN_CHANGE_TIER_JIB_VALUE`" — with these off, the system auto-generates the next tier number and overrides manual entry.
+- **26-01118522** "Unable to backdate a JIB Deck" (Application Configuration): BD006 backdate pick only returned REV decks. `Resolution__c` (verbatim): "We provided the client a configuration in the Reg SQL ID: **SELECT_DONL_DO_PROP_BACKDATE_PICK**, where JIB was added in order to allow the client to run the DO backdate process for JIB decks."
+- **25-01021825** "Backdate a JIB Tier" (Application Configuration) — same question, earlier ("I can do it for REV but I don't know how for JIB"); precedes the reg-SQL recipe above.
+
+**Recipe:** for tier numbering, flip the two configs; for backdating, edit registered SQL `SELECT_DONL_DO_PROP_BACKDATE_PICK` to include JIB DO types (metadata server → registered SQL), then rerun the backdate from BD006.
+
+### C — JIB transfer warning codes RADOITRW58 / RADOITRW59
+
+**Signature:** Previewing/approving a JIB maintenance-group transfer (typically many-to-one with Combine Flag) logs:
+- `RADOITRW58`: "No default market rep found… This may cause fatal error" — some builds even label it "FATAL ERROR".
+- `RADOITRW59`: combine warning whose parameters all print "WI" instead of actual values — while the interest **did** combine correctly into a single 1.00-NRI line.
+
+**Root cause (CONFIRMED via ADO):** market-rep validation is only meaningful for REV DOIs (default market rep lives in **code table 29100** per business unit); the check misfired on JIB DOIs, and RADOITRW59's parameter substitution was wrong.
+- **25-01027179** "Invalid Error Messages During JIB Transfer" (Software Defect) ↔ ADO Bug **1739512** "MEW - Invalid Warning Messages About Combining Interest (25-01027179)" (Closed). Case feed timeline: warning wording/validity fixed in the client's November hotfix + later patch (INFERRED); the remaining "No default market rep found" REV-only rework shipped with the client's **2025.04 upgrade**, not backported to 2024.04.
+- **26-01064806** "JIB TRANSFER - WARNING MESSAGE 'FATAL ERROR'" (Software Defect, GLE). `Resolution__c` (verbatim): "Long term fix is in WI **1622910** - this warning has been updated in later versions… to no longer say 'Fatal Error' and also was changed to only hit on REV DOIs. Since they don't have this change and this is for JIB, GLE can ignore this warning."
+- ADO Bug **1622910** "23-00918228--No default market rep found warning message on converted dummy DOIs for Revenue Suspense" (Closed, tag `Robot RN 2026.04`): validation changed to "ONLY validate for DOIs of type REV (DO Group Type R)"; a TRANS_SEQ_NO can only contain JIB or REV, never mixed.
+
+**Recipe:** if the DOI in the warning is JIB → warning is noise; confirm the transfer result (combine line, sequencing) and tell the client to ignore / consume the fix build. If REV → check code table 29100 has a default market rep for the business unit; a missing rep there is a **valid** config gap.
+
+### D — JIB deck values wrong from template / owner flags
+
+- **25-01027690** "JIB Deck Incorrect Interest Type" (Application Configuration): template set interest type **MI** but deck came in as **DI** (example property on case). Closed as config — check template↔interest-type mapping before suspecting code.
+- **26-01094960** "JIB OFF SET FLAG" (Application Configuration): saving an owner marked JIB Offset forces Pay Reason **5-Pay Regardless**, which bypasses the $100 minimum-suspense pay amount; client wanted 5-Pay Regardless to respect the minimum (repeat of their earlier 23-00878496). No product change on case — treat as product rule + enhancement candidate (§8 FAQ).
+- **23-00920921** "MG Error - Remove JIB Netting from BA" (Software Defect) and **22-00676527** "JIB Netting Interface with SAP" (Software Defect, Integration) — JIB-netting flag/interface family; SAP netting detail in `SKILL_QDO_Platform_Integration.md`.
+
+### E — Cost Center creation, numbering & security
+
+**E1 — Auto-number collision (CONFIRMED defect + workaround).**
+**26-01111459** "COST CENTER ISSUES-HIGH IMPORTANCE" (Software Defect, Closed-Deferred). Support analysis (case feed, verbatim core): "when a cost center is created, the system looks at the last used cost center number and automatically assigns the next available number. In PRD, the last used number is currently reflected as 500997; however, a cost center already exists with 500998… This is a bug where if multiple cost centers are created at once then it will increase the last number by 1 instead of how many cost centers you made."
+**Workaround (from case feed):** Maintenance → **Code Table Value Editor** → code table ID **29111** → update column **Last No** to the true last-used number → Update.
+**ADO:** Bug **1837136** "REP 2024.10 - Cost Center Last No does not correctly update in code table QARCH_TRAN_SEQ" (project Quorum, Closed, release-noted — fixed-in INFERRED from `SDP CRN` tag).
+
+**E2 — Property screen doesn't open after CC creation (CONFIRMED security).**
+**25-01042097** "UNABLE TO CREATE PROPERTY AFTER COST CENTER CREATED" (Application Configuration). `Resolution__c` (verbatim): "Ran security update scripts to give users access to the **ORGCOSTGEN** process."
+
+**E3 — Security error on CC setup though record saves (CONFIRMED security).**
+**25-01048054** (UAT cost center: security error, but "property was successfully created"; worked in PRD). `Resolution__c` (verbatim): "Added **ORG/BTYP/QRA** security object to groups 70000 and 90671012" (group numbers client-specific).
+
+**E4 — Navigation defect:** **23-00902872** "View Details of Associated Cost Centers Returns you to the Dashboard" (Software Defect, Query Screens) — older web-screen defect, no recipe on case.
+
+### F — AFE crossover
+
+- **22-00645822** "Multiple AFE Sync Jobs Launched" (Software Defect): duplicate AFE sync job launches — batch-dedup family; if recurring, check process-queue for duplicate submissions before rerunning.
+- DOI-validation failures raised by AFE/JIB Financials screens (JB020 "not an effective JIB DOI", AFEEXTIMP, AP055/GL025 voucher/GL validation, converted-AFE DOI decimals) are documented with ADO anchors in **`SKILL_ADO_QDO_DivisionOrder_Transfers.md`** — route there; the QDO-side check is always: does an *effective, approved* JIB DOI exist for the property/date the Financials transaction references?
+
+---
+
+# SECTION II — IMPORTS & BULK DATA LOADS
+
+## 5. Cluster G — Import From Excel drops or zeroes small decimals
+
+**Signature (three surfaces, one root cause):** owner NRI/allocation decimals that Excel stores in scientific notation (≤ ~1E-05) either import as `0.00000000`, or don't display in the import grid and make total allocation fail validation.
+
+| Case | Surface | Fix |
 |---|---|---|
-| DOI Worksheet **Import From Excel drops small decimals** (NRI blank/0 for 50+ owners) | Web grid loader fails on small decimals (scientific-notation range) | §9-F1 (23-00924182, ADO #1625151) |
-| Imported NRIs accept **more decimal places than PRECISION config** | Worksheet ignores global `PRECISION` (core default 8; DB supports 10) | §9-F2 (ADO #1727280; 22-00676548) |
-| **NRIs load as 0** with Import From Excel | Same decimal-parse family, legacy builds | §9-F1 (22-00676543, 22-00559779) |
-| Bulk Edit/View **missing a required column** (Owner Sub) → save fails validation | Release collateral damage in 2023.04 | §10-G1 (23-00924854) |
-| **TEGs load to worksheet but never reach live** tables | Worksheet→live import gap | §10-G2 (22-00830146) |
-| Import errors "**GWI Bearer Group 1 does not exist**" but re-keying the same value saves | Grid-import validation quirk — re-key the cell | §10-G3 (25-01055290) |
-| Bearer-group Bulk Edit **PK violation with date breaks** | See Upgrade skill §7-D5 | (24-00965362, ADO #1687869) |
-| Need **PRD BAs copied into UAT** (Datayank) | Managed-Services scripted data load | §11-H1 (26-01068062, ADO #1778563) |
-| How to load **Mineral Answers** BA data | Standard BA loader path (not the A&D module) | §11-H2 (26-01112343) |
-| Well import fails "**Legal Description is required if in-house operated**" | Registered SQL `SELECT_VALIDATE_WC_LEGAL_DESC` validation | §11-H3 (24-00941844) |
-| Owner Lease Xref bulk load broken / replace-existing not working | Design Studio loader defects | S3 Cluster H (22-00823022, 22-00672538) |
-| Bulk edit / import-to-owners **times out** on big MGs | Too many lines pulled into edit screen | §12-I (22-00823946, 23-00884583) |
+| **22-00676543** "MRO - NRIs Loading as 0 With Import From Excel" (new DOI setup; random rows 0.00000000; see legacy 20-00080816) | DOI Setup detail grid | `Resolution__c`: "Included in upcoming release" ↔ ADO Bug **1322617** "APA - 2020.09 Build Upgrade - myQDO DOI Setup Screen Importing from Excel Sets Some Owner NRIs to 0" (Closed, tag **2021.04 hotfix 1** — CONFIRMED tag). WI history: "Excel stores small enough values as strings in scientific notation (i.e. 0.1e-5). this should be taken into account when parsing." |
+| **26-01103568** "Import From Excel Not Recognizing Small Decimals For DO Maintenance" (Software Defect) | DO Maintenance import | ADO Bugs **1813831**/**1813832** (project Quorum, Closed). Root cause from WI history (verbatim): "Calling `.ToString()` on a `double` like `0.00000001` produces `\"1E-08\"`… import paths with raw decimal properties… go through `Convert.ChangeType(\"1E-08\", typeof(decimal))` which uses `NumberStyles.Number` — no `AllowExponent` — so it throws a `FormatException`, the value silently defaults to 0, and the allocation total fails validation." Fix scheduled in **Upstream 2025.04 Hotfix – June 2026** (case feed, INFERRED). Repro: DO Maintenance → Import From Excel → rows with 8-decimal/tiny values → preview totals < 1.000000 → blocked. Happens whether the Excel column is numeric or text. |
+| **23-00924182** "PRD A1 TEST - DOI Worksheet not all decimals are importing" (Software Defect; ~50 owners' NRI blank) | DOI Worksheet import | `Resolution__c` (verbatim): "Added a property **'NRIDecMasked'** in `DSTGDoDetailDoEXT.cs` which controls the precision configuration for small number and set it on Import and export excel methods in DOIWorksheet Controller." |
+| **22-00676548** "DOI Detail Grid and Bearer Group Detail Grid Allowing Import and Manual Input of Decimals Passed Precision Config" (Software Defect) | Opposite direction — import bypassed the decimal-precision config | fix in release (2021-era); when auditing, check for detail rows whose decimal scale exceeds the client's precision config |
 
-## 9. Cluster F — DOI Worksheet / DOI Setup Excel-import decimal failures
+**Recipe:** (1) identify affected rows (values ≤ 1E-05 or scale > precision config); (2) check the client's build against the surface-specific fix above; (3) workaround pre-fix: format the Excel column so values don't serialize in scientific notation (pad to fixed 8-decimal text) or key the handful of tiny rows manually; (4) validate post-import totals sum to 1.0 per DOI.
 
-**F1 — Small decimals dropped.** SF `23-00924182` "PRD A1 TEST - DOI Worksheet not all decimals are importing" (Software Defect, Closed 2026-06-30): importing the worksheet left 50+ owners' NRI blank. Resolution (verbatim): *"Added a property 'NRIDecMasked' in DSTGDoDetailDoEXT.cs which controls the precision configuration for small number and set it on Import and export excel methods in DOIWorksheet Controller."* ADO **#1625151** "CNR - Web Grid Excel Loader in DOI Worksheet Fails On Small Decimals (23-00924182)" (Closed, tag `NOV 2022.04`): *"The web grid excel loader fails on decimals that are too small"*; WI notes the DB table supports 10 decimal places and the same loader also serves DOI Setup → DOI Owners → Actions → Import From Excel. Follow-up `24-00951251` "PRD A1 Hotfix - DOI Worksheet small decimals not importing" resolved as *"resolved in Camino January 24 Hotfix"* (fixed-in **INFERRED**). Legacy twins: `22-00676543` / `22-00559779` "NRIs Loading as 0 With Import From Excel" (MRO).
-**Recipe:** confirm the client build has the NRIDecMasked fix (G3 check first). Workaround pre-fix: format NRI cells as text/expanded decimals (no scientific notation) before import; spot-check the smallest decimals after load.
+## 6. Clusters H & I — Bulk edits that don't stick
 
-**F2 — Precision-config bypass.** ADO **#1727280** "25-01012855 - DOI Worksheet Ignores PRECISION set in global configurations" (Closed): worksheet accepted 10 decimal places while the global `PRECISION` config (core default 8) rounds DOI Setup to 8 — bulk-edit save now rounds per config. Legacy anchor `22-00676548` (MRO) — DOI Detail + Bearer Group grids allowed import/manual input past precision config.
-**Recipe:** mismatched NRI totals between Worksheet and Setup after imports → check `PRECISION` global config and the build's #1727280 status; re-foot after rounding.
+### H — Owner Lease Xref import (Design Studio)
 
-## 10. Cluster G — Bulk Edit/View grid defects
+- **22-00672538** "Importing Owner Lease Xref to Replace Existing Content Not Working" (Software Defect): export → change xref number → import with "Replace Content" → grid shows new value but **Save reverts to the old number**. Reproduced by support; "Engineering has a fix… included in your upcoming patch" (case feed, 2021 — INFERRED build). Retest recipe from the case: filter by both Property and Owner Number, export/import the agreement-number change, Save, requery.
+- **22-00823022** "Owner Lease Xref - Bulk Edit load does not work" (Software Defect, Design Studio) — same screen family, bulk-edit path.
+- S3 skill Cluster H covers the Owner-Lease-Xref import basics; this cluster adds the replace/save-revert defect lineage.
 
-**G1 — Missing Owner Sub column.** `23-00924854` "Build 2023.04 - UAT - DOI Worksheet Bulk Edit/View missing owner sub" (**Release Collateral Damage**): upload leaves Owner Sub blank → validation fails on return to the normal screen. Classify G3/version; cite the case; interim: key Owner Sub on the normal screen after upload.
-**G2 — Worksheet→live gaps.** `22-00830146` "TEGs not importing to live table from DO Worksheet" (closed No Action Taken): TEGs loaded to the worksheet but never imported to live. If seen again: verify the TEG rows in the workspace tables vs live `DONL_*`, then escalate with both row sets (this case died without a fix — don't assume resolved).
-**G3 — "Bearer Group does not exist" import quirk.** `25-01055290` "DOI Import UBT" (Customer Cancelled) — description shows the loop: import errors that GWI Bearer Group 1 doesn't exist; deleting it errors that non-working interests need a bearer group; **re-keying the same value over the imported cell** then saves clean. Known workaround, not a data problem. Duplicate: 25-01055296.
-**G4 — Misc anchors:** can't type/paste Agreement Number in DOI Setup Bulk View/Edit (22-00676537, Software Defect); "Value N exceeds maximum defined length" adding NRI via Bulk Edit (22-00698356, Customer Error — column-length data issue); External FT import spreadsheet requesting extra fields (22-00672533); External FT shouldn't require DO Type/Maj Prod on Bulk Edit (24-00937029, Closed-Deferred); DOI History Search multi-value filter breaks Excel export (22-00641176, Software Defect).
+### I — Bulk View/Edit defects
 
-## 11. Cluster H — External loaders & data-copy requests
+- **24-00965362** "MEW 2024.04 upgrade - Bulk Edit Not Functioning For Bearer Group Maintenance when Bearer Group details have date breaks" (Software Defect): replacing Bearer Decimal en masse produced adds/deletes instead of updates. Case feed splits it into **two tracked defects**: (1) *FK error on Bearer Group bulk edit* — Medium, approved for the **2025.10 GA release**; (2) *Bearer Percent decimal rounding on copy/paste* — High, fixed in the next engineering sprint on **2024.04** (tested OK in UAT 2024-12; both builds INFERRED).
+- **22-00676537** "MRO myQuorum DOI Setup - Unable to Type or Paste the Agreement Number Within Bulk View Edit Screen" (Software Defect) — input-lock defect on bulk view/edit.
+- **23-00884583** / **22-00823946** "System Time Delays/Maintenance Bulk Edit/Import to Owners" (Software Defect) — bulk-edit + import performance/time-out family (pair with S2 performance cluster).
+- **22-00641176** "DOI History Search - Filtering On Multiple Records Values Within A Single Column Breaks Excel Export" (Software Defect) — the export side of the same grid stack.
+- **22-00672533** "Import Spreadsheet Requesting Addt'l Fields on External Funds Transfer Screen" (Software Defect) — EFT import template demanded fields it shouldn't.
 
-**H1 — Datayank (PRD→UAT data copies).** `26-01068062` "Datayank new PRD Business Associates for insert into UAT" (App Config, Closed 2026-03-20). Resolution (verbatim): *"Created the necessary scripts to add required BA data. Ref ADO WI 1778563 for the scripts."* ADO **#1778563** (project **QuorumServices\Managed Services**, Resolved) holds the reusable scripts.
-**Recipe:** these are Managed-Services scripted loads, not defects — reuse the WI 1778563 script pattern; verify BA keys don't collide in the target env.
-**H2 — Mineral Answers.** `26-01112343` "Import Data from Mineral Answers" (App Config, Closed 2026-08-14): client asked how to load Mineral Answers BA data; guidance was the standard BA loader used by other clients — explicitly *"not the A&D module"* (case description). No defect; route as a services/how-to with S3's BA-interface knowledge.
-**H3 — Well import validation.** `24-00941844` "Well Import Load Issue" (App Config). Resolution (verbatim, condensed): templates loaded clean except one failing *"Legal Description is required if in-house operated"*; fix was *"to disable the registered SQL `SELECT_VALIDATE_WC_LEGAL_DESC` by adding 'AND 1=-1' to the end."*
-**Recipe:** the disable-a-registered-SQL-with-`AND 1=-1`" pattern is the standard soft-off switch for optional validations — record which Reg SQL was touched in the case.
-**H4 — Owner Lease Xref loader** (22-00823022 "Bulk Edit load does not work", Software Defect; 22-00672538 "Importing Owner Lease Xref to Replace Existing Content Not Working", Software Defect) → deep dive lives in **S3 Cluster H**; keep anchors here for routing.
-**H5 — Loader security:** "Security Role Unable to Access Bulk Modify Loader" (22-00676439, Customer Error) and "Error on Bulk Modify Loader" (22-00676492, Customer Error) — check loader security objects/roles before debugging the loader.
+**Recipe:** for any "bulk edit didn't save / mangled rows" report: capture the exact grid + operation (update vs add/delete), row-count and whether date breaks exist on the target records; search ADO for the grid name — this family is heavily pre-logged; check build vs the fixed-in trains above before filing new.
 
-## 12. Cluster I — Bulk-operation performance
+## 7. Cluster J — External data loads (Mineral Answers, Datayank, well import)
 
-`22-00823946` and re-open `23-00884583` "System Time Delays / Maintenance Bulk Edit / Import to Owners / time-outs selecting funds" (both Software Defect): an MG with too many lines (case text: *"it appears to be too many lines of data to pull into the edit screen before time out"*) can't get past the New Transaction screen. Workaround: split the maintenance into smaller MGs / fewer owners per transaction; escalate with the MG number and row counts if splitting is unacceptable. Related mass-transfer chunking fix: ADO #1651746 (see Upgrade skill §7-D3).
+- **26-01112343** "Import Data from Mineral Answers" (Application Configuration): client asked for "a loader their other clients use… not the A&D module." Support outcome: no standard product loader confirmed; request routed toward the **Services team** (case feed). Answer template: BA data loads from third-party sources are a Services/Datayank engagement, not a product feature.
+- **26-01068062** "Datayank new PRD Business Associates for insert into UAT" (Application Configuration): client created BAs in PRD, refused a PRD→UAT refresh (would wipe a patch under test). `Resolution__c`: "Created the necessary scripts to add required BA data. Ref ADO WI **1778563** for the scripts" (Bug, Resolved, `QuorumServices\Managed Services`). Pattern: targeted datayank + QCloud deployment script instead of full refresh.
+- **24-00941844** "Well Import Load Issue" (Application Configuration) — well-master import config family.
 
 ---
 
-## 13. Known ADO Items (both sections)
+## 8. Expected-Behavior / User-Education FAQ
 
-| ADO WI | Title (condensed) | State | SF anchor | Notes |
-|---|---|---|---|---|
-| #1622910 | "No default market rep found" warning on converted dummy DOIs | Closed 2025-10-22 | 23-00918228, 26-01064806 | reworded, REV-only; Robot RN 2026.04 (INFERRED fixed-in) |
-| #1739512 | Invalid combining-interest warnings (RADOITRW58/59) | Closed | 25-01027179 | part of #1622910 family |
-| #1723387 | Error on JIB DOI MG approve (endpoint) | Closed | — | `EndpointInfoResolver` MT config; related #1732619 DOINTXWRK failure |
-| #1397799 | AFE_SYNCDO fails to launch on JIB DOI XFER | Closed | — | MergedToDevelop; 2022.04 retest tag |
-| #1625151 | Web grid Excel loader fails on small decimals | Closed | 23-00924182 | tag NOV 2022.04; also DOI Setup import path |
-| #1727280 | DOI Worksheet ignores PRECISION global config | Closed | 25-01012855 | bulk-edit save rounds per config |
-| #1687869 | Bearer bulk edit date breaks → PK violation | Closed | 24-00965362 | see Upgrade skill §7-D5 |
-| #1778563 | Datayank PRD BAs → UAT (scripts) | Resolved | 26-01068062 | QuorumServices\Managed Services |
-| S4 set | AP055/GL025/JB020/AFEEXTIMP DOI-validation bugs | — | — | see SKILL_ADO_QDO_DivisionOrder_Transfers.md |
+- **"Why does a JIB Offset owner force Pay Reason 5-Pay Regardless?"** Product rule: JIB-offset owners are set to pay regardless so offsets always settle; side effect is bypassing the minimum-suspense ($100) check. Recurring client complaint (26-01094960, prior 23-00878496) — no config exposed to change it; log as Enhancement if the client insists.
+- **"Can we backdate a JIB deck?"** Yes — but only after the backdate pick registered SQL (`SELECT_DONL_DO_PROP_BACKDATE_PICK`) includes JIB; out of the box BD006 may list only REV decks (26-01118522).
+- **"Why did my tier number change to 1?"** Auto-numbering is the default; manual tier numbers need `CAN_CHANGE_TIER_VALUE` / `CAN_CHANGE_TIER_JIB_VALUE` enabled (25-01043348).
+- **"The transfer warned about market rep / fatal error but everything looks fine."** On JIB DOIs those warnings (RADOITRW58/59) are invalid noise in pre-fix builds — verify the combine result, then ignore (26-01064806, ADO 1622910/1739512).
+- **"Exactly one JIB Base tier per property"** — both the error demanding it everywhere and silent approval with none are known defect states, not the rule itself (ADO 1618171/1639565).
 
-## 14. Diagnostic SQL (label `NOT YET RUN` without a live metadata connection)
+---
+
+## 9. Known ADO Items
+
+| WI | Type/State | Title (verbatim) | Fixed-in |
+|---|---|---|---|
+| **1618171** | Bug, Closed | CNR, MEW - Cannot save JIB DOI without JIB Base Flag checked | tags `SEPT 2022.04; OCT 2022.04` (CONFIRMED tags) |
+| **1639565** | Bug, Closed | CNR - JIB Base Flag Fix Still Does Not Work | follow-up to 1618171 |
+| **1739512** | Bug, Closed | MEW - Invalid Warning Messages About Combining Interest (25-01027179) | Nov-hotfix wording fix; market-rep REV-only in 2025.04 (INFERRED) |
+| **1622910** | Bug, Closed | 23-00918228--No default market rep found warning message on converted dummy DOIs for Revenue Suspense | tag `Robot RN 2026.04` (INFERRED) |
+| **1837136** | Bug, Closed (project Quorum) | REP 2024.10 - Cost Center Last No does not correctly update in code table QARCH_TRAN_SEQ | release-noted (INFERRED) |
+| **1322617** | Bug, Closed | APA - 2020.09 Build Upgrade - myQDO DOI Setup Screen Importing from Excel Sets Some Owner NRIs to 0 | tag `2021.04 hotfix 1` (CONFIRMED tag) |
+| **1813832 / 1813831** | Bugs, Closed (project Quorum) | MEW - QDO - Import From Excel Not Recognizing Small Decimals For DO Maintenance - 26-01103568 | Upstream 2025.04 Hotfix – June 2026 (INFERRED, case feed) |
+| **1778563** | Bug, Resolved (QuorumServices\Managed Services) | 26-01068062--Datayank new PRD Business Associates for insert into UAT | scripts delivered |
+
+---
+
+## 10. Diagnostic SQL
+
+Verify all table/column names via the metadata server before running; SELECT before UPDATE, in a transaction. Items marked NOT YET RUN are templates derived from case text.
 
 ```sql
--- B1: does the backdate picklist include JIB? (registered SQL text)
-SELECT * FROM <registered_sql_table> WHERE SQL_ID = 'SELECT_DONL_DO_PROP_BACKDATE_PICK';  -- verify reg-SQL store name on build
+-- A. Cost-center numbering drift (code table 29111; ADO names it QARCH_TRAN_SEQ)  [NOT YET RUN]
+-- Compare the code table's "Last No" against the true max cost-center number.
+-- UI path (CONFIRMED workaround, 26-01111459): Maintenance > Code Table Value Editor
+--   > code table ID 29111 > set "Last No" = actual last used number > Update.
 
--- B2: tier-edit configs
-SELECT * FROM <global_config_table> WHERE CONFIG_NM IN ('CAN_CHANGE_TIER_VALUE','CAN_CHANGE_TIER_JIB_VALUE','PRECISION');
+-- B. JIB base-flag audit: exactly one base tier per property  [NOT YET RUN]
+-- SELECT PROP_NO, COUNT(*) FROM <DONL DO header table>
+-- WHERE DO_TYPE_CD='JIB' AND <JIB base flag column>='Y'
+-- GROUP BY PROP_NO HAVING COUNT(*) <> 1;
 
--- D3: JIB offset staging vs BA screen
-SELECT TOP 25 * FROM DSTG_SAP_JIB_OFFSET ORDER BY 1 DESC;   -- compare against BA JIB-netting values
+-- C. Backdate pick: inspect registered SQL SELECT_DONL_DO_PROP_BACKDATE_PICK
+--    (metadata server > registered SQL) and confirm JIB DO types are included
+--    (CONFIRMED fix vector, 26-01118522).
 
--- F1: post-import decimal audit — smallest NRIs that should exist
-SELECT TOP 25 PROP_NO, TIER, FROM_BA_NO, NRI_DEC
-FROM DONL_DO_DETAIL WHERE NRI_DEC IS NULL OR NRI_DEC = 0;    -- candidates for dropped-decimal import rows
-
--- H3: the soft-off validation pattern (find validations disabled with AND 1=-1)
-SELECT SQL_ID FROM <registered_sql_table> WHERE SQL_TEXT LIKE '%AND 1=-1%';
+-- D. Import-decimal audit after an Excel load  [NOT YET RUN]
+-- SELECT <owner cols>, NRI_DEC FROM <DONL_DO_DETAIL>
+-- WHERE <deck keys> AND (NRI_DEC = 0 OR NRI_DEC < 0.0001)
+-- ORDER BY NRI_DEC;  -- compare against the source spreadsheet rows
 ```
-*(Table names from case/ADO text; verify against the client DB and run SELECTs in a transaction first.)*
 
-## 15. Expected-Behavior / FAQ
+Config keys referenced (CONFIRMED in cases): `CAN_CHANGE_TIER_VALUE`, `CAN_CHANGE_TIER_JIB_VALUE` (25-01043348). Security objects/processes: `ORGCOSTGEN` (25-01042097), `ORG/BTYP/QRA` (25-01048054). Code tables: **29100** default market rep (ADO 1622910/1739512), **29111** cost-center sequence (26-01111459 / ADO 1837136).
 
-- **"Why must a JIB Offset owner be 5-Pay Regardless?"** JIB netting needs the owner payable so revenue can offset billing; minimum-suspense thresholds would strand the offset. Small checks are the known trade-off (23-00878496, 26-01094960). Flag as Enhancement if the client wants threshold-aware netting.
-- **"Can we backdate a JIB deck?"** Yes — it's a picklist configuration (§4-B1), not a product limitation.
-- **"JIB decks don't show in Maintenance Group Creation."** Three closed no-action cases (26-01087387, 26-01083172, 26-01069321) — verify DOI type filters, approval status, and effectivity dates before logging a defect.
-- **"Import from Excel says my Bearer Group doesn't exist."** Re-key the flagged cell(s) over the imported value and save (25-01055290) — known grid quirk.
-- **"Fatal Error warning on JIB transfer"** — cosmetic on JIB DOIs; see §3-A before alarming the client.
-- **Cost-center renumbering / code standards** questions are usually process questions (Training) — 26-01098849, 26-01092858, 23-00913910.
+---
 
-## 16. Escalation
+## 11. Escalation
 
-- JIB warning/message defects and worksheet-import defects: `QuorumSoftware\Engineering\Revenue\Committed Backlog` or `...\Maintenance\Upstream\Professional Services\Revenue`; include the exact warning code (RADOITRW58/59), MG number, DOI type (JIB/REV), and build.
-- Endpoint/launch failures (§7-E2): environment/MT config first — attach the `EndpointInfoResolver` log block from `Quorum.Upstream.QDO.Application.MiddleTier` before any code escalation.
-- Data loads (Datayank/Mineral Answers): route to Managed Services (`QuorumServices\Managed Services`), citing WI #1778563 as the script precedent.
-- Financials crossover validations (AP055/GL025/JB020): escalate per **S4** to `QuorumSoftware\Engineering\Financials`.
+- **Config/security fixes** (tier configs, backdate reg SQL, ORGCOSTGEN, ORG/BTYP/QRA, code table 29111 Last No): applyable by support/Managed Services with client approval; document key, table, value, and whether QPEC/cache refresh is needed.
+- **Code defects:** search ADO first — every import-decimal and JIB-base-flag symptom above already has a closed bug; answer with fixed-in build where possible. New defects: project `QuorumSoftware` (areas `Engineering\Revenue\Committed Backlog`, `Engineering\Maintenance\Upstream\…\Revenue`) or project `Quorum` (`North America\Upstream\myQ Accounting RnD` for newer CC/import bugs). Title convention: client prefix + SF case number.
+- **External data loads** (Mineral Answers, PRD→UAT datayank): route to Services / Managed Services (`QuorumServices\Managed Services`), reference WI 1778563 as the delivery pattern.
+- **AP055/GL025/JB020 DOI-validation escalations:** `QuorumSoftware\Engineering\Financials` per `SKILL_ADO_QDO_DivisionOrder_Transfers.md`.
+
+---
 
 *Investigated by Auto-Bot — the L4 issue solver built by Aditya Bhagat. Line numbers verified against live source; re-baseline against the client's build branch before coding.*

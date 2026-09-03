@@ -1,11 +1,11 @@
 # SKILL: QDO Upgrade / Patch / Hotfix Regressions & Environment Availability
 
-**Version:** 1.0 | **Created:** 2026-09-02 | **Product:** My Quorum Division Order (QDO)
-**Built by Auto-Bot — the L4 issue solver by Aditya Bhagat.**
-**Scope:** Everything that breaks *because a build moved* — upgrade-UAT waves (Build 2023.04 / MEW 2024.04 / 2025 Upgrade / 2025.04), monthly Upstream patches and hotfixes (Patch 11/12, Patch 71, "October '25 2023.04 Hotfix"), post-refresh/mock-cutover environment drift (PRD A1 / UAT / DEVA1), classic-vs-web parity regressions, and the patch/hotfix request-and-deploy workflow itself. Companion skills: S1 `SKILL_QDO_Division_Orders.md` (feature mechanics), S2 `SKILL_QDO_Transfers_SuspendRelease.md` (transfer internals), S3 `SKILL_QDO_Platform_Integration.md` (BA web screens, security), S4 `SKILL_ADO_QDO_DivisionOrder_Transfers.md` (ADO defect reference).
+**Version:** 1.0 | **Created:** 2026-09-03 | **Product:** My Quorum Division Order (QDO) — `Product_list__c = 'My Quorum Division Order'`
+**Scope:** Everything that breaks *because a build changed* — version upgrades (classic desktop → myQDO Web, 2021.04 → 2025.04 trains), monthly hotfixes, numbered patches, post-refresh/cutover config drift, web-widget outages (404 / "Something went wrong"), UAT/build-test regressions, and hotfix delivery/deployment mechanics. Covers coverage-plan group **G4** (~62 actionable cases).
+**Companion skills:** `SKILL_QDO_Division_Orders.md` (DOI/MG functional detail), `SKILL_QDO_Transfers_SuspendRelease.md` (transfer/OFR pipeline), `SKILL_QDO_Platform_Integration.md` (BA web screens, security groups, eSuite), `SKILL_ADO_QDO_DivisionOrder_Transfers.md` (ADO defect reference for DOI-validation crossovers).
 
-> **Evidence base:** all-history mining 2026-09-02, coverage-plan group G4 (~62 actionable). SOQL sample: 70 closed `upgrade/patch/hotfix/deploy` cases + 25 `MEW/2023.04/2025.04/404/widget/environment` cases, Root_Cause__c IN (Software Defect, Application Configuration, ChangeConfig), newest-first; 16 deep-read (Description + Resolution__c); ADO confirmations via `search_workitem`/`wit_work_item` (org QuorumSoftware). Every claim cites a verbatim SF case number or ADO work item ID. Fixed-in builds are **INFERRED** from ADO history unless the WI states the merge explicitly.
-> **Client-prefix vocabulary seen in this cluster:** MEW (Mewbourne), GEC/Gulfport, TEP, PNR, APA, MRO, CNR, SPR — subjects routinely carry `<CLIENT> <version> Upgrade - ...`.
+> **Evidence base:** 75 closed actionable cases sampled newest-first (3 × LIMIT 25 pages, `Root_Cause__c IN ('Software Defect','Application Configuration','ChangeConfig')`, subject keywords upgrade/patch/hotfix/MEW/2023.04/2025.04/deploy/widget/404), plus full Description/Resolution and case-feed deep-dives on 12 of the richest. Every claim cites a verbatim SF case number and/or ADO work item ID. Fixed-in builds are **INFERRED** from case-feed/tag text unless marked CONFIRMED.
+> **PII:** individual names redacted; 3-letter client prefixes (MEW, APA, REP, PNR, GEC, GLE, CNR) retained as they identify orgs, not persons.
 
 ---
 
@@ -13,162 +13,214 @@
 
 | Symptom | Likely cause | Go to |
 |---|---|---|
-| QDO **web widgets fail with HTTP 404** after a refresh / mock cutover (PRD A1) | QDO URL in `QARCH_EXTERN_APP_SETUP` set wrong by Post-Refresh Scripts | §4-A1 (26-01068541) |
-| "The **patch dropped our configuration**" | Almost always an *isolated* metadata regression, not a bulk drop — find the one screen/report affected | §4-A2 (24-00980918 / 24-00981048) |
-| Report parameter **LOV missing** after applying a patch (e.g. Template Type on a Consolidated Exhibit-A) | Patch overwrote report-parameter metadata (Text vs LOV) | §4-A2 (24-00981048 — SQL metadata script) |
-| Button does nothing + middle-tier log `Exception has been thrown by the target of invocation` after a hotfix | **Bad/partial hotfix deployment** — redeploy the hotfix before debugging | §4-A3 (25-01053966) |
-| Client PRD metadata missing from next patch | PRD metadata never merged to the metadata repo — request a metadata compare/merge | §4-A4 (26-01084575) |
-| Field editable in **classic but read-only in web** (e.g. Historical DOI #) | Classic/web parity gap: web still checks a retired security object | §5-B1 (25-01031226, ADO #1743552/#1713922) |
-| **Cannot save a BA in web** after upgrade (zip/state/precision) | Web BA screen forces US zip/state format; separate decimal-precision save defect | §5-B2 (24-00987114; ADO #1614286) |
-| **Cannot delete a pending Maintenance Group** that has no data (post-2024.04) | Web defect — delete blocked for empty MGs | §6-C1 (25-01002719, ADO #1715622) |
-| MG Creation screen **retains data / reuses the previous MG number** | Regression: new group requires re-Retrieve; screen doesn't clear | §6-C2 (26-01067775, 25-01057971; ADO #1775211) |
-| Upgrade-UAT transfer w/ funds release: `Column 'OrigBusUnitCode' does not allow DBNull.Value` | Copy/paste defect in a Sept-2022 enhancement (wrong column mapped) | §7-D1 (23-00927336) |
-| Preview fails `DELETE ... conflicted with ... FK_DONL_DVD_MKT_EXMPT__DONL_DVD_DO_DETAIL` | Obsolete tables left behind by the upgrade — truncate them | §7-D2 (23-00933603) |
-| Mass transfer across multiple effective-date ranges errors on Preview (`Old owner not in DO`) | Chunking-logic defect on large (1,000+ DOI) transfers | §7-D3 (ADO #1651746) |
-| Excel **export of DOI Search ≠ DOI Setup** | Export not filtered by inquiry date on `DonlDoDetail` | §7-D4 (25-01000684, ADO #1711287) |
-| Bearer-group Bulk Edit fails w/ `PK_DONL_DVD_BEARER_GRP_DETAIL` violation when date breaks exist | Bulk edit tries add/delete instead of update | §7-D5 (24-00965362, ADO #1687869) |
-| `Not Authorized to access security object` on many screens right after upgrade | New-version security objects not granted; validation review needed | §7-D6 (23-00933550/23-00933549; U_DO_MAINT ADO #264870) |
-| "Please deliver hotfix X for version Y" (no defect) | **Hotfix-logistics case** — track request → build → deploy; not an investigation | §8-E |
+| QDO web widgets fail with **HTTP 404** or "Something went wrong" after a refresh / mock cutover / patch | `QARCH_EXTERN_APP_SETUP.TARGET_EXE` URL wrong (post-refresh scripts set it to the wrong env), needs QPEC restart | §4 Cluster A |
+| One user's widget still errors after the URL fix | User missing the widget's security-group assignment (e.g. group **95000** = New Business widget) | §4 Cluster A |
+| After upgrade, Maintenance Group Creation screen keeps old data; re-clicking "Create Maintenance Group" flips an **approved MG to 5-Error** and reuses the old group number | UI controller caches `DonlDvdGrp`; WRKSPC re-runs on the existing approved group (ADO Bug **1775211**) | §5 Cluster B |
+| MG creation flow "different in Live vs Test" — goes straight to the maintenance wizard | **Expected behavior**: intentional 2024.04 workflow change (release notes) | §9 FAQ |
+| MG stuck "Submitted for approval" with no transactions; can't delete or revert | Code defect — deleting empty MGs was blocked; code fix delivered | §5 Cluster B |
+| Post-upgrade MG/DOI maintenance takes 15+ minutes on large owner counts | Known perf defects on 2024.10 web (ADO **1756914**, **1668275**, **1673532**) | §5 Cluster B |
+| Field editable in classic DO006 but **read-only in web DOI Setup** (e.g. Historical DOI #) | Web parity gap; fix gated by security action `DOI_EDIT_APPROVED_MASTER_DATA` | §6 Cluster C |
+| Custom report / report parameter LOV missing after patch (e.g. QP088, Exhibit-A "Template Type") | Missing metadata for the parameter picklist in global metadata tables — isolated config, script fix | §7 Cluster D |
+| "Did the patch drop our configs?" | Patch 71 case: isolated single-parameter issue, **not** bulk config loss | §7 Cluster D |
+| OFR jobs not moving monies right after cutover to web | Web-QDO flip configs overwritten: `RUN_WINFORM_CALC_FOR_RSTG`, `DISABLE_CLASSIC_SCREEN` must be 1 | §7 Cluster D |
+| Funds-only MG "Retrieve" button dead + middle-tier log "Exception has been thrown by the target of invocation" after hotfix | Bad/partial hotfix deployment — redeploy the hotfix | §7 Cluster D |
+| Funds didn't auto-populate in MGs after go-live | Missing **ODBC driver** on new server → JE100 OFR records not flowing; install driver + script stuck records to error + rerun in JE100 | §8 Cluster F |
+| 2023.04 UAT: Modify-with-funds errors `Column 'OrigBusUnitCode' does not allow DBNull.Value` | Build defect (copy/paste column bug from a Sept-2022 enhancement) — code fix | §8 Cluster E |
+| 2023.04 UAT: MG preview fails `DELETE ... conflicted with FK_DONL_DVD_MKT_EXMPT__DONL_DVD_DO_DETAIL` | Obsolete tables left populated — script to truncate 2 unused tables | §8 Cluster E |
+| 2023.04 UAT: mass transfer across multiple effective-date ranges errors on Preview ("Old owner not in DO") | Chunking defect in DOINTXFRWB mass transfer — code fix (chunk remainder now saved in subsequent transaction) | §8 Cluster E |
 
 ---
 
-## 2. Upgrade landscape & concepts
+## 2. Concepts — how QDO upgrades & patches work
 
-- **Release trains:** on-prem/hosted QDO clients sit on year-versions (`2021.04`, `2022.04`, `2023.04`, `2024.04`, `2024.10`, `2025.04`, `2026.04`). Fixes land in `develop` + the *hotfix branches* of supported versions (pattern confirmed in ADO #1713922: "merged to develop and hotfix branches of release versions 2023.04, 2024.04 and 2024.10").
-- **Patches vs hotfixes:** monthly **Upstream Patch N** bundles (e.g. "Upstream Patch 11 & 12", "Patch 71") and named **hotfixes** ("October '25 2023.04 Hotfix", "March 2025 Hotfix for 2023.04" — 25-01000688). A patch can fail Quorum testing and be superseded (Patch 11 failed → go straight to Patch 12, 26-01068283).
-- **Environments:** `PRD A1` (production), `UAT` / `UAT2`, `DEVA1` (e.g. `MEWU_HD_DEVA1`), plus Citrix and QCloud fronts. Mock cutovers run **Post Refresh Scripts** that rewrite environment-specific config — a classic source of post-refresh breakage (§4-A1).
-- **Upgrade-UAT waves:** each client upgrade generates a burst of `"<CLIENT> <version> Upgrade - ..."` / `"Build 2023.04 - UAT - ..."` cases. Most are (a) web-vs-classic parity gaps, (b) config/security not carried forward, (c) genuine new-version defects. Classify each individually — do not blanket-blame the upgrade.
-- **Classic vs Web:** the recurring root-cause *shape* in this cluster is "behavior changed in classic, matching change never made in web" (25-01031226) or "web screen enforces stricter formats than classic" (24-00987114).
+- **Version trains:** 2020.09 → 2021.04 → 2022.04 → 2023.04 → 2024.04 → 2024.10 → 2025.04 → 2025.10/2026.04. Clients upgrade infrequently; each train gets **monthly hotfixes** ("October 2025 Hotfix for 2023.04 Version", 25-01045796) and cumulative **numbered patches** ("Patch 5", "Patch 8", "Patch 71", "Upstream Patch 11 & 12").
+- **Classic vs Web:** upgrades from desktop ("classic") QDO to **myQDO Web** produce a distinct regression family — field-permission parity, screen workflow changes, widget/URL config. Env naming: `<CLIENT>U_HD_DEV17` = classic-version env, `<CLIENT>U_HD_DEVA1` = web env (observed: MEWU_HD_DEV17 vs MEWU_HD_DEVA1 in 25-01003450 feed). Client tiers: DEV / UAT / UAT2 / UBT / **PRD A1**.
+- **Delivery mechanics:** hotfixes are packaged per client-version and uploaded to the client **FTP** site (25-01045796). If the client never promoted the previous patch to PRD, the new hotfix must be **repackaged and redeployed** (25-01045796 internal note). A fix "delivered in the March hotfix" for one train may be *deliberately not backported* if the client has an active upgrade (25-01027179 feed: fix rides the 2025.04 upgrade instead).
+- **Fix-in-version answers:** support quotes "included in Patch N" / "in the <month> hotfix" / "in the 2025.10 GA release" — treat all as **INFERRED** fixed-in until verified against release notes (`community.quorumsoftware.com/s/release-notes`) or ADO tags (`Robot RN 2026.04`, `2021.04 hotfix 1`, `UpsPerfHotfixed`).
+
+---
 
 ## 3. Decision Tree
 
 ```
-Case mentions upgrade/patch/hotfix/refresh?
-├─ Environment-wide outage or 404s right after refresh/cutover?
-│    └─ YES → §4-A1 post-refresh config drift (QARCH_EXTERN_APP_SETUP first)
-├─ Worked before patch, broken after, ONE screen/report?
-│    ├─ Metadata/LOV/parameter → §4-A2 patch metadata regression (script fix)
-│    └─ Button dead + MT "target of invocation" → §4-A3 redeploy the hotfix
-├─ Web behaves differently from classic on same build?
-│    └─ §5 parity regression (check config vs security-object pairs)
-├─ Maintenance-Group lifecycle broken post-upgrade?
-│    └─ §6 (delete-empty-MG, retained data / reused MG number)
-├─ Upgrade-UAT functional error with a hard DB message?
-│    └─ §7 known Build-2023.04/2024.04 defect family — match the error string
-└─ No defect at all — client asking for a patch/hotfix delivery?
-     └─ §8 logistics workflow (Root_Cause__c = Application Configuration)
+Symptom appeared right after an upgrade / patch / refresh?
+├─ Widgets or whole web app erroring (404, "Something went wrong")
+│   ├─ All users affected → QARCH_EXTERN_APP_SETUP URL wrong → Cluster A
+│   └─ One user only → widget security-group assignment → Cluster A (secondary)
+├─ Screen behaves differently than the old version
+│   ├─ Check release notes first (2024.04 MG-wizard change is INTENTIONAL) → FAQ §9
+│   ├─ Field read-only in web but editable in classic → Cluster C
+│   └─ Data retained / status corrupted on re-use → Cluster B (ADO 1775211)
+├─ Report / LOV / config missing after patch → Cluster D (metadata script, not bulk loss)
+├─ Batch/funds pipeline dead after cutover → configs (Cluster D) or infra/ODBC (Cluster F)
+└─ Errors only in the upgrade-UAT build (2023.04-style) → Cluster E (log to engineering;
+    most have existing closed ADO bugs — search before filing)
 ```
 
 ---
 
-## 4. Cluster A — Post-refresh / post-deploy environment drift (G2 config)
+## 4. Cluster A — Web widgets fail after refresh / cutover (404, "Something went wrong")
 
-**A1 — Web widgets 404 after mock cutover.** `26-01068541` "QDO Web Widgets in PRDA1 are failing on HTTP 404 error" (App Config, Closed 2026-03-06). Case description (verbatim): *"It looks like the QDO URL in QARCH_EXTERN_APP_SETUP may have been incorrectly set by the Post Refresh Scripts from mock cutover."*
-**Recipe:** verify the QDO web-app URL row in **`QARCH_EXTERN_APP_SETUP`** against a working environment; correct the URL; recycle/refresh cache. Whenever an environment was just refreshed, audit *all* Post-Refresh-Script outputs (URLs, endpoints, interface configs) before debugging application code.
+**Signature:** After an environment refresh, mock cutover, or patch, QDO web dashboard widgets (Owner/DOI Search, Pending DOI, New Business) return HTTP 404 or the generic "Something went wrong" banner.
 
-**A2 — "Patch dropped configuration".** `24-00981048` (App Config): after Patch 71 on PNR PRD, the Template Type parameter LOV was missing on the PNR Consolidated Exhibit-A report. Resolution (verbatim): *"SQL script provided to modify the metadata in order to change the Template type parameter from a Text field to a drop-down (LOV) field."* Companion case `24-00980918` "Did Patch 71 Drop Configuration Changes" concluded (verbatim): *"…an isolated issue… There should not be any other dropped/missed/changed configurations in bulk because of the Patch 71."*
-**Recipe:** scope the complaint to the specific screen/report; diff its metadata vs pre-patch backup; script the single correction. Reassure the client bulk config is intact unless evidence says otherwise.
-
-**A3 — Dead button after hotfix ⇒ redeploy first.** `25-01053966` "Possible October hotfix issue - funds only MG query does not work" (App Config): Retrieve button in a funds-only MG did nothing; middle-tier log showed `Exception has been thrown by the target of invocation`. Resolution (verbatim): *"The customer redeployed the hotfix, and everything worked as expected."*
-**Recipe:** when a *just-hotfixed* environment throws reflection/invocation errors, suspect a partial deployment; redeploy the hotfix before any code investigation.
-
-**A4 — PRD metadata not merged into the patch stream.** `26-01084575` "Merge PRD metadata into next patch" (App Config): TEP PRD metadata was never merged to the metadata repo; Services performed a metadata compare of PRD vs repo and merged what had to be preserved for Patch 12.
-**Recipe:** if a client hand-configured PRD, schedule a **metadata compare + merge** before each patch so the patch doesn't roll their config back.
-
-## 5. Cluster B — Classic-vs-Web parity regressions
-
-**B1 — Historical DOI # not editable in web.** `25-01003450` → follow-up `25-01031226` (both Software Defect; ADO **#1713922** and **#1743552**, both Closed). Root cause per SF resolution (verbatim, condensed): classic was changed to drive editability *only* from config **`EDIT_APPROVED_MASTER_DATA`**, dropping the security object **`DOI_EDIT_APPROVED_MASTER_DATA`** — *"While this change was made in classic application, the matching change was not made in the web application."* Fix: web now keys `Historical DOI #` and `Tier Description` read-only/editable purely off `EDIT_APPROVED_MASTER_DATA`. ADO #1713922 history: *"All the commits are merged to develop and hotfix branches of release versions 2023.04, 2024.04 and 2024.10"* (fixed-in those hotfix streams — CONFIRMED from WI history; specific build numbers INFERRED).
-**Diagnostic pattern:** any "certain users can edit in classic but not web" → list the config + security-object *pair* controlling the field; check whether one side of the pair was retired.
-
-**B2 — BA save failures in web after upgrade.** `24-00987114` "MEW 2024.04 Upgrade - Zip code and state code issue when trying to save BA in the web" (App Config): web BA screen (1) forces US zip format for non-US/CA countries, (2) rejects alpha zips, (3) forces a State code even where the country has none. Related earlier defect ADO **#1614286** "MEW - 2023.04 - Cannot Update a BA in the Web screen" (Closed): fixed by *"PR 88123: Correct Precision issue during BA save"*, shipped as **Quorum.ESUITE.Web → 17.30.3** on the 2023.04 hotfix branch. Deep zip/state/1099 mechanics live in S3 (BA master-data web screens) — use this cluster only for the *upgrade-regression* framing.
-
-**B3 — Web grid cosmetics/usability regressions.** ADO **#1693900** "24-00985406 - MEW 2024.04 Upgrade - Picklists that contain a checkbox with is true/is false filter are causing unnecessarily tall filter bars" (Closed) — a Kendo-grid regression touching a documented list of QDO web picklists (Property, DOI Setup, Bearer Group, DOI Copy, UTT, DOI Search, Maintenance Group, BA Contact). Merge-back to 2024.04/2024.10/2025.04 was discussed in the WI (**INFERRED**, not confirmed). Cosmetic — classify Software Defect, low priority, cite the WI.
-
-## 6. Cluster C — Maintenance-Group lifecycle regressions after upgrade
-
-**C1 — Cannot delete an empty pending MG.** `25-01002719` (Software Defect; ADO **#1715622** "Unable to delete a Pending Maintenance Group that does not have any data", Closed, tag `not 2026.04 Ups`). SF resolution: *"Update the code to enable the deleting of Maintenance Groups that do not have any data."*
-**C2 — MG Creation screen retains data / reuses MG number.** Cases `26-01067775` "UPGRADE- Maintenance Group Creation Error" (screen retains top+bottom data, Check-All can't be unchecked, users must exit to reset) and `25-01057971` "2025 Upgrade - Maintenance Group Creation Test vs Live" (both Software Defect). ADO **#1775211** "MEW UPS QDO - Maintenance Group Creation Retrieve Required for New Group Number - 26-01063731" (Closed, iteration 26.04, Found-In set to 2024.04; also reported by Gulfport in 2025.04 upgrade testing): reusing the tab without re-Retrieve keeps the **previous approved MG number** instead of generating a new one — wrong group gets modified. Fixed-in 2026.04 (Robot RN 2026.04 tag — **INFERRED**).
-**Recipe:** interim workaround — always exit/reopen MG Creation (or re-Retrieve) between consecutive groups; verify the MG number changed before adding transactions.
-**C3 — Funds-only MG Retrieve dead** → that is §4-A3 (redeploy hotfix) — check deployment before logging a defect.
-
-## 7. Cluster D — Upgrade-UAT defect wave (Build 2023.04 / 2024.04 families)
-
-**D1 — `OrigBusUnitCode` DBNull on Transfer/Modify with Funds Release.** `23-00927336` (Software Defect). Error (verbatim from subject): *"Table DtrnOwnrFundRls Errors: Row(-1): Column 'OrigBusUnitCode' does not allow DBNull.Value."* Resolution (verbatim): *"Found a copy/paste error that caused the wrong column of data to be used when creating the rows to save to the database. This was part of an enhancement done in Sept 2022."* Code fix — escalate with the error string; no data workaround documented.
-
-**D2 — FK_DONL_DVD_MKT_EXMPT delete-constraint on Preview DOI.** `23-00933603` (App Config). Resolution (verbatim): *"Provided script to truncate 2 tables that are no longer used by this version of QDO."* The MEG-remediation lineage (see S2 §7) obsoleted individual market-exemption tables; leftover rows block workspace deletes. Fix recipe: truncate the obsolete `DONL_DVD_MKT_EXMPT`-family tables per Quorum script (verify table names on the client build first).
-
-**D3 — Mass transfer across multiple effective-date ranges errors on Preview.** SF `24-00949299` (Software Defect, Closed); ADO **#1651746** "MEW 2023.04 - Mass transfer on multiple effective date ranges errors on Preview" (Closed, tag `2024.10 DO`): 1,049-DOI mass JIB transfer failed with `Old owner not in DO` / *"Could not complete transfer for this transaction"*; desktop workspace succeeded. Fix involved transaction **chunking logic**; a walkthrough doc is attached to the WI. Fixed-in 2024.10 stream (tag — **INFERRED**). Workaround: run very large mass transfers via classic/desktop workspace, or split by effective-date range.
-
-**D4 — DOI Search export ≠ DOI Setup export.** `25-01000684` (Software Defect; ADO **#1711287**, Closed, tag SDP2504). Resolution (verbatim): *"Code change implemented to filter the DonlDoDetail based on inquiry date for excel export."* Merged to 2024.04 and 2024.10 hotfix branches (WI history — CONFIRMED statement, builds INFERRED).
-
-**D5 — Bearer-group Bulk Edit with date breaks → PK violation.** `24-00965362` (Software Defect; ADO **#1687869**, Closed). Error (verbatim from WI): *"Violation of PRIMARY KEY constraint 'PK_DONL_DVD_BEARER_GRP_DETAIL'"* — bulk replace of bearer decimals attempts add/delete instead of update when the bearer group has date breaks. Fix scheduled under the **QDO Web Adoption** feature for 2025.10 (WI history — **INFERRED**). Workaround: maintain date-broken bearer groups row-by-row, not via Bulk Edit.
-
-**D6 — Security objects missing after upgrade.** `23-00933550` "Users receiving Not Authorized to access security object errors when navigating screens" + companion `23-00933549` "Review validations QARCH_CTRL_OBJECT_USE" (both App Config): new-version screens reference security objects the client's groups never got. ADO **#264870** "Add the U_DO_MAINT Security Object to CORE_REL" (Closed) documents the same shape: creating INF DOI types looks for `U_DO_MAINT`. Fix recipe: capture the object name from the error, grant it to the affected security groups (S3 owns the deep security cluster), and review `QARCH_CTRL_OBJECT_USE` for the build.
-
-**D7 — Other one-offs seen in the wave (anchors only):** `24-00952414` incorrect PD41 PPNs in 2023.04 UAT (Software Defect — PPN family, S1); `23-00915246` 100% recoup transfer wrong distribution (S2 owns recoupment); `23-00925267` changing BA sub on DOI Maintenance also changed owner number; `23-00928518` Production/Accounting-month filters returning nothing; `23-00933883` External Funds Transfer missing from dashboard; `23-00933599` QRA funds-release errors when releasing the Revenue Interface Lock with pending MGs; `24-00947442` owner-level vs DOI-header note category codes indistinguishable; `24-00943740` UTT participation stuck "In Interest Transfer"; `24-00937054` Preserve Interest Type not disabling owner interest type; `24-00937044` BA search requires full 10 digits; `25-01047600` DOI Worksheet template; `25-01041826` adding SSN removes 1099 indicator (S3). Route these to the owning skill; cite the case number.
-
-## 8. Cluster E — Patch / hotfix logistics workflow (no defect)
-
-Recognize the shape: the case *is the delivery vehicle*, Root_Cause__c is usually Application Configuration, and the "resolution" is a deploy note.
-- `25-01000688` "QDO: March 2025 Hotfix Request for 2023.04 Version" → resolution: *"deployed to PRD May 2025"*.
-- `25-01045796` "QDO: October 2025 Hotfix Request for 2023.04 Version" → resolution: "October 2023.04 HF".
-- `26-01068283` "Upstream Patch 11 & 12 - Perform targetted testing & provide Testing Support" → Patches 9 & 10 promoted to PRD; *"Patch 11 failed Quorum testing so we will proceed with a Patch 12"*; resolution "Patch 12 deployed".
-- `24-00940420` "January 2024 hotfix deployment"; historical run: 22-00516787/89, 22-00641213, 22-00672534/47, 22-00676456/64/78 (2021-22 monthly patch/hotfix tickets).
-**Recipe:** confirm target version + environment order (UAT → PRD), attach the release-note review, track deploy confirmation, close. No investigation gates needed — classify early and don't burn tokens.
-
----
-
-## 9. Known ADO Items
-
-| ADO WI | Title (condensed) | State | SF anchor | Fixed-in |
-|---|---|---|---|---|
-| #1713922 | MEW 2024.04 — Unable to update Historical DOI field | Closed | 25-01003450 | 2023.04/2024.04/2024.10 hotfix branches (WI history) |
-| #1743552 | MEW 2024.04 — classic/web Historical DOI # discrepancy | Closed | 25-01031226 | "MEW's next hotfix" (INFERRED) |
-| #1715622 | Unable to delete Pending MG with no data | Closed | 25-01002719 | tag `not 2026.04 Ups` (INFERRED) |
-| #1711287 | Export diff DOI Search vs DOI Setup | Closed | 25-01000684 | 2024.04 + 2024.10 hotfix branches (WI history) |
-| #1687869 | Bearer-group Bulk Edit date breaks → PK violation | Closed | 24-00965362 | QDO Web Adoption 2025.10 (INFERRED) |
-| #1775211 | MG Creation — Retrieve required for new group number | Closed | 26-01063731 (family: 26-01067775, 25-01057971) | 2026.04 (Robot RN tag, INFERRED) |
-| #1614286 | MEW 2023.04 — cannot update BA in web (precision on save) | Closed | (MEW upgrade wave) | PR 88123, Quorum.ESUITE.Web 17.30.3 → 2023.04 HF branch |
-| #1693900 | Tall picklist filter bars (Kendo) after 2024.04 | Closed | 24-00985406 | merge-back discussed (INFERRED) |
-| #1651746 | Mass transfer, multiple effective-date ranges errors on Preview | Closed | 24-00949299 | 2024.10 (tag, INFERRED) |
-| #264870 | Add U_DO_MAINT security object to CORE_REL | Closed | — | script-review resolution |
-| #1732619 | DOINTXWRK batch fails (endpoint) — referenced by #1723387 | (see WI) | — | see JIB skill §E |
-
-## 10. Diagnostic SQL (verification queries — label `NOT YET RUN` if no metadata connection)
+**Root cause 1 — extern-app URL drift (CONFIRMED):** the QDO URL in `QARCH_EXTERN_APP_SETUP` is set wrong by post-refresh scripts. Case **26-01068541** ("QDO Web Widgets in PRDA1 are failing on HTTP 404 error", Application Configuration): customer's own description flags `QARCH_EXTERN_APP_SETUP` set incorrectly by Post Refresh Scripts from mock cutover. Fix applied (case feed, verbatim):
 
 ```sql
--- A1: post-refresh URL drift — QDO web-app endpoints
-SELECT * FROM QARCH_EXTERN_APP_SETUP;            -- compare URL columns vs a known-good env
-
--- B1: parity pair for Historical DOI # editability
-SELECT * FROM <global_config_table> WHERE CONFIG_NM = 'EDIT_APPROVED_MASTER_DATA';  -- verify config table name on client build
--- and check whether security object DOI_EDIT_APPROVED_MASTER_DATA is still granted/referenced
-
--- C1/C2: pending MGs with no detail rows (delete-blocked candidates)
-SELECT h.GRP_NO, h.TRANS_DESCR
-FROM DONL_DVD_DO_HDR h                            -- verify exact workspace header table on build
-LEFT JOIN DONL_DVD_DO_DETAIL d ON d.GRP_NO = h.GRP_NO
-WHERE d.GRP_NO IS NULL;
-
--- D5: pre-check for bearer bulk edit PK collisions (date-broken groups)
-SELECT BEARER_GRP_NO, COUNT(*) 
-FROM DONL_DVD_BEARER_GRP_DETAIL
-GROUP BY BEARER_GRP_NO HAVING COUNT(*) > 1;       -- inspect for duplicate natural keys before bulk ops
+-- run in the QFC/global metadata DB for the env (case ran it in REP_PRDA1UPS_QFC)
+UPDATE QARCH_EXTERN_APP_SETUP
+SET TARGET_EXE = 'quorum://https://web-prd.myquorumcloud.com/REPUA1QDO/'
+WHERE TARGET_MODULE_CD = 'DO'
+-- then request a QPEC restart
 ```
-*(Table names are from case/ADO text — verify against the client DB before scripting; run SELECTs first.)*
 
-## 11. Expected-Behavior / FAQ
+Same signature in **26-01125253** ("PRDA1 - Web DO - Widgets - Something went wrong"): `Resolution__c` = "Updated the DO TARGET_EXE within the extern app setup."
 
-- **"The upgrade broke everything."** Each upgrade-UAT case is triaged individually; the historical split of this cluster is roughly half config-not-carried-forward (App Config) and half genuine defects — see §7-D7 for how varied the wave is.
-- **"Did the patch wipe our config?"** Precedent says no — Patch 71 analysis found exactly one isolated metadata regression (24-00980918). Ask for the *specific* broken screen.
-- **Warnings/slowness right after go-live** (`25-01054147` "Affiliated Flag Warning & System running very slow", App Config; `25-01001965` QCloud rollout performance, App Config) are usually environment sizing/config tuning, not code — route to environment/config review before G5.
-- **Hotfix-request cases** (§8) are not defects: classify fast, don't investigate.
-- **After any environment refresh**, treat Post-Refresh Scripts as a suspect for every "X stopped working in <env>" report (26-01068541 precedent).
+**Root cause 2 — per-user widget security (CONFIRMED):** after the URL fix in 26-01068541, two users still failed on the **New Business widget** only; one was "missing assignment to group **95000** that corresponds to the New Business Widget" (case feed). Fix: add the user to the widget's security group.
 
-## 12. Escalation
+**Related:** **23-00912353** "QDO Dashboard Pending DOI widget" (Application Configuration) — same widget-config family, older. **25-01020086** (Owner/DOI Search widget "NO DATA FOUND", Software Defect, Closed-No Response) — widget data defect family, unresolved on case.
 
-- Code-change candidates (G5): parity gaps (§5), MG lifecycle regressions (§6), D1/D3/D4/D5 — area paths seen on real QDO bugs: `QuorumSoftware\Engineering\Revenue\Committed Backlog`, `...\Engineering\Maintenance\Upstream\Professional Services\Revenue`, `...\Customer Service\Revenue`. Title convention: `<CLIENT> <version> Upgrade - <symptom> - <SF case #>`.
-- Include in the handoff: build/version (found-in), environment (UAT/PRD A1/DEVA1), classic-vs-web behavior matrix, exact error string, and whether a redeploy (§4-A3) was already tried.
-- Metadata merge/compare work (§4-A4) routes to Services (Managed Services), not Engineering.
+**Recipe:**
+1. `SELECT TARGET_MODULE_CD, TARGET_EXE FROM QARCH_EXTERN_APP_SETUP WHERE TARGET_MODULE_CD='DO'` — compare URL host/path to the working env.
+2. If wrong, UPDATE as above (adjust URL per client/env), QPEC restart.
+3. If a single user still fails: check the failing widget's security-group assignment for that user (New Business → group 95000 at REP; group numbers are client-specific — verify).
+
+---
+
+## 5. Cluster B — Post-upgrade Maintenance Group Creation regressions
+
+**B1 — Screen caches old group; WRKSPC corrupts the approved MG (CONFIRMED, code defect).**
+Cases **26-01067775** ("UPGRADE - Maintenance Group Creation Error": screen retains all data top+bottom after group creation, "Check All" can't be unchecked, regression vs old behavior where the bottom cleared) and **26-01063731** (per ADO). ADO Bug **1775211** "MEW UPS QDO - Maintenance Group Creation Retrieve Required for New Group Number - 26-01063731" (QuorumSoftware project, Closed, tag `Robot RN 2026.04`):
+- Root cause (WI history): "The Maintenance Group Creation screen caches the `DonlDvdGrp` object in the UI controller state… Since the cached value is 1888 (not 0), it skips group creation and tries to run WRKSPC on the existing approved group, which fails" — and **puts the previously-approved MG into status 5-Error**.
+- Repro: create MG → do maintenance → preview+approve → return to the same MG Creation tab → do NOT re-retrieve → add new owner/tier → Create Maintenance Group → WRKSPC SPEs, old MG number reused, approved MG flips to ERROR.
+- Fixed: Closed, release-noted for **2026.04 (INFERRED from tag `Robot RN 2026.04`)**. Workaround until then: always re-retrieve (or click New) before creating the next group; if an approved MG got flipped to 5-Error, escalate for status correction before re-approving anything.
+
+**B2 — Empty MG undeletable, stuck "Submitted for approval" (CONFIRMED).**
+Case **25-01002719** "MEW 2024.04 Upgrade - Unable to delete Maintenance Group": MG with no transactions stuck; delete and revert-status did nothing. `Resolution__c`: "Update the code to enable the deleting of Maintenance Groups that do not have any data." (code fix, fixed-in build INFERRED = a 2024.04 patch).
+
+**B3 — Post-upgrade MG performance (CONFIRMED defects).**
+- ADO Bug **1756914** (Quorum project, Closed): "GLE - 2024.10 Upgrade - Slow performance when up to 1.5 million owner records are involved in a maintenance group" — WRKSPC itself ~1.5 min but front-end load +3 min; grid checkbox rendering 6–7 min tracked separately as **#1673532**; total 15–16 min workflow.
+- ADO Bug **1668275** (QuorumSoftware, Closed, tags `2024.10 DO; UpsPerfHotfixed`): "GEC - Performance issues after previewing Maintenance Group … takes long time to load while transferring large number of funds (Defect 303)" — post-fix 27 min → ~5 s.
+- If a client reports post-upgrade MG slowness on 2024.10-era web builds, check whether these perf hotfixes are consumed before investigating further.
+
+**B4 — Warning noise on approval after upgrade (open/partially fixed).**
+Case **26-01067773** "UPGRADE - Warning Messages" (Software Defect): during upgrade testing, MEG/TEG/tax-exempt maintenance approvals emit `No Suspense Release data or no related Subledgers found for OPER_BUS_SEG_CD <X> {DO-CWOWFNDRLS-…}` + `No data posted to GL. {DO-JEPOSTPROC-…}` and the MG completes "with Warnings" (COPY_DVD_W). Multiple MGs listed in the feed (MEG 1→4, TEG 1→2, tax-exempt N→Y — all created PPNs). No resolution recorded on the case — treat as known warning-noise family; verify the MG actually approved and PPNs created, then judge whether funds/GL were genuinely expected to move. Related warning-cleanup lineage: ADO **1622910** (see companion JIB skill §RADOITRW cluster).
+
+---
+
+## 6. Cluster C — Classic→Web parity / field-permission regressions
+
+**Signature:** "We could do X in desktop; the web screen won't let us." Typical after MEW-style 2024.04 web upgrades — logged as Software Defect, fixed per-field in hotfixes.
+
+| Case | Field/behavior | Outcome |
+|---|---|---|
+| **25-01003450** + follow-up **25-01031226** | `Historical DOI #` editable in classic DO006 on an *approved* DOI; read-only in web DOI Setup (repro'd: MEWU_HD_DEV17 vs MEWU_HD_DEVA1) | Engineering made the field editable for approved DOIs **for users with execute permission on security action `DOI_EDIT_APPROVED_MASTER_DATA`**; delivered March hotfix / "Patch 5"; residual per-user issue fixed in "Patch 8" (both INFERRED builds, case feed) |
+| **24-00947442** | Cannot differentiate Owner-level vs DOI-Header note category codes in web | Software Defect (upgrade-project wave; detail on case) |
+| **24-00937054** | "Preserve Interest Type does not disable owner interest type" in web | Software Defect, same wave |
+| **24-00937044** | Web BA search requires full 10 digits | Software Defect, same wave |
+| **24-00943740** | Unit-To-Tract Participation screen shows status "In Interest Transfer" incorrectly | Software Defect, same wave |
+| **25-01000684** | Export differs between DOI Search and DOI Setup (MEW 2024.04) | Software Defect |
+| **25-01047600** | 2025 upgrade: DOI Worksheet Template broken | Support reproduced, "it's a bug… corrected and included in your next hotfix" (case feed; build INFERRED) |
+
+**Recipe:** reproduce side-by-side in the client's classic (`*_HD_DEV17`) vs web (`*_HD_DEVA1`) envs; if web-only, search ADO for an existing closed bug (this wave is heavily pre-logged) and answer with the fixed-in hotfix; check whether a **security action** gates the behavior (pattern: `DOI_EDIT_APPROVED_MASTER_DATA`) before calling it a defect.
+
+---
+
+## 7. Cluster D — Patch deployment, config drift & missing metadata
+
+**D1 — "Did the patch drop our configuration?" (CONFIRMED isolated, not bulk).**
+Case **24-00980918** "Did Patch 71 Drop Configuration Changes" (PNR): after Patch 71, report "PNR Consolidated Exhibit-A" lost its "Template Type" LOV — on the Parameter Definition screen `CodeTableId` was not populated and "Display Control Type" differed vs the un-patched clone. `Resolution__c` (verbatim): the change "was an isolated issue which has been addressed in the salesforce case **24-00981048** where an SQL script has been provided to correct the configurations. There should not be any other dropped/missed/changed configurations in bulk because of the Patch 71." → Answer template for "compare configs pre/post patch" asks: check the specific broken parameter first; bulk config loss from patching is not the observed pattern.
+
+**D2 — Custom report missing after upgrade (CONFIRMED).**
+Case **25-01027364** "Upgrade Project - QP088 - Missing Report": custom DO report absent in UBT. `Resolution__c`: "Missing metadata for parameter picklist returns in global metadata tables." Fix = metadata script re-registering the report's parameter picklist metadata.
+
+**D3 — Web-QDO flip configs overwritten by patching (CONFIRMED).**
+Case **23-00907112** "Issue Log 139: Patching Activity May Have Overwrote MyQDO Settings": OFR jobs stopped moving monies in testing after a patch. `Resolution__c` (verbatim): "`RUN_WINFORM_CALC_FOR_RSTG` and `DISABLE_CLASSIC_SCREEN`. These two configs are for flipping the system to web QDO. one of them locks down the screens in classic; one of them tells the maintenance group approval process to run OFR based on web configuration. The key value needs to be set to 1 when using myQDO." Also note: the reporter's own metadata authorization was overwritten in the same event — check security alongside configs after patching.
+
+**D4 — Hotfix mis-deployment (CONFIRMED).**
+Case **25-01053966** "Possible October hotfix issue - funds only MG query does not work": Retrieve button in funds-only MG transaction did nothing; middle-tier log `Exception has been thrown by the target of invocation`. `Resolution__c`: "The customer redeployed the hotfix, and everything worked as expected." → For dead-button + reflection-exception symptoms right after a hotfix, suspect a partial deployment before debugging product code.
+
+**D5 — Hotfix request/delivery cases (process, Application Configuration).**
+**25-01045796** "QDO: October 2025 Hotfix Request for 2023.04 Version" (APA): patch had to be **repackaged and redeployed because the client did not promote the previous patch to PRD**; delivered to FTP. Sibling **25-01000688** (March 2025 hotfix request, 2023.04). **24-00940420** "January 2024 hotfix deployment". These close as Application Configuration; deliverable = scheduling/packaging, not investigation.
+
+---
+
+## 8. Cluster E — Build-UAT regressions (2023.04-style upgrade waves)
+
+Upgrade-project UAT surfaces build defects titled `Build 2023.04 - UAT - …` / `Upgrade Project: QDO - …`. Highest-value resolved examples:
+
+| Case | Error signature (verbatim where quoted) | Root cause / fix |
+|---|---|---|
+| **23-00927336** | `Message Code: TEMP.DOIMaintIntTransferController.DoAction.345 … Table DtrnOwnrFundRls Errors: Row(-1): Column 'OrigBusUnitCode' does not allow DBNull.Value.` on Modify/Modify-with-funds | `Resolution__c`: "Found a copy/paste error that caused the wrong column of data to be used when creating the rows to save to the database. This was part of an enhancement done in Sept 2022" — code fix |
+| **23-00933603** | MG preview (100% backdated transfer with funds) fails: `The DELETE statement conflicted with the REFERENCE constraint "FK_DONL_DVD_MKT_EXMPT__DONL_DVD_DO_DETAIL"` (SQLState 23000, NativeError 547) | `Resolution__c`: "Provided script to truncate 2 tables that are no longer used by this version of QDO." (Application Configuration) |
+| **24-00949299** | Mass transfer of one owner across 1,049 JIB DOIs / multiple effective-date ranges errors on Preview: `Old owner not in DO …` + `The QIntTransfer process has failed for group {0}` + `Call to C++ Batch Process Step Class Name QPSINTTRANSFER failed Execute` + `Continue Process On Failed Execute Is FALSE for DOINTXFRWB` (desktop workspace path worked) | `Resolution__c`: "Modified the chunking logic for mass transfer. After Chunking, remaining records will get saved immediately in subsequent transaction." — code fix, go-live blocker for MEW 2023.04 |
+| **23-00933599** | QRA Funds Release errors when releasing Revenue Interface Lock with pending MGs | Application Configuration (upgrade wave; sequence releases vs pending MGs) |
+| **23-00933550** | "Not Authorized to access security object" errors while navigating post-upgrade | Application Configuration — security-object gaps after upgrade (see S3 security cluster) |
+| **24-00952414** | Build 2023.04 UAT: incorrect PD41 PPNs generated | Software Defect (PPN family, see S1) |
+
+**Recipe:** for any `Build <ver> - UAT` regression, first `search_workitem` for the error string / case number — these waves are almost always already logged and often already Closed with a fix in a later patch of the same train.
+
+---
+
+## 9. Cluster F — Environment / infra availability after go-live
+
+**F1 — Missing ODBC driver breaks JE100/OFR feed (CONFIRMED).**
+Case **25-01053856** "2025 Upgrade Live - funds did not automatically populate" (MGs 7954 transfer / 7955 pay-code change): `Resolution__c` (verbatim): "The ODBC driver was installed on 11/10/2025. This was preventing JE100 records from coming in correctly. Then, a script was run to update the JE100 OFR records to an 'error' status for a CNR user to then Rerun in JE100." → New-infrastructure go-lives: verify DB drivers on app/middle-tier servers when an interface silently produces nothing; recover stuck rows by scripting them to error status and rerunning in JE100.
+
+**F2 — Merge PRD metadata into next patch** (**26-01084575**, Application Configuration) and **Datayank PRD→UAT data to avoid wiping a patch under test** (**26-01068062**, see companion Imports skill) — environment-management requests that ride the patch pipeline; deliverable is scripts/packaging via Managed Services (ADO **1778563** pattern).
+
+---
+
+## 10. Known ADO Items
+
+| WI | Type/State | Title (verbatim) | Notes |
+|---|---|---|---|
+| **1775211** | Bug, Closed | MEW UPS QDO - Maintenance Group Creation Retrieve Required for New Group Number - 26-01063731 | `DonlDvdGrp` UI cache → WRKSPC on approved MG → 5-Error; RN tag 2026.04 (fixed-in INFERRED) |
+| **1756914** | Bug, Closed (Quorum project) | GLE - 2024.10 Upgrade - Slow performance when up to 1.5 million owner records are involved in a maintenance group | front-end load + checkbox grid (#1673532) |
+| **1668275** | Bug, Closed | GEC - Performance issues after previewing Maintenance Group… (Defect 303) | tag `UpsPerfHotfixed`, 2024.10 DO |
+| **1622910** | Bug, Closed | 23-00918228--No default market rep found warning message on converted dummy DOIs for Revenue Suspense | warning-noise cleanup; RN 2026.04 tag; market rep = code table 29100 |
+| **1659136** | Requirement, Proposed | QDO Web - Review REQUIRE_INQUIRY_DATE logic | config: 0 = blank inquiry date (core default), 1 = defaults to first of month; drives DOI Maintenance retrieve behavior |
+| **1778563** | Bug, Resolved (QuorumServices\Managed Services) | 26-01068062--Datayank new PRD Business Associates for insert into UAT | scripts for PRD→UAT data insert without refresh |
+
+---
+
+## 11. Diagnostic SQL
+
+All queries are verification templates — **verify table/column names against the client DB first**; run SELECT before any UPDATE, inside a transaction.
+
+```sql
+-- A. Widget/extern-app URL check (CONFIRMED table, from 26-01068541)
+SELECT TARGET_MODULE_CD, TARGET_EXE
+FROM QARCH_EXTERN_APP_SETUP
+WHERE TARGET_MODULE_CD = 'DO';
+
+-- B. Verbatim fix applied in 26-01068541 (adjust URL per client/env; QPEC restart after)
+UPDATE QARCH_EXTERN_APP_SETUP
+SET TARGET_EXE = 'quorum://https://web-prd.myquorumcloud.com/REPUA1QDO/'
+WHERE TARGET_MODULE_CD = 'DO';
+
+-- C. Web-QDO flip configs after patching (keys CONFIRMED in 23-00907112; table = client
+--    global config store, name varies — locate via metadata server)  [NOT YET RUN]
+--    Expect KEY_VALUE = 1 for both when running myQDO Web:
+--    RUN_WINFORM_CALC_FOR_RSTG, DISABLE_CLASSIC_SCREEN
+```
+
+---
+
+## 12. Expected-Behavior FAQ
+
+- **"Maintenance Group Creation works differently after the upgrade — it jumps straight into the wizard."** Intentional. In 2024.04 the workflow was changed to remove the MG-screen → Transactions tab → New Transaction clicks and take the user straight to the maintenance wizard, based on usage metrics and customer feedback. Documented in the 2024.04 release notes / executive summary at `community.quorumsoftware.com/s/release-notes`. (Case **25-01057971** feed, closed as confirmed.)
+- **"Will you compare every config before/after the patch?"** The observed failure mode is *isolated* parameter metadata (one report LOV), not bulk config loss; fix is a targeted script (24-00980918 → 24-00981048). Offer the targeted check first.
+- **"The fix you delivered for our current version — where is it after we upgraded?"** Fixes are delivered per version train; a fix may ship in your *upgrade target* release instead of a backport when an upgrade is active (25-01027179: remaining fix rode 2025.04; 24-00949849 "March Hotfix & Release Notes" family). Always confirm which train the client runs before promising a hotfix.
+
+---
+
+## 13. Escalation
+
+- **Widget/URL & security-group fixes** (Cluster A) — Managed Services / CloudOps can apply; needs QPEC restart window.
+- **Code defects** (Clusters B, C, E) — log/route to ADO. QDO engineering areas observed: `QuorumSoftware\Engineering\Revenue\Committed Backlog`, `QuorumSoftware\Engineering\Maintenance\Upstream\Professional Services\Revenue`, `…\Customer Service\Revenue`; some newer bugs in project `Quorum` (`Quorum\North America\Upstream\myQ Accounting RnD`). Title convention: client prefix + SF case number.
+- **Hotfix packaging/deployment** (Cluster D5) — coordinate with the delivery owner; confirm previous patch was promoted to PRD or expect repackage (25-01045796).
+- Approved MG flipped to 5-Error by B1: **stop the client from re-approving**; escalate for status correction script before further maintenance on that group.
+
+---
 
 *Investigated by Auto-Bot — the L4 issue solver built by Aditya Bhagat. Line numbers verified against live source; re-baseline against the client's build branch before coding.*
