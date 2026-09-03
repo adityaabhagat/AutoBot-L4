@@ -1,11 +1,11 @@
 # SKILL: FLOWCAL — Exceptions, Validations & Messages Troubleshooting Guide
 
-**Version:** 1.0 | **Created:** 2026-09-02 | **Products:** `FLOWCAL` (primary; Exceptions/Messages is a FLOWCAL-only category — TESTit had 18 cases, PROVEit 0)
+**Version:** 1.1 (second mining pass, same day) | **Created:** 2026-09-02 | **Products:** `FLOWCAL` (primary; Exceptions/Messages is a FLOWCAL-only category — TESTit had 18 cases, PROVEit 0)
 **Scope:** The **validation engine** (meter/analysis/quality validations, Validation Set Points, the recurring **EEFFACE** set-points corruption), the **Exception Resolver** (new .NET ER + Legacy ER: blank screens, freezes, access violations, settings resets, list visibility, tiles), **exception generation & auto-resolution defects** (missing-data / missing-analysis / no-flow exceptions not created or not cleared), **FLOWCAL Message NNN notifications** (Message 123/128/203/321 — routing, distribution lists, and the import failures behind them), and **Message Queue (MSMQ) / TI subscription** plumbing that the Message Queue viewer exposes.
 **Use when:** case mentions `EEFFACE`, `Exception Resolver`, "exceptions not showing/created/resolved", `validation`, `set points`, `Message 123|128|203|321`, `Message Viewer`, `Message Queue`, "flagged", "limits", `Error -32000`, exception code `2158` (Drive Gain).
 **Companion skills:** import failures themselves (CFX/ticket/GQ) → Imports skill (group #1); TI (TESTit↔FLOWCAL) integration service health → Integrations/WebSync skill (group #11); Windows services & Transaction Queue → Services skill (group #3); gas-quality/calc correctness → Calculations skill (group #7).
 
-> **Evidence base (mined 2026-09-02):** ~95 closed FLOWCAL cases sampled across 4 SOQL clusters (`Case_Category__c='Exceptions / Messages'` actionable, Exception Resolver subjects all-history, validation subjects actionable, Message NNN / Message Queue subjects all-history) + 16 ADO work items verified live. Coverage plan sizes this group at ~1,425 cases, ~130 actionable. Every root-cause claim cites an SF case and/or ADO id. Fixed-in versions are **INFERRED** from SF resolution text unless marked otherwise.
+> **Evidence base (mined 2026-09-02):** ~95 closed FLOWCAL cases sampled across 4 SOQL clusters (`Case_Category__c='Exceptions / Messages'` actionable, Exception Resolver subjects all-history, validation subjects actionable, Message NNN / Message Queue subjects all-history) + 22 ADO work items verified live (v1.1 pass added 1678088/1859867/1756236/1119372 + the 10.8.0.3 Query Editor semantics change). Coverage plan sizes this group at ~1,425 cases, ~130 actionable. Every root-cause claim cites an SF case and/or ADO id. Fixed-in versions are **INFERRED** from SF resolution text unless marked otherwise.
 
 ---
 
@@ -16,6 +16,8 @@
 | "External exception **EEFFACE**" opening Setup > Meter > **Set Points** (may freeze app) | Corrupt/drifted `FC_METER_VALIDATION_HIST` table (unused/removed columns) | §4 | Bulk Change Editor: clear validation min/max on the failing meter → screen opens. Durable fix: rebuild the hist table (SQL w/ services stopped) |
 | Same EEFFACE, client on ≤10.5.0.21 | Known defect, resolved **10.5.0.22** (INFERRED) | §4 | Upgrade path + workaround above (26-01066345) |
 | Exception Resolver opens but shows **no exceptions at all** | ER display defect (unreproducible for dev) or edit-reason filter bug | §5 | Switch to **Legacy ER** (`<add key="legacy:ExceptionResolver" value="Y"/>`); ADO 1739171 |
+| Lists pull no exceptions **right after a 10.8.0.3 upgrade** | Query Editor Match/Active Status semantics changed — stale dynamic-list queries | §5 | Update the list queries; NOT a defect (26-01101645) |
+| **Large** source list shows nothing; small lists fine | Size-dependent defect, fixed R1060 port | §5 | ADO 1678088; upgrade or split the list |
 | ER **settings/layout keep resetting** to default | Corrupt **Citrix user profile** | §5 | Cloud resets the Citrix profile (26-01104193, 26-01085068) |
 | ER: **Access Violation** after editing data in Volume Editor | Known bug editing from ER; Citrix Workspace version aggravates | §5 | Update Citrix Workspace + use Legacy ER (25-01062048); ADO 1788769 (OPEN) |
 | ER: "Error Loading Meter Periodic Values **Error: -32000**", app not responding | Defect in 10.5.x | §5 | Fixed 10.5.0.20 / 10.6.0.7 (INFERRED) (25-01022729) |
@@ -129,6 +131,9 @@ The new .NET ER carries a family of display bugs; the **Legacy ER is the univers
 |---|---|---|---|
 | ER shows **no exceptions at all** (10.4.0.15) | Dev could not reproduce; still open | Legacy ER | 25-01054794; ADO **1739171** (New — repro found: after editing Edit Reasons w/ "Remember UI Filter Values" on, ER returns blank; also edit-reason dropdown omits multi-type reasons) |
 | ER **viewer not working for Source Lists** (10.5.0.2) | Defect | Fixed **10.8.0.2** (INFERRED) | 25-00995790 |
+| **Large GQ source lists** pull NO exceptions while small lists work (individual sources show them) | Size-dependent list-query defect | Fixed via ADO **1678088** "Large source lists do not display exceptions (R1060* PORT)" (Closed, Escalated); client wanted it in a 10.6.0.x | ADO 1678088 (full repro in WI: static list + access list + ER object type "Source List") |
+| **Cannot pull exceptions by list at all after upgrading to 10.8.0.3** | NOT a defect — 10.8.0.3 changed how **Match** and **Active Status** behave in the **Query Editor**; dynamic-list queries built on the old semantics return nothing | Update the list queries to the new Match/Active Status semantics | 26-01101645 (Application Configuration) |
+| Legacy C# ER can't **acknowledge 10000+ exceptions** in one action | Volume cap defect (2020 era) | Closed | ADO **1119372** |
 | Same **GQ source in multiple lists** breaks ER display | Defect | Fixed **10.6.0.12 / 10.8.0.2** (INFERRED) | 25-01060221 |
 | **Access Violation** editing data from ER (edit → apply → save → close Volume Editor → AV) | OPEN bug; "not able to estimate when this issue will be resolved" | Update Citrix Workspace + Legacy ER as mitigation | 25-01062048; ADO **1788769** (New) |
 | Double-clicking exception **doesn't open Volume Editor** (legacy ER AVs) | Closed as Training-tagged | — | ADO **1837313**; source case 25-01048298 |
@@ -161,7 +166,7 @@ Version-check FIRST — this cluster is dominated by known defects with fixed-in
 | **Exception recognition issues** (TGI, severity High) | 10.4.0.14 | 10.8.0.4 | 25-01004221 |
 | **Exception Queue/Validations bug** | 10.x | 10.3.0.23 | 24-00988967 |
 | Auto Edits **set VCF = 1 and auto-resolve exceptions** they shouldn't | 10.6 era | 10.6.0.13 patch | 24-00992610 |
-| **Drive Gain (code 2158)** exception pulls wrong **Field Value** into ER | 10.x | targeted 10.9 (June 2026) | 26-01068318, 25-01043587 |
+| **Drive Gain (code 2158)** exception pulls wrong **Field Value** into ER (shows Meter Temp instead of drive gain vs. the Alarm Limit) | 10.x | targeted 10.9 (June 2026); dev item ADO **1756236** (DEV*, Closed) | 26-01068318, 25-01043587 |
 | **CV exceptions for T and P on compensated meters** | — | defect accepted; no fix noted in case | 25-01015006 |
 | **Exceptions Graph** misrepresents missing data; yellow exception line solid for whole month | 10.8.0.3 (also 10.6.0.24, 10.5.0.14 listed in repro) | ADO **1866898** (New) — OPEN | — |
 | Coriolis raw-volume **exception reset** behavior | 10.x | defect per case; details thin | 25-01021218 |
@@ -208,7 +213,7 @@ Escalation note: MSMQ bad data after Vault/TI misconfig also appears in the Secu
 ## 9. Bad-data-shaped exception failures (data-investigator handoffs)
 
 - **ER crashes with "Unhandled exception from AppDomain.CurrentDomain.UnhandledException"** on specific meters → gibberish written into meter **User-Defined Fields** (by an import). Clean/NULL the UDFs and ER works (26-01104714 MPLX). The same UDF garbage broke list rollups/reports in 26-01113739 (fix: NULL the fields, requeue Postponed records). **Rule: single-meter ER crash → inspect UDFs before filing a bug.**
-- **Source apply conversion not possible (ER)** while GQ Source Editor shows a Z-Method → **Z-Method NULL at the database level**, inherited from older versions. Fix by SQL update or by toggling the Z-Method in the Gas Quality Source Editor (change → save → revert → save) which rewrites the row (26-01122401).
+- **Source apply conversion not possible (ER)** while GQ Source Editor shows a Z-Method → **Z-Method NULL at the database level**, inherited from older versions. Fix by SQL update or by toggling the Z-Method in the Gas Quality Source Editor (change → save → revert → save) which rewrites the row (26-01122401, Software Defect → ADO **1859867** "source apply conversion not possible", Closed 2026-08).
 - **Plate change "Unable to Save" (Program Termination Window)** — device characteristics arriving from the field didn't match FLOWCAL standards (AGA-8 Detail 1992 + Time Trails), plus a blank record stamped 09:59:59 let the device characteristic in; after correcting those records the meter saved (25-01053071). Leads-vs-trails conversion clients are prone to this.
 - Business Status ≠ validation problem: meters with Business Status other than "On" are treated **out of service — no imports, excluded from reports**; set via Meter Editor or TESTit imports; NOT date-effective (25-01017303 — full option list On/Off/Pending disconnect/Pending New/Pending reconnect).
 
@@ -236,6 +241,10 @@ Escalation note: MSMQ bad data after Vault/TI misconfig also appears in the Secu
 | 1416377 | QuorumSoftware | Bug / Closed | 21-00216019--Flowcal Validation Set Point Error-"External exception EEFFACE" | Canonical validation table list |
 | 1134716 | QuorumSoftware | Bug / Closed | [EXT] Validation Set Point Error | 10.2.0.2 freeze variant |
 | 1134221 | QuorumSoftware | Bug / **Proposed** | Validation Set Point Editor Freezes When Null Values Are Saved (10.1.0) | Mole% + Run-on-Edit trigger for EEFFACE |
+| 1678088 | QuorumSoftware | Bug / Closed (Escalated) | Large source lists do not display exceptions (R1060* PORT) | Size-dependent ER source-list blindness (§5) |
+| 1859867 | Quorum | Bug / Closed | source apply conversion not possible | Z-Method NULL-at-DB defect behind 26-01122401 (§9) |
+| 1756236 | QuorumSoftware | Bug / Closed | Drive Gain Exception (2158) - Pulling in wrong value for Field Value in Exception Resolver (DEV*) | Dev twin of the 2158 Field Value bug (§6) |
+| 1119372 | QuorumSoftware | Bug / Closed | C# exception resolver will not acknowledge 10000+ exceptions (Dev) | Bulk-acknowledge volume cap (§5) |
 
 ---
 
@@ -269,6 +278,7 @@ Env assumption: client PRD/UAT Oracle as fcowner. Column lists for the UDF-garba
 - **"Meter stopped importing and dropped off reports after a TESTit import."** Check Business Status — anything other than "On" = out of service, immediately, not date-effective (25-01017303).
 - **"Resolution dates from SQL don't match FLOWCAL screens."** Set `nls_date_format = 'mm/dd/yyyy hh24:mi:ss'` in the session (25-01004570).
 - **"Bulk-inhibit LQ sources from ER?"** Not in product plan — enhancement (23-00932755).
+- **"Since upgrading to 10.8.0.3 our lists pull no exceptions."** Intentional change: 10.8.0.3 altered how **Match** and **Active Status** work in the Query Editor — dynamic-list queries written against the old semantics must be updated, not the product (26-01101645).
 
 ---
 

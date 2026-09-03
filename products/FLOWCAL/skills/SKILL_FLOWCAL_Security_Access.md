@@ -1,11 +1,11 @@
 # SKILL: FLOWCAL Family — Security, Authentication & Access Troubleshooting Guide
 
-**Version:** 1.0 | **Created:** 2026-09-02 | **Products:** `FLOWCAL`, `TESTit`, `PROVEit` (Product_list__c literals)
+**Version:** 1.1 (second mining pass, same day) | **Created:** 2026-09-02 | **Products:** `FLOWCAL`, `TESTit`, `PROVEit` (Product_list__c literals)
 **Scope:** Everything between "user double-clicks the icon" and "app opens with the right permissions": **OKTA** (QCloud identity, admin groups, group sync), **Citrix / StoreFront / FAS** (published-app launch, tiles, outages, profile resets), **FLOWCAL Instant Login & the credential Vault** (setup, post-refresh breakage, splash-screen hangs, VaultApi), **in-app security** (Security > Groups, access lists, role/permission bleed), **desktop login failures** (TESTit/PROVEit local SQL Server + Password Utility), **license lockouts that masquerade as access issues** (CrypKey, Policy Date File, Casper), and **Secure Gateway / network access** (DB whitelisting, SFTP, blocked IPs).
 **Use when:** case mentions `OKTA`, `Citrix`, "Login Failed", "unable to log in", "locked out", `Instant Login`, `vault`, "access list", `Secure Gateway`, "StoreFront", "Cannot complete your request", "All licenses in use", "Policy Date File", "password reset", "RO/RW PRD icon", or a named user losing access.
 **Companion skills:** Licensing/site-key issuance mechanics → SKILL_FLOWCAL_Licensing_CrypKey (group #5). QCloud environment outages/FTP → FLOWCloud skill (group #10). Windows-services problems → Services skill (group #3).
 
-> **Evidence base (mined 2026-09-02):** ~150 closed family cases sampled across 6 SOQL clusters (OKTA subject hits, Citrix subject hits, Access-List category, login-failure subjects filtered to Software Defect/Application Configuration, Security/Application Security/Systems-Users-Groups categories, Instant Login/vault/Secure Gateway subjects) + 12 ADO work items verified live (`Quorum`, `QuorumSoftware`, `myQuorum Cloud` projects). Coverage plan sizes this group at ~1,620 family cases, ~170 actionable. Every root-cause claim cites an SF case number and/or ADO id. Fixed-in versions are **INFERRED** from SF resolution text unless marked release-notes-confirmed.
+> **Evidence base (mined 2026-09-02):** ~150 closed family cases sampled across 6 SOQL clusters (OKTA subject hits, Citrix subject hits, Access-List category, login-failure subjects filtered to Software Defect/Application Configuration, Security/Application Security/Systems-Users-Groups categories, Instant Login/vault/Secure Gateway subjects) + 17 ADO work items verified live (`Quorum`, `QuorumSoftware`, `myQuorum Cloud` projects; v1.1 pass added 1623450/1722418/1658708/1850610 + FCADMIN DB-lock recipes). Coverage plan sizes this group at ~1,620 family cases, ~170 actionable. Every root-cause claim cites an SF case number and/or ADO id. Fixed-in versions are **INFERRED** from SF resolution text unless marked release-notes-confirmed.
 >
 > **Data-quality caveat:** like every security category, the bulk of volume is routine user-admin fulfillment (add/reset/unlock). The defect signal concentrates in Instant Login (real product bugs, some still open) and QCloud provisioning sync ("Login Failed" recurrences). Treat §4-§5 as runbook routing, §7 as genuine RCA territory.
 
@@ -176,6 +176,9 @@ DB-side the proxy chain uses Oracle accounts **`FCSRV`**, **`svcfcinstant`**, **
 | FLOWCAL→TESTit integration icon: "Vault connection error: Vault service is not found or is currently unavailable" | **`Quorum.Platform.SecretManagement.VaultApi`** not configured on the FLOWCAL server | Cloud configures VaultApi; then clean bad MSMQ data + purge audit/error queues if TI sync backed up | 26-01098171 |
 | 10.9.0.0: Standard-login users blocked from `/instant` ("only instant login users can use instant login") | Regression — `dlls\cbuilderguis\CSecurityUser.cpp:697` checks `login_type != USER_TYPE_INSTANT`; login types: Standard, `I`=Instant, `A`=API | ADO **1834035** Closed, tag 10.9.0.0.1 (fixed-in INFERRED). Follow-on: API users get no proper error → ADO **1834322** (New) | case owner Johann Calvete per ADO |
 | Instant Login user can't view/save Balance Explorer **custom templates** (10.5.0.13) | Open defect, under investigation since 2025 | No fix yet — workaround: use a password (Standard) account for template authoring | 25-00999986, 25-01004951 → ADO **1711912** (New/Investigation) |
+| Instant login fails silently when the **CrypKey-bypass `AuthTest.dll`** is not-yet-active/expired | License-bypass DLL lifecycle — no user-facing message existed | Replace/renew `AuthTest.dll`; clearer expiry messaging added to FC 10.8/10.9 | ADO **1850610** (User Story, Closed) |
+| Instant Login **hangs when the user is in many AD groups** (legacy) | Group-enumeration defect | Fixed **10.2.0.18** (INFERRED) | 22-00685402; sibling 22-00627942 |
+| **Custom exports run with the SSO/instant proxy account's permissions**, not the logged-on user's (legacy) | Permission-context defect | Fixed **10.2.0.14** (INFERRED) | 22-00638858 |
 | Instant Login fails only under **Azure RemoteApp / Nerdio** | **Product limitation** — Instant Login needs traditional Windows AD auth; can't read the vault under token-based auth models. Works in local/Citrix/RDP | Expected Behavior + enhancement request | 26-01090565 |
 | Plains QCloud instant-login failure (long-running) | env-specific, ADO trail | ADO 1627717 (New) | 23-00878092 (config assistance; vault access) |
 | Client asks "does FLOWCAL integrate with PingFederate?" | Authentication is done at the **Citrix layer** (PingFederate OIDC/RADIUS+MFA); FLOWCAL Instant Login just recognizes the authenticated Windows session — no secondary challenge | Expected Behavior — architecture is supported as-is | 26-01113463 |
@@ -215,16 +218,25 @@ Context: SQL 2014 engine can't install on Win11 (PowerShell V2 removed end-2025)
 
 **Other desktop signatures:** login failed → full TESTit+SQL uninstall/reinstall (26-01095531); PROVEit login failure → run **Password Utility 1.4** (25-00998833); TESTit login blocked by "Exception Error occurred in CExportUtils: There is not enough space on the disk" → free disk, advise ≥50 GB (25-01034176); TESTit logs "unable to login as FCADMIN" during import processing — resolved itself after config (26-01110539, weak signal).
 
+**FCADMIN account locked at the SQL Server level (server-hosted TESTit/PROVEit):**
+- TESTit "FCADMIN Account Locked and User Access Issue" (26-01109681): the `FCADMIN` SQL login on the field-apps instance was locked out. Confirmed fix, run in `sqlcmd` against the **`.\FCFIELDAPPS`** instance / **`FIELDAPPS`** database as `sa`: `ALTER LOGIN FCADMIN WITH PASSWORD = '<current pw — from Keeper, REDACTED in source case>' UNLOCK;` — user logged in immediately after.
+- PROVEit "Server Database Error occurred in **CDbio**: Login failed for user 'FCADMIN'" (23-00914722, Software Defect): recipe = run the **Password Utility** to reset the FCADMIN password → execute the SQL output file it generates (SSMS/VS) → log in to the app as FCADMIN → add the affected username to the proper **role under Security Options** (the user had no role, which is what actually blocked them).
+- FLOWCAL (Oracle side) "user account is locked" (26-01105991): support ships a DB unlock script + a query listing all users and their account status — ask for it rather than hand-rolling.
+
 ---
 
 ## 10. In-app security: groups, access lists, roles
 
 **FLOWCAL security groups:** to grant a login/screen rights, Security > Groups → open group → move user **Available Users → Selected Users** (26-01117001). On-prem AD-integrated sites: user must ALSO be in the right AD group (26-01115618 — Keyera login worked only after AD group add). PPA approval rights: Settings Manager → Group permissions + System Configurations → Approval (auto-approvals) (25-01059859). User roles/privileges report → query `fc_security_user` and related security tables (26-01068100, 26-01098639).
 
-**Access lists (FLOWCAL "lists" scoping meters/reports):**
+**Access lists (Settings Manager > Security > Access Lists — scoping meters/sources/locations):**
+- **Access List NOT limiting access** — user in exactly one group tied to one access list could still open ALL meters (23-00922649 → ADO **1623450**, Bug, Closed, Escalated). Investigation notes are the key diagnostic: almost all users in the affected DB (`fc_semu`) had `login_type` **NULL** in `fc_security_user`, and the thread spells out the two-layer model — *"Okta/AD security vs application security"*. When enforcement "fails", first pull `fc_security_user.login_type` for the user and check every group/access-list association before touching OKTA.
 - User can't see a list (e.g. in Exception Resolver dropdown): List Editor → select list → **"Group and User Access" tab** → add the user's security group (25-01048705).
 - "CANNOT ACCESS LIST EXT2_ALL ... NOT ROLLING UP" — was actually **bad data**: invalid values written to Volume Editor user-defined fields by a prior import; NULL them, requeue Postponed records (26-01113739). Don't assume security when a list misbehaves.
-- Access Lists screen sorting broken in 10.5.0.17 — Software Defect, scheduled for **10.9** (INFERRED) (25-01010699).
+- Access Lists editor sorting broken in 10.5.0.17 — objects listed in random order + cursor jumps to top of Available Users on every add. Software Defect, scheduled for **10.9** (INFERRED) (25-01010699 → ADO **1722418** "Security Access Lists - Sorting Capabilities (Dev*)", Closed).
+- Access List **Refresh button** shows the FIRST list's groups/users, not the selected list's (ADO **1658708**, Closed, found in 10.6.0 AHT) — tell users to re-select the list after Refresh before reading the tab.
+- **Permissions granted only via security Groups didn't apply to "Create New Export Template"** (22-00608787, Software Defect, 2021 era) — if a group-granted right doesn't stick, test granting it directly to the user and cite this lineage.
+- TESTit **"Admin User Looses Admin Rights"** (22-00542839, Software Defect) — legacy; if an admin drops privileges spontaneously on an old TESTit build, it's this, not tampering.
 
 **TESTit roles — permission bleed (KEY expected-behavior trap):** if a user is in **two roles, permissions bleed over** — removing Create/Edit/Delete from one group does nothing while the user retains another role granting them (26-01108901, TESTit 3.18: "If you're in two different roles, the permissions will bleed over"). Check ALL role memberships before calling it a defect.
 
@@ -264,6 +276,10 @@ Secure Gateway = QCloud's brokered DB access path for client tools (SQL clients,
 | 1807973 | myQuorum Cloud | Incident / Closed | EIG EIGER FLOWCAL - Instant Login Failed | Cloud troubleshooting doc referenced: "Flowcal: Instant Login Setup Instructions - Troubleshooting" |
 | 1860388 | myQuorum Cloud | Incident / Closed | Case#26-01120477: [FEM][PRD][Foundation Energy] Instant Login Failed for Multiple Users | Contains the canonical log signature (`UnknownLegacyError`) |
 | 1862452 | myQuorum Cloud | Incident / Closed | [WMN][Western Midstream Partners] Instant login failed error in FC UAT App icon | Access-request-shaped instant login failure |
+| 1623450 | QuorumSoftware | Bug / Closed (Escalated) | 23-00922649--Access List Not Working | Access lists not limiting access; `fc_security_user.login_type` NULL diagnostic (§10) |
+| 1722418 | QuorumSoftware | Bug / Closed | Security Access Lists - Sorting Capabilities (Dev*) | 25-01010699 sorting + cursor-jump defects (§10) |
+| 1658708 | QuorumSoftware | Bug / Closed | [AHT] Access List Refresh button populates with groups and users from the top/first access list when pressed while on the "Group and User Access" tab | Refresh shows wrong list (§10) |
+| 1850610 | Quorum | User Story / Closed | Add clearer messaging when CrypKey bypass expires when logging in to FLOWCAL as Instant User | `AuthTest.dll` active/expiry windows; messaging in FC 10.8/10.9 (§7.2) |
 | INFERRED (from SF resolution text only): 1822810, 1839253, 1811881, 1831891, 1837323, 1809689, 1827027, 1805195, 1726122, 1863942, 1775198, 1775199, 1764943 | myQuorum Cloud | — | — | Cited in case resolutions; not individually fetched |
 
 ---
@@ -279,6 +295,18 @@ SELECT user_name, login_type FROM fc_security_user WHERE UPPER(user_name) = UPPE
 SELECT username, account_status, lock_date FROM dba_users
  WHERE username IN ('FCSRV','SVCFCINSTANT','FCOWNER');
 -- Locked/expired after an RMAN clone → alter user ... identified by ... account unlock;
+
+-- Access-list enforcement failure triage (ADO 1623450): NULL login_type users are the tell
+SELECT login_type, COUNT(*) FROM fc_security_user GROUP BY login_type;
+```
+
+```sql
+-- TESTit/PROVEit server (SQL Server, instance .\FCFIELDAPPS, DB FIELDAPPS — 26-01109681):
+-- FCADMIN login locked? (run as sa)
+SELECT name, is_disabled, LOGINPROPERTY(name,'IsLocked') AS is_locked
+  FROM sys.sql_logins WHERE name = 'FCADMIN';
+-- Unlock (password from Keeper for the env — never hardcode):
+-- ALTER LOGIN FCADMIN WITH PASSWORD = '<pw>' UNLOCK;
 ```
 Verification SQL for group membership/roles beyond `fc_security_user` is **NOT YET RUN** against a live schema — table-analyst should enumerate `fc_security_%` tables on first connected case.
 
