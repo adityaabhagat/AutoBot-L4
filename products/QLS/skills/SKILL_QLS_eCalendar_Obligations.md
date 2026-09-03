@@ -19,11 +19,11 @@
 | "Server Error on List view / Coordinator won't load / Inbox slow" | C6 | G5 code (known items) |
 | "Recommendation missing / empty recommendation approved / can't pick approvers" | C7 | mixed — see cluster |
 | "eCal remarks/comments not in QLS" / "obligation stuck Held by Production" | C8 | G3 version (legacy eCal deprecated) |
-| "ECALWF/Pull Events not running / failing" | C9 | G2 config (scheduling) |
+| "ECALWF/Pull Events not running / failing" | see `SKILL_QLS_Batch_MassChange.md` §3.2 (scheduled-process ops) + C1 below | G2 config (scheduling) |
 
 Triage questions to ask first (from repeated case patterns):
 1. **Which eCalendar?** Legacy eCal (deprecated) vs current eCalendar module — remark/comment sync bugs are legacy-only, fixed by upgrade to 2026.04 (SF 25-01037615).
-2. **Is it ONE event or all events?** All events missing → batch scheduling (ALL_EVENT_ROLL / Pull Events / ECALWF not running, C1/C9). One event → route/limit/data problem (C2).
+2. **Is it ONE event or all events?** All events missing → batch scheduling (ALL_EVENT_ROLL / Pull Events / ECALWF not running — C1 below, plus `SKILL_QLS_Batch_MassChange.md` §3.2 for the scheduler itself). One event → route/limit/data problem (C2).
 3. **Was the scrubber + Pull Events already run?** That combo clears most stuck-event states (SF 25-01023990, 24-00984507, 24-00994588) — if the issue *recurs weekly* after scrubbing, it is the known ECALWF abort defect, not user error (SF 24-00994588).
 4. **Client build vs hotfix train** — most C2/C4 defects are fixed on 2022.04→2024.10 hotfix tags; check version before investigating code.
 
@@ -33,7 +33,7 @@ Triage questions to ask first (from repeated case patterns):
 
 ```
 Event(s) not visible in eCalendar?
-├─ ALL events for everyone → C9: is ECALWF / Pull Events / ALL_EVENT_ROLL scheduled & succeeding?
+├─ ALL events for everyone → scheduler check (SKILL_QLS_Batch_MassChange.md §3.2): is ECALWF / Pull Events / ALL_EVENT_ROLL scheduled & succeeding?
 │   ├─ Pull Events not scheduled → configure schedule (30-min cycle used at one client) [26-01120369]
 │   └─ ALL_EVENT_ROLL not scheduled → event dates never roll forward [24-00985081]
 ├─ Some users only → working-months / staging config (C1) [26-01099872, 26-01085381]
