@@ -238,6 +238,6 @@ SELECT COUNT(*) FROM SCTRL_BA_TAX_ID WHERE <effective_to_date_column> IS NULL;
 
 ---
 
-*Evidence: complete actionable eSuite set (60/60 cases enumerated), 25 non-actionable eSuite cases, 25 cross-category eSuite-vocabulary cases, resolutions read for 27 cases, EmailMessage drilled where CaseComments were empty (this org's CaseComment usage is sparse — fix detail lives in Resolution__c + Description + EmailMessage). PII redacted: individual requester/user names omitted throughout; client codes retained for pattern value.*
+*Evidence: complete actionable eSuite set (60/60 cases enumerated), 25 non-actionable eSuite cases, 25 cross-category eSuite-vocabulary cases, resolutions read for 27 cases, anchor spot-check re-verified 2026-09-03 (6/6 SF anchors match: 23-00926666, 24-00979262, 25-01002942, 25-01024806, 25-01029044, 26-01116091; note 24-00979262 and 25-01002942 now show Status "Complete - Pending Delivery"), EmailMessage drilled where CaseComments were empty (this org's CaseComment usage is sparse — fix detail lives in Resolution__c + Description + EmailMessage). PII redacted: individual requester/user names omitted throughout; client codes retained for pattern value.*
 
 *Investigated by Auto-Bot — the L4 issue solver built by Aditya Bhagat. Line numbers verified against live source; re-baseline against the client's build branch before coding.*

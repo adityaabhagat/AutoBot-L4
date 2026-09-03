@@ -25,7 +25,18 @@
 | Revenue journal entries, GL posting from revenue, JE balancing | [SKILL_QRA_Journal.md](SKILL_QRA_Journal.md) |
 | Acquisitions & dispositions, payouts, owner funds release (OFR), escheat funds | [SKILL_QRA_AcqDisp_Payouts.md](SKILL_QRA_AcqDisp_Payouts.md) |
 | Production/volume allocation, volumetric reporting, gas balancing, royalty volumes | [SKILL_QRA_Volume_Allocation.md](SKILL_QRA_Volume_Allocation.md) |
-| eSuite/web platform, integration, security, QQM, system config for QRA | [SKILL_QRA_Platform_Integration_Security.md](SKILL_QRA_Platform_Integration_Security.md) |
+| eSuite / owner web portal: BA web screens (Contacts/Addresses/Documents tabs), "Factory QCFSDataHelper does not exist", zip/postal mask (`ZIPCODE_MASK_WEB` / `SCODE_COUNTRY.ZIP_CD_MASK_WEB`), V17 web down after refresh, `/EQCU17QRAAPI` 500, owner check-detail contact info | [SKILL_QRA_eSuite_OwnerPortal.md](../skills/SKILL_QRA_eSuite_OwnerPortal.md) |
+| Integration, security, QQM, system config, non-eSuite platform/infra for QRA | [SKILL_QRA_Platform_Integration_Security.md](SKILL_QRA_Platform_Integration_Security.md) |
+
+**No `Case_Category__c` (387 cases; sampled 3 pages 2026-09-03 — mis-filed PPA + check-write symptoms, route by vocabulary):**
+
+| If the uncategorized case mentions… | Go to |
+|---|---|
+| `Impaired Reason 301`/`311`, PPN not generated, rejected Land PPN, PPA duplicate payment, `LD18` PPNs from paycode changes (SF 26-01087692/26-01117981, 25-01023975, 24-00994991, 26-01071081, 23-00897334, 23-00894089 — LD18 "Resolved in v17."), PPN errors after rebuilding masterlink (26-01104139) | [SKILL_QRA_Prior_Period_Adjustments.md](../skills/SKILL_QRA_Prior_Period_Adjustments.md) |
+| Escheat reversal / suspense listing for escheat, negative check amounts, `CW_MAIN` `TRANS_VAL_AMT` footing error, void checks with foreign withholding, escheat-state wrong after BA address change (SF 26-01114255, 26-01092353, 26-01083190, 23-00883589, 23-00924119, 24-00958182) | [SKILL_QRA_Check_Processing.md](../skills/SKILL_QRA_Check_Processing.md) |
+| `CWONRFNDRL` fails "cannot insert NULL into column 'ORIG_BUS_UNIT_CD'... `JSTG_JE_INPUT`", `OFR stuck in Queued` (SF 24-00968735, 24-00995401, 26-01102265) | [SKILL_QRA_Check_Processing.md](../skills/SKILL_QRA_Check_Processing.md) |
+| `VL100` MaxLength/processing errors, `RRID` results not landing in `RD031` (SF 26-01066422, 25-01043564, 23-00924646, 26-01065631) | [SKILL_QRA_Revenue_Distribution.md](SKILL_QRA_Revenue_Distribution.md) |
+| 1099 process errors `QP043` / `CW1099EXPG` filed without category (SF 23-00877080, 22-00565012, 22-00584887) | [SKILL_QRA_Tax_Regulatory.md](SKILL_QRA_Tax_Regulatory.md) |
 
 ### QCA — Cost Accounting
 | If the case mentions… | Go to |
