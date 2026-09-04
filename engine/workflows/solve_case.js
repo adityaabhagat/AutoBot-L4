@@ -54,12 +54,34 @@ const GATE_AGENT = {
   G5: 'code-investigator',
 }
 
+// ---------------------------------------------------------------- model tiers
+// Mirrors the `model:` frontmatter in .claude/agents/*.md. Needed here because
+// this script spawns generic agents told to FOLLOW an agent file, so frontmatter
+// does not apply - the tier must be passed explicitly per call.
+// Policy + rationale: docs/MODEL_POLICY.md. Force one model everywhere while
+// debugging with env CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1.
+const TIER = {
+  intake:       { model: 'sonnet' },
+  connect:      { model: 'haiku', effort: 'low' },
+  repro:        { model: 'sonnet' },
+  classify:     { model: 'opus' },            // routing decides everything downstream
+  batch:        { model: 'sonnet' },
+  tableAnalyst: { model: 'sonnet' },
+  report:       { model: 'sonnet' },          // thinking already done; template fill
+  writeback:    { model: 'opus' },            // writes knowledge that compounds
+  verify:       { model: 'opus' },            // the safety net - never downgrade
+  'config-investigator':  { model: 'sonnet' },
+  'version-investigator': { model: 'sonnet' },
+  'data-investigator':    { model: 'opus' },  // writes SQL that touches client data
+  'code-investigator':    { model: 'opus' },  // defect mechanism -> customer-facing doc
+}
+
 phase('Intake')
 const brief = await agent(
   `Run the intake-agent role from .claude/agents/intake-agent.md for Salesforce case ${caseNumber}. ` +
   `Follow it exactly (KB recall first, LIMIT 25, product detection). Write cases/${caseNumber}/case_brief.md. ` +
   `Return the executive summary + detected product + prior gate signal.`,
-  { label: `intake:${caseNumber}`, phase: 'Intake' }
+  { label: `intake:${caseNumber}`, phase: 'Intake', ...TIER.intake }
 )
 if (!brief) throw new Error('Intake failed — check Salesforce connector and case number.')
 log(`Intake done for ${caseNumber}`)
@@ -73,7 +95,7 @@ const connection = await agent(
   `This is a HEADLESS run: if the environment is ambiguous or mismatched, do NOT wait for a user — ` +
   `record Status NOT CONNECTED (or MISMATCH) with the candidate environments in the brief and return that. ` +
   `Return the Metadata connection block.`,
-  { label: `connect:${caseNumber}`, phase: 'Connect' }
+  { label: `connect:${caseNumber}`, phase: 'Connect', ...TIER.connect }
 )
 const metadataConnected = !!(connection && connection.includes('CONNECTED') && !connection.includes('NOT CONNECTED'))
 log(metadataConnected ? 'Metadata server bound to matching client env' : 'Metadata degraded mode — investigators emit NOT YET RUN SQL')
@@ -82,7 +104,7 @@ phase('Reproduce')
 const repro = await agent(
   `Run the repro-agent role from .claude/agents/repro-agent.md for case ${caseNumber}. ` +
   `Read cases/${caseNumber}/case_brief.md, append the Reproduction section, return the verdict line.`,
-  { label: `repro:${caseNumber}`, phase: 'Reproduce' }
+  { label: `repro:${caseNumber}`, phase: 'Reproduce', ...TIER.repro }
 )
 if (!repro) log(`Repro agent failed for ${caseNumber} — continuing without a Reproduction verdict`)
 
@@ -90,21 +112,21 @@ phase('Classify')
 let cls = await agent(
   `Run the classifier-agent role from .claude/agents/classifier-agent.md for case ${caseNumber}. ` +
   `Read the brief, append the Classification block, and return it as structured output.`,
-  { label: `classify:${caseNumber}`, phase: 'Classify', schema: CLASSIFY_SCHEMA }
+  { label: `classify:${caseNumber}`, phase: 'Classify', schema: CLASSIFY_SCHEMA, ...TIER.classify }
 )
 
 if (cls.batch_flag !== 'none') {
   const batch = await agent(
     `Run the batch-debugger role from .claude/agents/batch-debugger.md for case ${caseNumber} ` +
     `(${cls.batch_flag} batch suspected). Append findings to cases/${caseNumber}/evidence.md and return the underlying_gate block.`,
-    { label: `batch:${caseNumber}`, phase: 'Classify' }
+    { label: `batch:${caseNumber}`, phase: 'Classify', ...TIER.batch }
   )
   if (batch) {
     cls = await agent(
       `Run the classifier-agent role from .claude/agents/classifier-agent.md again for case ${caseNumber}, ` +
       `incorporating the batch-debugger finding:\n${batch}\n` +
       `Update the Classification block in the brief; return structured output.`,
-      { label: `reclassify:${caseNumber}`, phase: 'Classify', schema: CLASSIFY_SCHEMA }
+      { label: `reclassify:${caseNumber}`, phase: 'Classify', schema: CLASSIFY_SCHEMA, ...TIER.classify }
     )
   } else {
     log(`batch-debugger failed for ${caseNumber} — keeping original classification`)
@@ -121,7 +143,7 @@ if (gates.length) {
     `Run the ${GATE_AGENT[g]} role from .claude/agents/${GATE_AGENT[g]}.md for case ${caseNumber}. ` +
     `Read cases/${caseNumber}/case_brief.md and evidence.md, investigate per the agent file, ` +
     `append anchored findings to evidence.md, and return your verdict block.`,
-    { label: `${GATE_AGENT[g]}:${caseNumber}`, phase: 'Investigate' }
+    { label: `${GATE_AGENT[g]}:${caseNumber}`, phase: 'Investigate', ...(TIER[GATE_AGENT[g]] || {}) }
   ))
   // table-analyst runs alongside G2/G4/G5 when the metadata server is bound to the client env
   if (metadataConnected && gates.some(g => g === 'G2' || g === 'G4' || g === 'G5')) {
@@ -130,7 +152,7 @@ if (gates.length) {
       `Read cases/${caseNumber}/case_brief.md (note the Metadata connection env), build the module table map, ` +
       `verify objects/schemas/registered SQLs live, interrogate the data chain for the case entities (SELECT-only), ` +
       `append findings to evidence.md under "Table analysis", and return your verdict block.`,
-      { label: `table-analyst:${caseNumber}`, phase: 'Investigate' }
+      { label: `table-analyst:${caseNumber}`, phase: 'Investigate', ...TIER.tableAnalyst }
     ))
   }
   verdicts = (await parallel(investigators)).filter(Boolean)
@@ -144,7 +166,7 @@ if (gates.length) {
     `Run the hallucination-checker role from .claude/agents/hallucination-checker.md for case ${caseNumber}. ` +
     `Verify all claims in cases/${caseNumber}/evidence.md and these verdict blocks:\n${verdicts.join('\n---\n')}\n` +
     `Return structured output.`,
-    { label: `verify:${caseNumber}`, phase: 'Verify', schema: VERDICT_SCHEMA }
+    { label: `verify:${caseNumber}`, phase: 'Verify', schema: VERDICT_SCHEMA, ...TIER.verify }
   )
   for (let i = 0; i < 2 && check.verdict === 'FAIL'; i++) {
     log(`Hallucination gate FAIL (${check.failures.length} claims) — iteration ${i + 1}`)
@@ -152,13 +174,13 @@ if (gates.length) {
       `Re-run the ${GATE_AGENT[g]} role from .claude/agents/${GATE_AGENT[g]}.md for case ${caseNumber} ` +
       `addressing ONLY these refuted claims:\n` +
       `${check.failures.join('\n')}\nFix or downgrade them in evidence.md; return the updated verdict block.`,
-      { label: `fix:${GATE_AGENT[g]}:${caseNumber}`, phase: 'Verify' }
+      { label: `fix:${GATE_AGENT[g]}:${caseNumber}`, phase: 'Verify', ...(TIER[GATE_AGENT[g]] || {}) }
     )))).filter(Boolean)
     if (!verdicts.length) { log('All fix agents failed — aborting retry loop'); break }
     check = await agent(
       `Re-run the hallucination-checker role from .claude/agents/hallucination-checker.md for case ${caseNumber} ` +
       `on the updated evidence and these verdict blocks:\n${verdicts.join('\n---\n')}\nReturn structured output.`,
-      { label: `reverify:${caseNumber}`, phase: 'Verify', schema: VERDICT_SCHEMA }
+      { label: `reverify:${caseNumber}`, phase: 'Verify', schema: VERDICT_SCHEMA, ...TIER.verify }
     )
   }
   if (check.verdict === 'FAIL') {
@@ -172,7 +194,7 @@ const report = await agent(
   `Gate outcome: ${cls.primary_gate}; hallucination verdict: ${check.verdict}` +
   `${check.verdict === 'FAIL' ? ' (ship as Investigation doc with ranked hypotheses)' : ''}. ` +
   `Write cases/${caseNumber}/report_<type>.md; return the report path + 5-line SF-paste summary.`,
-  { label: `report:${caseNumber}`, phase: 'Report' }
+  { label: `report:${caseNumber}`, phase: 'Report', ...TIER.report }
 )
 
 phase('Writeback')
@@ -180,7 +202,7 @@ const learned = await agent(
   `Run the knowledge-curator role from .claude/agents/knowledge-curator.md for case ${caseNumber}. ` +
   `Decide index-only vs skill-update vs new-skill, update the product router if needed, ` +
   `and run kb.py remember. Return what was learned + where it was filed.`,
-  { label: `writeback:${caseNumber}`, phase: 'Writeback' }
+  { label: `writeback:${caseNumber}`, phase: 'Writeback', ...TIER.writeback }
 )
 
 return { caseNumber, classification: cls, hallucination: check.verdict, report, learned }

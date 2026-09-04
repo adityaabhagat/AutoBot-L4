@@ -85,21 +85,23 @@ Gate order in N2's routing to the N3 investigators is strict: **G1 → G2 → G3
 
 ## AGENT ROSTER (`.claude/agents/`)
 
-| Agent | Node | Job |
-|-------|------|-----|
-| `intake-agent` | N0 | Pull everything from SF (case, comments, emails, attachments, similar cases) + ADO (linked items) + KB recall; detect product; write `case_brief.md` |
-| `metadata-connector` | N0.5 | Initial step: map client → Quorum Metadata MCP environment (dbconfig.json), verify live DB connection, ask user for client/DB when ambiguous |
-| `repro-agent` | N1 | Extract/derive steps to reproduce; judge reproducibility with current data |
-| `classifier-agent` | N2 | Classify into the 5 classes + batch flag; route to gate |
-| `config-investigator` | G2 | Config keys/metadata layers; exact change instruction |
-| `version-investigator` | G3 | ADO fixed-in-version check; label inferred builds |
-| `data-investigator` | G4 | Diagnostic SQL, bad-data signature, correction script |
-| `code-investigator` | G5 | Code root cause to exact `repo/file:line`, client overrides first |
-| `batch-debugger` | flag | Normal vs segregated (QPEC) batch diagnosis |
-| `table-analyst` | support | Module table map + live schema/registered-SQL/data-chain analysis via metadata server; feeds table-level root-cause evidence to G2/G4/G5 |
-| `hallucination-checker` | H | Adversarial verify: refute every claim; kick back unanchored ones |
-| `report-writer` | N4 | L4 Triaged doc / Engineering Handoff / customer explanation from templates |
-| `knowledge-curator` | N5 | Create/update skills for novel symptoms; `kb.py remember` |
+| Agent | Node | Model | Job |
+|-------|------|-------|-----|
+| `intake-agent` | N0 | **sonnet** | Pull everything from SF (case, comments, emails, attachments, similar cases) + ADO (linked items) + KB recall; detect product; write `case_brief.md` |
+| `metadata-connector` | N0.5 | **haiku** | Initial step: map client → Quorum Metadata MCP environment (dbconfig.json), verify live DB connection, ask user for client/DB when ambiguous |
+| `repro-agent` | N1 | **sonnet** | Extract/derive steps to reproduce; judge reproducibility with current data |
+| `classifier-agent` | N2 | **opus** | Classify into the 5 classes + batch flag; route to gate |
+| `config-investigator` | G2 | **sonnet** | Config keys/metadata layers; exact change instruction |
+| `version-investigator` | G3 | **sonnet** | ADO fixed-in-version check; label inferred builds |
+| `data-investigator` | G4 | **opus** | Diagnostic SQL, bad-data signature, correction script |
+| `code-investigator` | G5 | **opus** | Code root cause to exact `repo/file:line`, client overrides first |
+| `batch-debugger` | flag | **sonnet** | Normal vs segregated (QPEC) batch diagnosis |
+| `table-analyst` | support | **sonnet** | Module table map + live schema/registered-SQL/data-chain analysis via metadata server; feeds table-level root-cause evidence to G2/G4/G5 |
+| `hallucination-checker` | H | **opus** | Adversarial verify: refute every claim; kick back unanchored ones |
+| `report-writer` | N4 | **sonnet** | L4 Triaged doc / Engineering Handoff / customer explanation from templates |
+| `knowledge-curator` | N5 | **opus** | Create/update skills for novel symptoms; `kb.py remember` |
+
+Models are tiered per agent to cut cost and wall-clock without weakening the nodes where a wrong answer is expensive or permanent — rationale, expected savings, and the override switches are in `docs/MODEL_POLICY.md`. The same tiers are mirrored in `engine/workflows/solve_case.js`. **Never downgrade `hallucination-checker`** — a cheap verifier turns the safety gate into theatre.
 
 Run independent investigators in parallel when evidence is ambiguous between two gates (e.g., G3+G4), but never skip the hallucination gate.
 
